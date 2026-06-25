@@ -1,26 +1,145 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+  thriftedBD design tokens.
+  Source of truth: thriftedBD-design-system.md
+  Do not introduce ad-hoc hex values outside this file.
+*/
+@theme {
+  /* Primary — green (brand, actions) */
+  --color-green-50: #ecfbf2;
+  --color-green-100: #d1f5e0;
+  --color-green-200: #a6ebc2;
+  --color-green-300: #6fd89e;
+  --color-green-400: #38c578;
+  --color-green-500: #17b45a;
+  --color-green-600: #109a4b;
+  --color-green-700: #0d7c3d;
+  --color-green-800: #0c6132;
+  --color-green-900: #0a4f2a;
+
+  /* Ink / neutral (warm gray — text, surfaces, borders) */
+  --color-ink-50: #fbfaf6;
+  --color-ink-100: #f3f1ea;
+  --color-ink-200: #e7e3d8;
+  --color-ink-300: #d5cfc0;
+  --color-ink-400: #a8a192;
+  --color-ink-500: #7c766a;
+  --color-ink-600: #595449;
+  --color-ink-700: #3c382f;
+  --color-ink-800: #29261f;
+  --color-ink-900: #1c1b19;
+
+  /* Accent — yellow/amber (highlights, badges) */
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #facc15;
+  --color-amber-500: #eab308;
+  --color-gold-600: #c98a04;
+
+  /* Tertiary — denim */
+  --color-denim-500: #3b6e9a;
+
+  /* Semantic */
+  --color-sale-50: #fdecea;
+  --color-sale-500: #e0413b;
+  --color-sale-700: #b5302b;
+
+  /* Radius scale (px values per design system) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+
+  /* Elevation — warm-tinted shadows */
+  --shadow-xs: 0 1px 2px rgba(28, 27, 25, 0.06);
+  --shadow-sm: 0 2px 8px rgba(28, 27, 25, 0.06);
+  --shadow-md: 0 6px 20px rgba(28, 27, 25, 0.08);
+  --shadow-lg: 0 16px 40px rgba(28, 27, 25, 0.1);
+
+  /* Container */
+  --container-container: 1440px;
+
+  /* Typography */
+  --font-sans: var(--font-noto), system-ui, sans-serif;
+
+  /* Motion */
+  --ease-brand: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/*
+  shadcn/ui semantic surface mapping — bridges generic component slots
+  (background, border, ring, etc.) to the thriftedBD palette above.
+  thriftedBD has no dark mode: surfaces are intentionally light by default,
+  with explicit dark *sections* (hero, footer) styled directly with ink-900.
+*/
+@theme inline {
+  --color-background: var(--color-ink-50);
+  --color-foreground: var(--color-ink-900);
+  --color-card: white;
+  --color-card-foreground: var(--color-ink-900);
+  --color-popover: white;
+  --color-popover-foreground: var(--color-ink-900);
+  --color-primary: var(--color-green-500);
+  --color-primary-foreground: white;
+  --color-secondary: var(--color-ink-100);
+  --color-secondary-foreground: var(--color-ink-900);
+  --color-muted: var(--color-ink-100);
+  --color-muted-foreground: var(--color-ink-500);
+  --color-accent: var(--color-ink-100);
+  --color-accent-foreground: var(--color-ink-900);
+  --color-destructive: var(--color-sale-500);
+  --color-destructive-foreground: white;
+  --color-border: var(--color-ink-200);
+  --color-input: var(--color-ink-200);
+  --color-ring: var(--color-green-500);
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-ink-50);
+  --foreground: var(--color-ink-900);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-price {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
 }
