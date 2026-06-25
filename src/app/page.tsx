@@ -1,4 +1,4 @@
-import { RotateCcw, ShieldCheck, Truck } from "lucide-react";
+import { ArrowCounterClockwise, ShieldCheck, Truck } from "@phosphor-icons/react/dist/ssr";
 
 import { Button } from "@/components/ui/button";
 
@@ -14,7 +14,7 @@ const valueProps = [
     description: "Pay the way you already do, with cash on delivery available nationwide.",
   },
   {
-    icon: RotateCcw,
+    icon: ArrowCounterClockwise,
     title: "Nationwide delivery & easy returns",
     description: "We ship across Bangladesh and make returns simple if something's off.",
   },
@@ -48,7 +48,7 @@ export default function Home() {
           {valueProps.map(({ icon: Icon, title, description }) => (
             <div key={title} className="flex flex-col items-start gap-4">
               <span className="rounded-pill flex size-12 items-center justify-center bg-green-50">
-                <Icon className="size-6 text-green-600" strokeWidth={1.75} aria-hidden="true" />
+                <Icon className="size-6 text-green-600" weight="regular" aria-hidden="true" />
               </span>
               <h4 className="text-ink-900 text-lg font-semibold">{title}</h4>
               <p className="text-ink-500 text-sm">{description}</p>
