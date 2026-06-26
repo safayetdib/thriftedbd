@@ -48,7 +48,11 @@ thriftedBD is an online thrifted/secondhand clothing e-commerce platform operati
 
 **Full field-by-field reference lives in [`docs/database-schema.md`](./docs/database-schema.md) — read it before writing Mongoose models, API routes that touch the database, or migrations.** It's kept out of this always-loaded file because most tasks (UI, styling, copy) don't need the full schema in context.
 
-## 6. Core rules for AI agents
+## 6. SEO & AI search
+
+**Before building or editing any storefront route, layout, or content component, read [`docs/seo-ai-guidelines.md`](./docs/seo-ai-guidelines.md)** — metadata, structured data (JSON-LD), semantic HTML, image alt text, Core Web Vitals, sitemap/robots, and AI-answer-engine optimization. Kept out of this always-loaded file for the same reason as the DB schema: only needed when actually touching frontend pages.
+
+## 7. Core rules for AI agents
 
 1. Keep admin and storefront in the same Next.js application. Do not create a separate backend unless required.
 2. Products are unique thrift pieces — avoid rigid multi-stock e-commerce assumptions.
