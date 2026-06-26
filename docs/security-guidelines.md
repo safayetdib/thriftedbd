@@ -12,7 +12,7 @@ Read this before writing any route handler, auth logic, or upload flow. PII (pho
 - Passwords hashed with bcrypt; never log plaintext passwords, hashes, or session tokens.
 
 ## 3. Secrets
-- All secrets (Mongo URI, R2 keys, `AUTH_SECRET`) live in env vars, never committed. `.env.example` documents every required variable with a placeholder.
+- All secrets (Mongo URI, R2 keys, `AUTH_SECRET`, `GOOGLE_TRANSLATE_API_KEY`) live in env vars, never committed. `.env.example` documents every required variable with a placeholder.
 - Secrets are only ever read in server-side code (route handlers, server components) — never in a `"use client"` file, never sent to the browser bundle.
 
 ## 4. Uploads

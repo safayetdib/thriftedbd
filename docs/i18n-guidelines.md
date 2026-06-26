@@ -18,7 +18,11 @@ The site fully supports English (default) and Bangla, switchable via a toggle in
 - **Closed enums get one translation, not one per record** — `grade`, `condition`, `orderStatus`, badge labels (New/Imported/Premium/Sale/Sold), etc. are translated once in the UI message files. Never add a `{ en, bn }` field to a schema for something that's already a fixed enum.
 
 ## 4. Admin product form
-- Every bilingual field (title, notes, image alt text) gets two inputs — English (required) and Bangla (optional, with a visible "not translated yet" state if empty) — not a single field with a language dropdown, so the admin can see and fill both at a glance while creating a listing.
+- Every bilingual field (title, notes, image alt text) gets two inputs — English (required) and Bangla — not a single field with a language dropdown, so the admin can see and fill both at a glance while creating a listing.
+- **Auto-translate as an editable draft.** When the admin saves with the Bangla field empty, the server calls the Google Cloud Translation API to auto-fill it, then returns the draft into the (still editable) Bangla input — never auto-publishes a translation the admin hasn't seen. The admin can leave it, fix a word, or rewrite it entirely before publishing. This is the speed/quality balance: fast by default, correctable when a fashion-specific term or brand reference comes out wrong.
+- Brand names and other proper nouns are never sent through translation — they're not part of any bilingual field to begin with (see §3).
+- If the translation call fails or errors, leave `bn` empty rather than blocking the save — the existing English-fallback rule (§3) already covers display, so a translation API outage should never stop an admin from publishing a product.
+- The API key (`GOOGLE_TRANSLATE_API_KEY`) is a server-side secret — the call happens in the product service (`docs/api-conventions.md`), never from the client.
 
 ## 5. What this does NOT cover yet
 - Bangla input/search (e.g. searching the catalog by typing in Bangla) — not in scope until the search feature itself is built; flag for that point, don't build speculatively now.
