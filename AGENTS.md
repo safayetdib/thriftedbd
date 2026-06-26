@@ -52,7 +52,22 @@ thriftedBD is an online thrifted/secondhand clothing e-commerce platform operati
 
 **Before building or editing any storefront route, layout, or content component, read [`docs/seo-ai-guidelines.md`](./docs/seo-ai-guidelines.md)** — metadata, structured data (JSON-LD), semantic HTML, image alt text, Core Web Vitals, sitemap/robots, and AI-answer-engine optimization. Kept out of this always-loaded file for the same reason as the DB schema: only needed when actually touching frontend pages.
 
-## 7. Core rules for AI agents
+## 7. Internationalization (English / Bangla)
+
+The site fully supports an English (default) / Bangla toggle, including translated product listings, not just UI chrome. **Before building any storefront route, the language switcher, or admin product forms, read [`docs/i18n-guidelines.md`](./docs/i18n-guidelines.md)** — locale routing, which fields are bilingual, fallback rules, and the slug-stays-Latin rule.
+
+## 8. API, security, and testing conventions
+
+Three more on-demand references, same reasoning as above — read whichever is relevant before touching that part of the codebase:
+- [`docs/api-conventions.md`](./docs/api-conventions.md) — route structure, Zod validation, the service layer, **multi-document transactions** (order confirmation, cancellation, remittance reconciliation all require one), response shape, and status codes.
+- [`docs/security-guidelines.md`](./docs/security-guidelines.md) — input/query safety, auth, secrets, uploads, rate limiting, PII handling.
+- [`docs/testing-rules.md`](./docs/testing-rules.md) — which logic must ship with a test (stock/order-confirmation/payment paths) before merge, and what's explicitly not worth testing.
+
+## 9. Auth: self-hosted, not a managed identity provider
+
+Deliberately **not** using Clerk/Auth0/Supabase Auth/Firebase Auth, even on their free tiers. We need our own `customers` collection regardless (addresses, favorites, order history, bilingual fields), so a managed provider would add a second identity system to sync rather than remove work — and NextAuth + bcrypt already handles the hard parts (CSRF, JWT signing, secure cookies) for free. Stick with NextAuth v5, JWT sessions, two Credentials providers (`admin`, `customer`).
+
+## 10. Core rules for AI agents
 
 1. Keep admin and storefront in the same Next.js application. Do not create a separate backend unless required.
 2. Products are unique thrift pieces — avoid rigid multi-stock e-commerce assumptions.
@@ -64,4 +79,6 @@ thriftedBD is an online thrifted/secondhand clothing e-commerce platform operati
 8. Guest checkout always works; customer accounts are an upgrade (saved addresses, favorites, persistent cart, order history), never a requirement to buy.
 9. Order line items, owner, and price are fully snapshotted at order time — later edits to `products`, `owners`, `categories`, or `colors` must never retroactively change a past order.
 10. Cash movement is logged in `transactions`, independent of `orders`, since courier remittances are frequently batched across multiple delivered orders.
-11. Optimize for low cost and future scalability.
+11. Multi-document writes (order confirmation, cancellation/return, remittance reconciliation) must use a MongoDB transaction — never partial-write across collections.
+12. Bilingual text (`products.title`/`notes`, `categories.name`, `colors.name`) is stored as `{ en, bn? }`; `bn` is optional and falls back to `en`, but slugs are always Latin/English regardless of display language.
+13. Optimize for low cost and future scalability.
