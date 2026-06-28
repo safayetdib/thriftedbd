@@ -82,3 +82,4 @@ Deliberately **not** using Clerk/Auth0/Supabase Auth/Firebase Auth, even on thei
 11. Multi-document writes (order confirmation, cancellation/return, remittance reconciliation) must use a MongoDB transaction — never partial-write across collections.
 12. Bilingual text (`products.title`/`notes`, `categories.name`, `colors.name`) is stored as `{ en, bn? }`; `bn` is optional and falls back to `en`, but slugs are always Latin/English regardless of display language.
 13. Optimize for low cost and future scalability.
+14. **Never run `git commit` (or `git push`).** Make the code/file changes and stop there — the project owner reviews the diff and commits it themselves.
