@@ -18,3 +18,21 @@ export async function requireAdmin() {
   }
   return null;
 }
+
+/** Returns a 401/403 response if the caller isn't an authenticated customer, otherwise null. */
+export async function requireCustomer() {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: { message: "Unauthorized", code: "UNAUTHORIZED" } },
+      { status: 401 },
+    );
+  }
+  if (session.user.role !== "customer") {
+    return NextResponse.json(
+      { error: { message: "Forbidden", code: "FORBIDDEN" } },
+      { status: 403 },
+    );
+  }
+  return null;
+}

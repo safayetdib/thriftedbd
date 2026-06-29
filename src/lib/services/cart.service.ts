@@ -3,7 +3,7 @@ import Product from "@/models/Product";
 
 export type CartIdentity = { customerId: string } | { cartToken: string };
 
-function identityFilter(identity: CartIdentity) {
+export function identityFilter(identity: CartIdentity) {
   return "customerId" in identity
     ? { customerId: identity.customerId }
     : { cartToken: identity.cartToken };
