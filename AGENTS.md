@@ -83,3 +83,5 @@ Deliberately **not** using Clerk/Auth0/Supabase Auth/Firebase Auth, even on thei
 12. Bilingual text (`products.title`/`notes`, `categories.name`, `colors.name`) is stored as `{ en, bn? }`; `bn` is optional and falls back to `en`, but slugs are always Latin/English regardless of display language.
 13. Optimize for low cost and future scalability.
 14. **Never run `git commit` (or `git push`).** Make the code/file changes and stop there — the project owner reviews the diff and commits it themselves.
+15. This Next.js version renamed `middleware.ts` to `src/proxy.ts` (export stays default/`proxy`) — confirmed by `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/proxy.md`. Don't recreate `middleware.ts`.
+16. `@auth/core` must stay an explicit `devDependency` even though it's only a transitive dependency of `next-auth` — pnpm's strict `node_modules` isolation means type-augmentation files (`src/types/next-auth.d.ts`) can't resolve `@auth/core/*` otherwise.
