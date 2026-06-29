@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import { getAllColors } from "@/lib/services/color.service";
+import { getActiveColors } from "@/lib/services/color.service";
 
 export async function GET() {
   await connectDB();
-  const colors = await getAllColors();
+  const colors = await getActiveColors();
   return NextResponse.json({ data: colors });
 }

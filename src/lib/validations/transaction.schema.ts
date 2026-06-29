@@ -10,4 +10,7 @@ export const createTransactionSchema = z.object({
   notes: z.string().optional(),
 });
 
+export const updateTransactionSchema = createTransactionSchema.partial();
+
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
+export type UpdateTransactionInput = z.infer<typeof updateTransactionSchema>;

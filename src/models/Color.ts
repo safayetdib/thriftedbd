@@ -4,12 +4,14 @@ import { i18nTextSchema, type I18nText } from "./shared";
 export interface IColor extends Document {
   name: I18nText;
   hex?: string;
+  isActive: boolean;
   createdAt: Date;
 }
 
 const colorSchema = new Schema<IColor>({
   name: { type: i18nTextSchema, required: true },
   hex: { type: String },
+  isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
 });
 

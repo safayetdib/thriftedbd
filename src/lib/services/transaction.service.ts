@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 import Transaction from "@/models/Transaction";
 import Order from "@/models/Order";
 import { updateAdvancePayment } from "@/lib/services/order.service";
-import type { CreateTransactionInput } from "@/lib/validations/transaction.schema";
+import type {
+  CreateTransactionInput,
+  UpdateTransactionInput,
+} from "@/lib/validations/transaction.schema";
 
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 100;
@@ -42,6 +45,28 @@ export async function getTransactions(params: {
 
 export async function getTransactionById(id: string) {
   return Transaction.findById(id).lean();
+}
+
+/** Only PENDING entries are editable — once RECEIVED/RECONCILED the ledger
+ * record (and whatever order updates it triggered) must stay immutable. */
+export async function updateTransaction(id: string, input: UpdateTransactionInput) {
+  const transaction = await Transaction.findById(id);
+  if (!transaction) throw new Error("TRANSACTION_NOT_FOUND");
+  if (transaction.status !== "PENDING") throw new Error("TRANSACTION_NOT_EDITABLE");
+
+  Object.assign(transaction, input);
+  await transaction.save();
+  return transaction;
+}
+
+/** Void a mistaken entry — only while PENDING, since nothing's been applied
+ * to any order yet at that point. */
+export async function voidTransaction(id: string) {
+  const transaction = await Transaction.findById(id);
+  if (!transaction) throw new Error("TRANSACTION_NOT_FOUND");
+  if (transaction.status !== "PENDING") throw new Error("TRANSACTION_NOT_VOIDABLE");
+
+  await transaction.deleteOne();
 }
 
 /**

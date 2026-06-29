@@ -5,19 +5,25 @@ import { cn } from "@/lib/utils";
 
 /**
  * thriftedBD button variants — see design system §7.1.
- * Pill radius, 44px+ tap targets, green as the only primary action color.
+ * Sharp corners (radius token is 0), 44px+ tap targets, green as the only
+ * primary action color. Filled/outline variants get a 2px ink border + hard
+ * offset shadow that flattens on press — the signature funky/modern device.
  */
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-1.5 rounded-pill border border-transparent text-sm font-medium whitespace-nowrap transition-all duration-200 ease-brand outline-none select-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 active:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center gap-1.5 rounded-pill border-2 border-transparent text-sm font-semibold whitespace-nowrap transition-all duration-150 ease-brand outline-none select-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        primary: "bg-green-500 text-white hover:bg-green-600 active:bg-green-700",
-        secondary: "bg-ink-900 text-ink-50 hover:bg-ink-800",
-        outline: "border-ink-300 bg-transparent text-ink-900 hover:bg-ink-100",
+        primary:
+          "border-ink-900 bg-green-500 text-white shadow-brutal-sm hover:bg-green-600 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+        secondary:
+          "border-ink-900 bg-ink-900 text-ink-50 shadow-brutal-sm hover:bg-ink-800 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+        outline:
+          "border-ink-900 bg-white text-ink-900 shadow-brutal-sm hover:bg-ink-100 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
         ghost: "border-transparent bg-transparent text-ink-700 hover:bg-ink-100",
         link: "border-transparent bg-transparent p-0 text-green-700 hover:underline",
-        destructive: "bg-sale-500 text-white hover:bg-sale-700",
+        destructive:
+          "border-ink-900 bg-sale-500 text-white shadow-brutal-sm hover:bg-sale-700 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
       },
       size: {
         sm: "h-9 px-4 text-sm",

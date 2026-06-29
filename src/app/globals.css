@@ -48,18 +48,27 @@
   --color-sale-500: #e0413b;
   --color-sale-700: #b5302b;
 
-  /* Radius scale (px values per design system) */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-pill: 9999px;
+  /* Radius scale — flattened to 0 across the board. thriftedBD v2 is
+     funky/modern via sharp edges + hard offset shadows, never soft rounding. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-pill: 0px;
 
-  /* Elevation — warm-tinted shadows */
+  /* Elevation — warm-tinted soft shadows, kept for subtle/quiet surfaces
+     (sticky header on scroll, skeleton, etc). Funky/elevated components use
+     the hard offset --shadow-brutal-* tokens below instead. */
   --shadow-xs: 0 1px 2px rgba(28, 27, 25, 0.06);
   --shadow-sm: 0 2px 8px rgba(28, 27, 25, 0.06);
   --shadow-md: 0 6px 20px rgba(28, 27, 25, 0.08);
   --shadow-lg: 0 16px 40px rgba(28, 27, 25, 0.1);
+
+  /* Hard offset "brutal" shadows — no blur, signature funky/modern device.
+     Always paired with a 2px ink-900 border on the same element. */
+  --shadow-brutal-sm: 3px 3px 0 0 var(--color-ink-900);
+  --shadow-brutal-md: 5px 5px 0 0 var(--color-ink-900);
+  --shadow-brutal-lg: 8px 8px 0 0 var(--color-ink-900);
 
   /* Container */
   --container-container: 1440px;

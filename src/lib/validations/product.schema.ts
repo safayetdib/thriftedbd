@@ -41,7 +41,12 @@ export const createProductSchema = z.object({
   categoryId: z.string().min(1),
   price: z.number().int().positive(),
   compareAtPrice: z.number().int().positive().optional(),
-  images: z.array(productImageInput).default([]),
+  // No `.default([])` here deliberately — `.partial()` (used by
+  // updateProductSchema) keeps Zod defaults active even when the field is
+  // omitted, which would silently wipe `images` on every unrelated PATCH
+  // (e.g. a price-only update). Default to [] in the service layer instead,
+  // only at creation time.
+  images: z.array(productImageInput).optional(),
   size: productSizeInput,
   colorId: z.string().min(1),
   ownerId: z.string().min(1),

@@ -15,7 +15,9 @@ export const createColorSchema = z.object({
   hex: hexInput,
 });
 
-export const updateColorSchema = createColorSchema.partial();
+export const updateColorSchema = createColorSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
 
 export type CreateColorInput = z.infer<typeof createColorSchema>;
 export type UpdateColorInput = z.infer<typeof updateColorSchema>;

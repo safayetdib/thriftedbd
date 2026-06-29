@@ -11,6 +11,7 @@ import type {
   ConfirmationCallInput,
   AdvancePaymentInput,
   CancelOrderInput,
+  AdvanceOrderStatusInput,
 } from "@/lib/validations/order.schema";
 
 const DEFAULT_LIMIT = 24;
@@ -18,6 +19,9 @@ const MAX_LIMIT = 100;
 // Stock was decremented at the PENDING -> CONFIRMED transition, so only
 // these statuses need it restored on cancel/return.
 const STOCK_DECREMENTED_STATUSES = new Set(["CONFIRMED", "PACKED", "SHIPPED", "DELIVERED"]);
+// Forward-only fulfillment stages after CONFIRMED — index is the only thing
+// that matters, used to enforce one-step-at-a-time progression.
+const FULFILLMENT_STAGES = ["CONFIRMED", "PACKED", "SHIPPED", "DELIVERED"];
 
 function clampLimit(limit?: number) {
   if (!limit || limit < 1) return DEFAULT_LIMIT;
@@ -269,4 +273,41 @@ export async function cancelOrder(orderId: string, input: CancelOrderInput, chan
   } finally {
     session.endSession();
   }
+}
+
+/**
+ * Moves a CONFIRMED order through the fulfillment pipeline one stage at a
+ * time (PACKED -> SHIPPED -> DELIVERED), per the dispatch flow in
+ * AGENTS.md §2. Courier fields are merged in (set once dispatched), and the
+ * relevant `notificationsSent` timestamp is stamped automatically so a
+ * notification-sending job can later check it to avoid double-sends.
+ */
+export async function advanceOrderStatus(
+  orderId: string,
+  input: AdvanceOrderStatusInput,
+  changedBy?: string,
+) {
+  const order = await Order.findById(orderId);
+  if (!order) throw new Error("ORDER_NOT_FOUND");
+
+  const currentIndex = FULFILLMENT_STAGES.indexOf(order.orderStatus);
+  const targetIndex = FULFILLMENT_STAGES.indexOf(input.status);
+  if (currentIndex === -1 || targetIndex !== currentIndex + 1) {
+    throw new Error("INVALID_TRANSITION");
+  }
+
+  if (input.courier) {
+    order.courier = { ...order.courier, ...input.courier };
+  }
+  order.orderStatus = input.status;
+  order.statusHistory.push({
+    status: input.status,
+    changedAt: new Date(),
+    changedBy: changedBy as unknown as Types.ObjectId | undefined,
+  });
+  if (input.status === "SHIPPED") order.notificationsSent.dispatchTracking = new Date();
+  if (input.status === "DELIVERED") order.notificationsSent.deliveryConfirmation = new Date();
+
+  await order.save();
+  return order;
 }

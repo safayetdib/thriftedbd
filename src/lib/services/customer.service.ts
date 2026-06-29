@@ -21,6 +21,31 @@ export async function createCustomer(input: SignupInput) {
   });
 }
 
+const DEFAULT_LIMIT = 24;
+const MAX_LIMIT = 100;
+
+function clampLimit(limit?: number) {
+  if (!limit || limit < 1) return DEFAULT_LIMIT;
+  return Math.min(limit, MAX_LIMIT);
+}
+
+export async function getCustomers(params: { page?: number; limit?: number }) {
+  const limit = clampLimit(params.limit);
+  const page = params.page && params.page > 0 ? params.page : 1;
+
+  const [items, total] = await Promise.all([
+    Customer.find()
+      .select("-passwordHash")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean(),
+    Customer.countDocuments(),
+  ]);
+
+  return { items, total, page, limit };
+}
+
 export async function getCustomerById(id: string) {
   return Customer.findById(id).select("-passwordHash").lean();
 }

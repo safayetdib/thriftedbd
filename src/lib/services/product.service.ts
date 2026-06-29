@@ -101,7 +101,7 @@ export async function createProduct(input: CreateProductInput) {
     categoryPath,
     price: input.price,
     compareAtPrice: input.compareAtPrice,
-    images: input.images,
+    images: input.images ?? [],
     size: input.size,
     colorId: input.colorId,
     color: color.name,
