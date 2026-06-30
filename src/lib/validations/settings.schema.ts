@@ -5,6 +5,37 @@ const i18nTextOptionalInput = z.object({
   bn: z.string().optional(),
 });
 
+const heroSlideInput = z.object({
+  imageUrl: z.string(),
+  imageKey: z.string(),
+  headline: z.string(),
+  subheadline: z.string().optional(),
+  ctaText: z.string().optional(),
+  ctaLink: z.string().optional(),
+  order: z.number().optional(),
+  enabled: z.boolean().optional(),
+});
+
+const whyBuyBlockInput = z.object({
+  icon: z.string(),
+  title: i18nTextOptionalInput.optional(),
+  description: i18nTextOptionalInput.optional(),
+});
+
+const faqItemInput = z.object({
+  question: i18nTextOptionalInput.optional(),
+  answer: i18nTextOptionalInput.optional(),
+  order: z.number().optional(),
+});
+
+const homepageInput = z.object({
+  heroSlides: z.array(heroSlideInput).optional(),
+  featuredProductIds: z.array(z.string()).optional(),
+  featuredCategoryIds: z.array(z.string()).optional(),
+  whyBuyBlocks: z.array(whyBuyBlockInput).optional(),
+  faqs: z.array(faqItemInput).optional(),
+});
+
 export const updateSettingsSchema = z.object({
   deliveryFee: z
     .object({
@@ -37,6 +68,7 @@ export const updateSettingsSchema = z.object({
     })
     .partial()
     .optional(),
+  homepage: homepageInput.optional(),
 });
 
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;

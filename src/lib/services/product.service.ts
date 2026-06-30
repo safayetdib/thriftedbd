@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import mongoose from "mongoose";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Color from "@/models/Color";
@@ -62,6 +63,11 @@ export async function getActiveProducts(params: {
 
 export async function getProductBySlug(slug: string) {
   return Product.findOne({ slug }).lean();
+}
+
+export async function getProductById(id: string) {
+  if (!mongoose.isValidObjectId(id)) return null;
+  return Product.findById(id).lean();
 }
 
 export async function getAdminProducts(params: { page?: number; limit?: number; status?: string }) {

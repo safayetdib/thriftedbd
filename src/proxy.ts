@@ -10,12 +10,14 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/admin/login", req.url));
   }
 
-  const isAccountRoute = pathname.startsWith("/account") && pathname !== "/login";
-  if (isAccountRoute && role !== "customer") {
-    return NextResponse.redirect(new URL("/login", req.url));
+  const isCustomerRoute =
+    (pathname.startsWith("/account") && pathname !== "/login") || pathname === "/favorites";
+  if (isCustomerRoute && role !== "customer") {
+    const callbackUrl = encodeURIComponent(req.nextUrl.pathname + req.nextUrl.search);
+    return NextResponse.redirect(new URL(`/login?callbackUrl=${callbackUrl}`, req.url));
   }
 });
 
 export const config = {
-  matcher: ["/admin/:path*", "/account/:path*"],
+  matcher: ["/admin/:path*", "/account/:path*", "/favorites"],
 };

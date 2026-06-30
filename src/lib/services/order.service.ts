@@ -192,6 +192,7 @@ export async function getAdminOrders(params: { page?: number; limit?: number; st
 }
 
 export async function getOrderById(id: string) {
+  if (!mongoose.isValidObjectId(id)) return null;
   return Order.findById(id).lean();
 }
 

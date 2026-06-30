@@ -28,3 +28,21 @@ export async function resolveCartIdentity(): Promise<CartIdentity> {
   });
   return { cartToken: token };
 }
+
+/**
+ * Read-only counterpart for Server Components (layouts/pages) — Next.js
+ * only allows cookies().set() in a Server Action or Route Handler, never
+ * during render. Returns undefined if no identity exists yet (guest with
+ * no cartToken cookie); the cookie itself only gets created lazily by the
+ * cart API routes on first real interaction.
+ */
+export async function peekCartIdentity(): Promise<CartIdentity | undefined> {
+  const session = await auth();
+  if (session?.user?.role === "customer") {
+    return { customerId: session.user.id };
+  }
+
+  const cookieStore = await cookies();
+  const existingToken = cookieStore.get(CART_TOKEN_COOKIE)?.value;
+  return existingToken ? { cartToken: existingToken } : undefined;
+}

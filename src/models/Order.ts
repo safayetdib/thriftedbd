@@ -91,6 +91,8 @@ export interface IOrder extends Document {
   courier: ICourier;
   cancelReason?: string;
   notificationsSent: INotificationsSent;
+  couponCode?: string;
+  discountApplied: number;
   shippingFee: number;
   total: number;
   createdAt: Date;
@@ -187,6 +189,8 @@ const orderSchema = new Schema<IOrder>(
       dispatchTracking: { type: Date },
       deliveryConfirmation: { type: Date },
     },
+    couponCode: { type: String },
+    discountApplied: { type: Number, default: 0 },
     shippingFee: { type: Number, required: true, default: 0 },
     total: { type: Number, required: true },
   },

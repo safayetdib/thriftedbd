@@ -1,0 +1,32 @@
+# thriftedBD
+
+thriftedBD is an online thrifted/secondhand clothing e-commerce platform based in Bangladesh.
+
+## What we sell
+
+Quality-checked, imported preloved fashion sourced from Korea, Japan, Taiwan, and China. Every piece is unique — no duplicate SKUs. Items are individually inspected before listing.
+
+## Key pages
+
+- Homepage: https://thriftedbd.com
+- All products: https://thriftedbd.com/products
+- Cart: https://thriftedbd.com/cart
+
+## Delivery & payment
+
+- Cash on delivery (COD) — nationwide across Bangladesh
+- bKash and Nagad online payment also accepted
+- Delivery via Steadfast or Pathao courier
+- Tracking link sent after dispatch
+
+## How orders work
+
+1. Customer browses and adds to bag on the website
+2. Checkout with name, phone, and address (no account required)
+3. thriftedBD calls to confirm the order before dispatch
+4. Parcel is dispatched via courier with a tracking link
+5. Customer pays cash on delivery to the courier
+
+## Contact
+
+Facebook: https://facebook.com/thriftedbd

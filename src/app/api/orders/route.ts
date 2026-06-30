@@ -4,6 +4,41 @@ import { connectDB } from "@/lib/db";
 import { resolveCartIdentity } from "@/lib/cart-identity";
 import { createOrderSchema } from "@/lib/validations/order.schema";
 import { createOrderFromCart } from "@/lib/services/order.service";
+import Order from "@/models/Order";
+
+/**
+ * Public order tracking: GET by phone + orderNumber.
+ * No login required — phone + orderNumber together are sufficient.
+ */
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const phone = searchParams.get("phone");
+  const orderNumber = searchParams.get("orderNumber");
+
+  if (!phone || !orderNumber) {
+    return NextResponse.json(
+      {
+        error: { message: "Missing phone or orderNumber", code: "MISSING_PARAMS" },
+      },
+      { status: 400 },
+    );
+  }
+
+  await connectDB();
+  const order = await Order.findOne({
+    "customer.phone": phone,
+    orderNumber,
+  }).lean();
+
+  if (!order) {
+    return NextResponse.json(
+      { error: { message: "Order not found", code: "NOT_FOUND" } },
+      { status: 404 },
+    );
+  }
+
+  return NextResponse.json({ data: order });
+}
 
 export async function POST(request: Request) {
   const body = await request.json();

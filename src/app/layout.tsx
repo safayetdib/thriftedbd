@@ -15,6 +15,27 @@ export const metadata: Metadata = {
     "Quality-checked, imported thrifted fashion from Korea, Japan, Taiwan & China. COD across Bangladesh.",
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://thriftedbd.com/#organization",
+      name: "thriftedBD",
+      url: "https://thriftedbd.com",
+      description:
+        "Online thrifted/secondhand clothing platform in Bangladesh. Quality-checked preloved fashion imported from Korea, Japan, Taiwan & China.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://thriftedbd.com/#website",
+      url: "https://thriftedbd.com",
+      name: "thriftedBD",
+      publisher: { "@id": "https://thriftedbd.com/#organization" },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,7 +43,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${noto.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
