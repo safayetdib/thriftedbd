@@ -11,6 +11,7 @@ export const createOrderSchema = z.object({
     method: z.enum(["COD", "bKash", "Nagad", "Card"]),
     transactionRef: z.string().optional(),
   }),
+  couponCode: z.string().optional(),
 });
 
 export const confirmationCallSchema = z.object({

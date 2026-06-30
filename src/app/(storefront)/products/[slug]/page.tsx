@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import {
   ShieldCheckIcon,
   TruckIcon,
   ArrowCounterClockwiseIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { connectDB } from "@/lib/db";
-import { getProductBySlug } from "@/lib/services/product.service";
+import { getProductBySlug, getSimilarProducts } from "@/lib/services/product.service";
+import { getActivePromotions } from "@/lib/services/promotion.service";
 import { ProductGallery } from "@/components/storefront/product-gallery";
 import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import type { IProductSize } from "@/models/Product";
 
 const BASE = "https://thriftedbd.com";
@@ -92,6 +95,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const product = await getProductBySlug(slug);
   if (!product || product.status !== "ACTIVE") notFound();
 
+  const [similarProducts, promotions] = await Promise.all([
+    getSimilarProducts(String(product._id), String(product.categoryId), product.price),
+    getActivePromotions(["pdp", "global"]),
+  ]);
+
   const size = sizeLabel(product.size);
 
   const jsonLd = {
@@ -172,6 +180,58 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
       </div>
+
+      {promotions.length > 0 && (
+        <section className="mt-12 space-y-4">
+          <h2 className="text-ink-900 text-lg font-extrabold">Special offers</h2>
+          <div className="flex flex-col gap-3">
+            {promotions.map((promo) => (
+              <div
+                key={String(promo._id)}
+                className="border-ink-900 border-2 p-4"
+                style={{ backgroundColor: promo.backgroundColor || "#000" }}
+              >
+                <h3 className="font-bold text-white">{promo.headline?.en || promo.title}</h3>
+                {promo.body?.en && <p className="mt-1 text-sm text-white">{promo.body.en}</p>}
+                {promo.ctaLink && promo.ctaText?.en && (
+                  <a
+                    href={promo.ctaLink}
+                    className="mt-2 inline-block text-sm text-white underline"
+                  >
+                    {promo.ctaText.en} →
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {similarProducts.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-ink-900 mb-6 text-lg font-extrabold">Similar products</h2>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {similarProducts.map((prod) => (
+              <Link key={String(prod._id)} href={`/products/${prod.slug}`}>
+                <div className="border-ink-900 hover:bg-ink-50 flex flex-col gap-2 border-2 p-3 transition-colors">
+                  <div className="border-ink-900 bg-ink-100 relative aspect-square overflow-hidden border-2">
+                    {prod.images[0] && (
+                      <Image
+                        src={prod.images[0].url}
+                        alt={prod.title.en}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
+                  </div>
+                  <p className="text-ink-900 line-clamp-2 text-sm font-semibold">{prod.title.en}</p>
+                  <p className="text-price text-ink-900 font-bold">৳{prod.price}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

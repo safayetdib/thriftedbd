@@ -109,5 +109,16 @@ const productSchema = new Schema<IProduct>(
 
 productSchema.index({ status: 1, createdAt: -1 });
 productSchema.index({ status: 1, categoryId: 1 });
+// Text search index: title, brand, category path
+productSchema.index({
+  "title.en": "text",
+  brand: "text",
+  "categoryPath.en": "text",
+});
+// Filter + sort indexes
+productSchema.index({ status: 1, price: 1 });
+productSchema.index({ status: 1, "size.standard": 1 });
+productSchema.index({ status: 1, condition: 1 });
+productSchema.index({ status: 1, colorId: 1 });
 
 export default mongoose.models.Product || mongoose.model<IProduct>("Product", productSchema);

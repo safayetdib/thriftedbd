@@ -2,13 +2,17 @@ import { redirect } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import { getCart } from "@/lib/services/cart.service";
 import { peekCartIdentity } from "@/lib/cart-identity";
+import { getActivePromotions } from "@/lib/services/promotion.service";
 import { CheckoutForm } from "@/components/storefront/checkout-form";
 import type { ICartItem } from "@/models/Cart";
 
 export default async function CheckoutPage() {
   await connectDB();
   const identity = await peekCartIdentity();
-  const cart = identity ? await getCart(identity) : null;
+  const [cart, promotions] = await Promise.all([
+    identity ? getCart(identity) : null,
+    getActivePromotions(["checkout", "global"]),
+  ]);
   const items: ICartItem[] = cart?.items ?? [];
 
   if (items.length === 0) {
@@ -20,9 +24,23 @@ export default async function CheckoutPage() {
   return (
     <main className="max-w-container mx-auto w-full px-4 py-8 md:px-8">
       <h1 className="text-ink-900 mb-6 text-2xl font-extrabold">Checkout</h1>
+      {promotions.length > 0 && (
+        <div className="mb-6 space-y-3">
+          {promotions.map((promo) => (
+            <div
+              key={String(promo._id)}
+              className="border-ink-900 border-2 p-3"
+              style={{ backgroundColor: promo.backgroundColor || "#000" }}
+            >
+              <h3 className="text-sm font-bold text-white">{promo.headline?.en || promo.title}</h3>
+              {promo.body?.en && <p className="mt-1 text-xs text-white">{promo.body.en}</p>}
+            </div>
+          ))}
+        </div>
+      )}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <CheckoutForm />
+          <CheckoutForm subtotal={subtotal} />
         </div>
         <div className="border-ink-900 flex flex-col gap-3 border-2 bg-white p-5 lg:col-span-1">
           <h2 className="text-eyebrow text-ink-500">Order summary</h2>

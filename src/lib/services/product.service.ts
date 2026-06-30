@@ -43,15 +43,58 @@ export async function getActiveProducts(params: {
   page?: number;
   limit?: number;
   categoryId?: string;
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sizes?: string[];
+  conditions?: string[];
+  colorIds?: string[];
+  brands?: string[];
+  sort?: "newest" | "price-asc" | "price-desc" | "sale-first";
 }) {
   const limit = clampLimit(params.limit);
   const page = params.page && params.page > 0 ? params.page : 1;
   const filter: Record<string, unknown> = { status: "ACTIVE" };
+
   if (params.categoryId) filter.categoryId = params.categoryId;
+
+  if (params.search && params.search.trim()) {
+    filter.$text = { $search: params.search.trim() };
+  }
+
+  if (params.minPrice !== undefined || params.maxPrice !== undefined) {
+    filter.price = {};
+    if (params.minPrice !== undefined)
+      (filter.price as Record<string, number>).$gte = params.minPrice;
+    if (params.maxPrice !== undefined)
+      (filter.price as Record<string, number>).$lte = params.maxPrice;
+  }
+
+  if (params.sizes && params.sizes.length > 0) {
+    filter["size.standard"] = { $in: params.sizes };
+  }
+
+  if (params.conditions && params.conditions.length > 0) {
+    filter.condition = { $in: params.conditions };
+  }
+
+  if (params.colorIds && params.colorIds.length > 0) {
+    filter.colorId = { $in: params.colorIds.map((id) => new mongoose.Types.ObjectId(id)) };
+  }
+
+  if (params.brands && params.brands.length > 0) {
+    filter.brand = { $in: params.brands };
+  }
+
+  // Determine sort
+  let sort: Record<string, 1 | -1> = { createdAt: -1 };
+  if (params.sort === "price-asc") sort = { price: 1 };
+  else if (params.sort === "price-desc") sort = { price: -1 };
+  else if (params.sort === "sale-first") sort = { compareAtPrice: -1, price: 1 };
 
   const [items, total] = await Promise.all([
     Product.find(filter)
-      .sort({ createdAt: -1 })
+      .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit)
       .lean(),
@@ -68,6 +111,28 @@ export async function getProductBySlug(slug: string) {
 export async function getProductById(id: string) {
   if (!mongoose.isValidObjectId(id)) return null;
   return Product.findById(id).lean();
+}
+
+export async function getSimilarProducts(
+  productId: string,
+  categoryId: string,
+  currentPrice: number,
+) {
+  if (!mongoose.isValidObjectId(productId)) return [];
+
+  const products = await Product.find({
+    categoryId,
+    status: "ACTIVE",
+    _id: { $ne: productId },
+  })
+    .sort({ price: 1 })
+    .limit(20)
+    .lean();
+
+  // Sort by distance from current price, return 8 closest
+  return products
+    .sort((a, b) => Math.abs(a.price - currentPrice) - Math.abs(b.price - currentPrice))
+    .slice(0, 8);
 }
 
 export async function getAdminProducts(params: { page?: number; limit?: number; status?: string }) {

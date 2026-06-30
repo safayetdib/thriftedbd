@@ -5,6 +5,7 @@ import Cart, { type ICartItem } from "@/models/Cart";
 import Product from "@/models/Product";
 import Blacklist from "@/models/Blacklist";
 import { getSettings } from "@/lib/services/settings.service";
+import { validateCoupon, redeemCoupon } from "@/lib/services/coupon.service";
 import { identityFilter, type CartIdentity } from "@/lib/services/cart.service";
 import type {
   CreateOrderInput,
@@ -115,7 +116,17 @@ export async function createOrderFromCart(
     (sum: number, item: (typeof orderItems)[number]) => sum + item.price * item.quantity,
     0,
   );
-  const total = itemsTotal + shippingFee;
+
+  let discountApplied = 0;
+  const subtotal = itemsTotal + shippingFee;
+  if (input.couponCode) {
+    const couponResult = await validateCoupon(input.couponCode, itemsTotal);
+    if (couponResult.valid && couponResult.discountAmount) {
+      discountApplied = couponResult.discountAmount;
+    }
+  }
+
+  const total = subtotal - discountApplied;
 
   const riskFlags: string[] = [];
   const blacklisted = await Blacklist.findOne({
@@ -153,6 +164,8 @@ export async function createOrderFromCart(
           },
           orderStatus: "PENDING",
           statusHistory: [{ status: "PENDING", changedAt: new Date() }],
+          couponCode: input.couponCode,
+          discountApplied,
           shippingFee,
           total,
         },
@@ -164,6 +177,12 @@ export async function createOrderFromCart(
     cart.items = [];
     await cart.save({ session });
     await session.commitTransaction();
+
+    // After transaction commits, increment coupon usage if applied
+    if (input.couponCode && discountApplied > 0) {
+      await redeemCoupon(input.couponCode);
+    }
+
     return order;
   } catch (err) {
     await session.abortTransaction();

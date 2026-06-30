@@ -5,7 +5,7 @@ export async function GET() {
   try {
     await connectDB();
     return NextResponse.json({ data: { status: "ok", db: "connected" } });
-  } catch (err) {
+  } catch (_err) {
     return NextResponse.json(
       { error: { message: "Database unavailable", code: "DB_UNAVAILABLE" } },
       { status: 500 },

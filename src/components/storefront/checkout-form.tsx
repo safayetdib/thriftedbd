@@ -1,19 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-type PlacedOrder = {
-  orderNumber: string;
-  total: number;
-  shippingFee: number;
+type CouponState = {
+  code: string;
+  discountAmount: number;
+  error?: string;
 };
 
-export function CheckoutForm() {
+export function CheckoutForm({ subtotal }: { subtotal: number }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -23,7 +22,48 @@ export function CheckoutForm() {
   const [transactionRef, setTransactionRef] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
+  const [coupon, setCoupon] = useState<CouponState | null>(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
+
+  async function handleValidateCoupon() {
+    if (!couponCode.trim()) {
+      setCoupon({ code: "", discountAmount: 0, error: "Enter a coupon code" });
+      return;
+    }
+
+    setValidatingCoupon(true);
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponCode, orderSubtotal: subtotal }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setCoupon({
+          code: couponCode,
+          discountAmount: 0,
+          error: json.error?.message || "Invalid coupon",
+        });
+      } else {
+        const data = json.data;
+        if (data.valid) {
+          setCoupon({
+            code: data.code,
+            discountAmount: data.discountAmount,
+          });
+          setCouponCode("");
+        } else {
+          setCoupon({ code: couponCode, discountAmount: 0, error: data.error || "Invalid coupon" });
+        }
+      }
+    } catch (_err) {
+      setCoupon({ code: couponCode, discountAmount: 0, error: "Failed to validate coupon" });
+    } finally {
+      setValidatingCoupon(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,37 +77,17 @@ export function CheckoutForm() {
         body: JSON.stringify({
           customer: { name, phone, address, city },
           payment: { method, transactionRef: transactionRef || undefined },
+          couponCode: coupon?.code || undefined,
         }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error?.message ?? "Failed to place order");
-      setPlacedOrder({
-        orderNumber: json.data.orderNumber,
-        total: json.data.total,
-        shippingFee: json.data.shippingFee,
-      });
-      router.refresh();
+      router.push(`/order-success/${json.data.orderNumber}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to place order");
     } finally {
       setSubmitting(false);
     }
-  }
-
-  if (placedOrder) {
-    return (
-      <div className="border-ink-900 flex flex-col items-center gap-4 border-2 bg-white p-8 text-center">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Order placed!</h1>
-        <p className="text-ink-600">
-          Order <span className="text-ink-900 font-semibold">{placedOrder.orderNumber}</span> ·
-          Total ৳{placedOrder.total} (incl. ৳{placedOrder.shippingFee} delivery)
-        </p>
-        <p className="text-ink-500 text-sm">We&apos;ll call {phone} to confirm before dispatch.</p>
-        <Link href="/products">
-          <Button variant="primary">Continue shopping</Button>
-        </Link>
-      </div>
-    );
   }
 
   return (
@@ -115,6 +135,62 @@ export function CheckoutForm() {
           />
         </div>
       )}
+
+      <div className="border-ink-200 border-t-2 pt-4">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="couponCode">Coupon code (optional)</Label>
+          <div className="flex gap-2">
+            <Input
+              id="couponCode"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              placeholder="Enter coupon code"
+              disabled={!!coupon || validatingCoupon}
+            />
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleValidateCoupon}
+              disabled={!couponCode.trim() || validatingCoupon || !!coupon}
+            >
+              {validatingCoupon ? "..." : "Apply"}
+            </Button>
+          </div>
+        </div>
+
+        {coupon && (
+          <div
+            className={`mt-3 border-2 p-2 ${coupon.error ? "border-sale-500 bg-sale-50" : "border-green-600 bg-green-50"}`}
+          >
+            {coupon.error ? (
+              <>
+                <p className="text-sale-700 text-sm font-medium">{coupon.error}</p>
+                <button
+                  type="button"
+                  onClick={() => setCoupon(null)}
+                  className="text-sale-700 mt-1 text-xs underline"
+                >
+                  Try different code
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-green-700">
+                  Coupon {coupon.code} applied
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setCoupon(null)}
+                  className="text-xs text-green-700 underline"
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       {error && (
         <p className="border-sale-500 bg-sale-50 text-sale-700 border-2 px-3 py-2 text-sm font-medium">
           {error}
