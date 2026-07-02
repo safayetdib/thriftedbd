@@ -24,8 +24,10 @@ export default async function CartPage() {
 
   let featuredProducts: IProduct[] = [];
   if (settings.homepage?.featuredProductIds && settings.homepage.featuredProductIds.length > 0) {
-    const featuredIds = settings.homepage.featuredProductIds.slice(0, 4);
-    const products = await Promise.all(featuredIds.map((id) => getProductById(String(id))));
+    const featuredIds = settings.homepage.featuredProductIds.slice(0, 4) as unknown[];
+    const products = await Promise.all(
+      featuredIds.map((id: unknown) => getProductById(String(id))),
+    );
     featuredProducts = products.filter((p): p is IProduct => p !== null && p.status === "ACTIVE");
   }
 

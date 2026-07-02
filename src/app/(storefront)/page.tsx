@@ -82,7 +82,11 @@ export default async function Home() {
                 </Button>
               </Link>
               <Link href="/products">
-                <Button variant="outline" size="lg" className="border-ink-300 text-ink-50">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-ink-300 text-ink-50 bg-transparent hover:bg-white/10"
+                >
                   Explore new in
                 </Button>
               </Link>

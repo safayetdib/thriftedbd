@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getR2Client } from "@/lib/r2";
 import type { PresignUploadInput } from "@/lib/validations/upload.schema";
@@ -35,4 +35,10 @@ export async function createPresignedUpload(input: PresignUploadInput) {
     key,
     publicUrl: `${publicUrl}/${key}`,
   };
+}
+
+export async function deleteR2Object(key: string) {
+  const bucket = process.env.R2_BUCKET;
+  if (!bucket) throw new Error("Missing R2_BUCKET");
+  await getR2Client().send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
 }

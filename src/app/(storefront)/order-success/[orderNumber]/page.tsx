@@ -45,7 +45,9 @@ export default async function OrderSuccessPage({
   let featuredProducts: IProduct[] = [];
   if (settings.homepage?.featuredProductIds && settings.homepage.featuredProductIds.length > 0) {
     const featuredIds = settings.homepage.featuredProductIds.slice(0, 4);
-    const products = await Promise.all(featuredIds.map((id) => getProductById(String(id))));
+    const products = await Promise.all(
+      featuredIds.map((id: unknown) => getProductById(String(id))),
+    );
     featuredProducts = products.filter((p): p is IProduct => p !== null && p.status === "ACTIVE");
   }
 
@@ -172,7 +174,7 @@ export default async function OrderSuccessPage({
           </Link>
 
           <Link
-            href={`/track-order?orderNumber=${order.orderNumber}&phone=${order.customer.phone}`}
+            href={`/track-order?orderNumber=${order.orderNumber}&phone=${encodeURIComponent(order.customer.phone)}`}
           >
             <Button variant="secondary" size="lg" className="w-full">
               Track order

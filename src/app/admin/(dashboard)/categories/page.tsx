@@ -2,16 +2,9 @@ import { PlusIcon, PencilSimpleIcon, ProhibitIcon } from "@phosphor-icons/react/
 import { connectDB } from "@/lib/db";
 import { getActiveCategories } from "@/lib/services/category.service";
 import { Button } from "@/components/ui/button";
-import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
+import { CategoryFormDialog } from "@/components/admin/category-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { createCategoryAction, updateCategoryAction, deactivateCategoryAction } from "./actions";
-
-const FIELDS: EntityField[] = [
-  { name: "name.en", label: "Name (English)", required: true },
-  { name: "name.bn", label: "Name (Bangla, optional)" },
-  { name: "slug", label: "Slug", required: true },
-  { name: "order", label: "Sort order", type: "number" },
-];
 
 export default async function AdminCategoriesPage() {
   await connectDB();
@@ -21,14 +14,13 @@ export default async function AdminCategoriesPage() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h1 className="text-ink-900 text-2xl font-extrabold">Categories</h1>
-        <EntityFormDialog
+        <CategoryFormDialog
           trigger={
             <Button variant="primary" size="sm">
               <PlusIcon size={16} /> New category
             </Button>
           }
           title="New category"
-          fields={FIELDS}
           onSubmit={createCategoryAction}
         />
       </div>
@@ -60,18 +52,18 @@ export default async function AdminCategoriesPage() {
                 <td className="text-ink-700 px-4 py-3">{category.order}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <EntityFormDialog
+                    <CategoryFormDialog
                       trigger={
                         <Button variant="outline" size="icon-sm">
                           <PencilSimpleIcon size={14} />
                         </Button>
                       }
                       title={`Edit ${category.name.en}`}
-                      fields={FIELDS}
                       initialValues={{
                         name: { en: category.name.en, bn: category.name.bn },
                         slug: category.slug,
                         order: category.order,
+                        coverImage: category.coverImage,
                       }}
                       onSubmit={updateCategoryAction.bind(null, String(category._id))}
                     />

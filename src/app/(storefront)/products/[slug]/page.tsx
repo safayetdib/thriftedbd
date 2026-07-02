@@ -11,7 +11,10 @@ import { getProductBySlug, getSimilarProducts } from "@/lib/services/product.ser
 import { getActivePromotions } from "@/lib/services/promotion.service";
 import { ProductGallery } from "@/components/storefront/product-gallery";
 import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
+import { FavoriteButton } from "@/components/storefront/favorite-button";
 import { Badge } from "@/components/ui/badge";
+import { auth } from "@/lib/auth";
+import Customer from "@/models/Customer";
 import Link from "next/link";
 import type { IProductSize } from "@/models/Product";
 
@@ -95,6 +98,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const product = await getProductBySlug(slug);
   if (!product || product.status !== "ACTIVE") notFound();
 
+  // Check if customer has this product favorited
+  const session = await auth();
+  let isFavorited = false;
+  if (session?.user?.id && session.user.role === "customer") {
+    const customer = await Customer.findById(session.user.id).select("favoriteProductIds").lean();
+    isFavorited =
+      customer?.favoriteProductIds?.some((id: unknown) => String(id) === String(product._id)) ??
+      false;
+  }
+
   const [similarProducts, promotions] = await Promise.all([
     getSimilarProducts(String(product._id), String(product.categoryId), product.price),
     getActivePromotions(["pdp", "global"]),
@@ -160,8 +173,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {product.notes?.en && <p className="text-ink-600 text-sm">{product.notes.en}</p>}
 
-          <div className="mt-2">
-            <AddToCartButton productId={String(product._id)} />
+          <div className="mt-2 flex items-center gap-2">
+            <div className="flex-1">
+              <AddToCartButton productId={String(product._id)} />
+            </div>
+            <FavoriteButton productId={String(product._id)} initialFavorited={isFavorited} />
           </div>
 
           <div className="border-ink-200 mt-4 grid grid-cols-1 gap-4 border-t-2 pt-4 sm:grid-cols-3">

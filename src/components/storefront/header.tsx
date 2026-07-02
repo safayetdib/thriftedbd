@@ -1,87 +1,131 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ListIcon,
   MagnifyingGlassIcon,
   UserIcon,
   HeartIcon,
   ShoppingBagIcon,
+  XIcon,
+  CaretDownIcon,
 } from "@phosphor-icons/react";
-import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
-type NavCategory = { slug: string; name: string };
+type SubCategory = { slug: string; name: string; coverImage?: { url: string; key: string } };
+type Department = {
+  slug: string;
+  name: string;
+  coverImage?: { url: string; key: string };
+  children: SubCategory[];
+};
 
 export function SiteHeader({
-  categories,
+  departments,
   cartCount,
 }: {
-  categories: NavCategory[];
+  departments: Department[];
   cartCount: number;
 }) {
   return (
-    <header className="border-ink-900 sticky top-0 z-40 flex h-16 items-center border-b-2 bg-white px-4 md:px-8">
-      <div className="max-w-container mx-auto flex w-full items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Sheet>
-            <SheetTrigger
-              render={
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="lg:hidden"
-                  aria-label="Open menu"
-                />
-              }
-            >
-              <ListIcon size={22} />
-            </SheetTrigger>
-            <SheetContent side="left">
-              <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col gap-1 p-4">
-                {categories.map((c) => (
-                  <Link
-                    key={c.slug}
-                    href={`/products?category=${c.slug}`}
-                    className="text-ink-900 hover:bg-ink-100 px-2 py-2.5 text-sm font-semibold"
-                  >
-                    {c.name}
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
+    <header className="border-ink-900 sticky top-0 z-40 border-b-2 bg-white">
+      <div className="max-w-container mx-auto flex h-16 w-full items-center justify-between px-4 md:px-8">
+        {/* Logo */}
+        <Link href="/" className="text-ink-900 shrink-0 text-lg font-extrabold tracking-tight">
+          thrifted<span className="text-green-600">BD</span>
+        </Link>
 
-          <Link href="/" className="text-ink-900 text-lg font-extrabold tracking-tight">
-            thrifted<span className="text-green-600">BD</span>
-          </Link>
-
-          <nav className="hidden items-center gap-5 lg:flex">
-            {categories.slice(0, 6).map((c) => (
+        {/* Desktop nav — hidden on mobile */}
+        <nav className="hidden items-center gap-0 lg:flex">
+          {departments.slice(0, 7).map((dept) => (
+            <div key={dept.slug} className="group relative">
+              {/* Department link */}
               <Link
-                key={c.slug}
-                href={`/products?category=${c.slug}`}
-                className="text-ink-700 hover:text-ink-900 text-sm font-semibold"
+                href={`/products?category=${dept.slug}`}
+                className="text-ink-700 hover:text-ink-900 group-hover:text-ink-900 relative flex h-16 items-center px-4 text-sm font-semibold transition-colors"
               >
-                {c.name}
+                {dept.name}
+                {/* Active underline on hover */}
+                <span className="bg-ink-900 absolute right-4 bottom-0 left-4 h-0.5 scale-x-0 transition-transform group-hover:scale-x-100" />
               </Link>
-            ))}
-          </nav>
-        </div>
 
+              {/* Mega menu dropdown — only if subcategories exist */}
+              {dept.children.length > 0 && (
+                <div className="border-ink-900 pointer-events-none absolute top-full left-1/2 min-w-[480px] -translate-x-1/2 border-2 bg-white opacity-0 shadow-lg transition-all duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+                  <div className="p-4">
+                    <p className="text-eyebrow text-ink-500 mb-3 text-xs font-bold tracking-widest uppercase">
+                      {dept.name}
+                    </p>
+                    <div className="grid grid-cols-3 gap-3">
+                      {dept.children.map((sub) => (
+                        <Link
+                          key={sub.slug}
+                          href={`/products?category=${sub.slug}`}
+                          className="group/sub border-ink-200 hover:border-ink-900 flex flex-col gap-2 border-2 p-2 transition-colors"
+                        >
+                          {/* Cover image */}
+                          <div className="bg-ink-100 relative aspect-square w-full overflow-hidden">
+                            {sub.coverImage ? (
+                              <Image
+                                src={sub.coverImage.url}
+                                alt={sub.name}
+                                fill
+                                sizes="120px"
+                                className="object-cover transition-transform duration-200 group-hover/sub:scale-[1.04]"
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center">
+                                <span className="text-ink-300 text-xs">No image</span>
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-ink-900 text-center text-xs font-semibold">
+                            {sub.name}
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
+                    {/* View all link */}
+                    <Link
+                      href={`/products?category=${dept.slug}`}
+                      className="mt-3 block text-center text-xs font-semibold text-green-700 hover:underline"
+                    >
+                      View all {dept.name} →
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* Mobile hamburger + right icons */}
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon-sm" aria-label="Search">
-            <MagnifyingGlassIcon size={20} />
-          </Button>
-          <Button variant="ghost" size="icon-sm" aria-label="Account">
-            <UserIcon size={20} />
-          </Button>
-          <Button variant="ghost" size="icon-sm" aria-label="Wishlist">
-            <HeartIcon size={20} />
-          </Button>
+          {/* Mobile menu trigger */}
+          <MobileMenu departments={departments} />
+
+          {/* Desktop-only icons */}
+          <div className="hidden items-center gap-1 lg:flex">
+            <Link href="/products" aria-label="Search">
+              <Button variant="ghost" size="icon-sm">
+                <MagnifyingGlassIcon size={20} />
+              </Button>
+            </Link>
+            <Link href="/account" aria-label="Account">
+              <Button variant="ghost" size="icon-sm">
+                <UserIcon size={20} />
+              </Button>
+            </Link>
+            <Link href="/favorites" aria-label="Wishlist">
+              <Button variant="ghost" size="icon-sm">
+                <HeartIcon size={20} />
+              </Button>
+            </Link>
+          </div>
+
+          {/* Cart — always visible */}
           <Link href="/cart" className="relative">
             <Button variant="ghost" size="icon-sm" aria-label="Cart">
               <ShoppingBagIcon size={20} />
@@ -95,5 +139,122 @@ export function SiteHeader({
         </div>
       </div>
     </header>
+  );
+}
+
+function MobileMenu({ departments }: { departments: Department[] }) {
+  const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        className="lg:hidden"
+        aria-label="Open menu"
+        onClick={() => setOpen(true)}
+      >
+        <ListIcon size={22} />
+      </Button>
+
+      {/* Overlay */}
+      {open && <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setOpen(false)} />}
+
+      {/* Slide-in panel */}
+      <div
+        className={`border-ink-900 fixed top-0 left-0 z-50 flex h-full w-80 max-w-[90vw] flex-col border-r-2 bg-white transition-transform duration-200 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="border-ink-900 flex h-16 items-center justify-between border-b-2 px-4">
+          <span className="text-ink-900 font-extrabold">Menu</span>
+          <Button variant="ghost" size="icon-sm" onClick={() => setOpen(false)} aria-label="Close">
+            <XIcon size={20} />
+          </Button>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto p-4">
+          {departments.map((dept) => (
+            <div key={dept.slug} className="border-ink-200 border-b">
+              <div className="flex items-center justify-between">
+                <Link
+                  href={`/products?category=${dept.slug}`}
+                  onClick={() => setOpen(false)}
+                  className="text-ink-900 flex-1 py-3 text-sm font-semibold"
+                >
+                  {dept.name}
+                </Link>
+                {dept.children.length > 0 && (
+                  <button
+                    onClick={() => setExpanded(expanded === dept.slug ? null : dept.slug)}
+                    className="text-ink-500 hover:text-ink-900 px-2 py-3"
+                    aria-label="Expand"
+                  >
+                    <CaretDownIcon
+                      size={16}
+                      className={`transition-transform ${
+                        expanded === dept.slug ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                )}
+              </div>
+
+              {expanded === dept.slug && dept.children.length > 0 && (
+                <div className="bg-ink-50 pb-2 pl-4">
+                  {dept.children.map((sub) => (
+                    <Link
+                      key={sub.slug}
+                      href={`/products?category=${sub.slug}`}
+                      onClick={() => setOpen(false)}
+                      className="text-ink-700 hover:text-ink-900 flex items-center gap-2 py-2 text-sm"
+                    >
+                      {sub.coverImage && (
+                        <div className="relative size-8 shrink-0 overflow-hidden">
+                          <Image
+                            src={sub.coverImage.url}
+                            alt={sub.name}
+                            fill
+                            sizes="32px"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                      {sub.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Extra links */}
+          <div className="mt-4 flex flex-col gap-1">
+            <Link
+              href="/account"
+              onClick={() => setOpen(false)}
+              className="text-ink-700 py-2 text-sm font-semibold"
+            >
+              My account
+            </Link>
+            <Link
+              href="/favorites"
+              onClick={() => setOpen(false)}
+              className="text-ink-700 py-2 text-sm font-semibold"
+            >
+              Favorites
+            </Link>
+            <Link
+              href="/track-order"
+              onClick={() => setOpen(false)}
+              className="text-ink-700 py-2 text-sm font-semibold"
+            >
+              Track order
+            </Link>
+          </div>
+        </nav>
+      </div>
+    </>
   );
 }

@@ -10,6 +10,7 @@ export const createCategorySchema = z.object({
   slug: z.string().min(1),
   parentId: z.string().nullable().optional(),
   order: z.number().int().optional(),
+  coverImage: z.object({ url: z.string(), key: z.string() }).optional(),
 });
 
 export const updateCategorySchema = createCategorySchema.partial().extend({

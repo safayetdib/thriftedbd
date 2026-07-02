@@ -59,6 +59,7 @@ export function ProductForm({
   const router = useRouter();
   const [slug, setSlug] = useState(initial?.slug ?? "");
   const [titleEn, setTitleEn] = useState(initial?.title.en ?? "");
+  const [slugManuallySet, setSlugManuallySet] = useState(Boolean(initial?.slug));
   const [titleBn, setTitleBn] = useState(initial?.title.bn ?? "");
   const [brand, setBrand] = useState(initial?.brand ?? "");
   const [categoryId, setCategoryId] = useState(initial?.categoryId ?? categories[0]?._id ?? "");
@@ -115,7 +116,16 @@ export function ProductForm({
     }
   }
 
-  function removeImage(key: string) {
+  async function removeImage(key: string) {
+    try {
+      await fetch("/api/admin/uploads", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key }),
+      });
+    } catch {
+      // Don't block UI if R2 delete fails
+    }
     setImages((prev) =>
       prev.filter((img) => img.key !== key).map((img, i) => ({ ...img, order: i })),
     );
@@ -214,14 +224,34 @@ export function ProductForm({
           <h2 className="text-eyebrow text-ink-500">Basics</h2>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="slug">Slug</Label>
-            <Input id="slug" value={slug} onChange={(e) => setSlug(e.target.value)} required />
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) => {
+                setSlug(e.target.value);
+                setSlugManuallySet(true);
+              }}
+              required
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="titleEn">Title (English)</Label>
             <Input
               id="titleEn"
               value={titleEn}
-              onChange={(e) => setTitleEn(e.target.value)}
+              onChange={(e) => {
+                setTitleEn(e.target.value);
+                if (!slugManuallySet && !productId) {
+                  setSlug(
+                    e.target.value
+                      .toLowerCase()
+                      .trim()
+                      .replace(/[^\w\s-]/g, "")
+                      .replace(/\s+/g, "-")
+                      .replace(/-+/g, "-"),
+                  );
+                }
+              }}
               required
             />
           </div>

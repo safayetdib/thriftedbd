@@ -2,9 +2,9 @@ import Settings from "@/models/Settings";
 import type { UpdateSettingsInput } from "@/lib/validations/settings.schema";
 
 export async function getSettings() {
-  let settings = await Settings.findOne();
+  const settings = await Settings.findOne().lean();
   if (!settings) {
-    settings = await Settings.create({});
+    return (await Settings.create({})).toObject();
   }
   return settings;
 }

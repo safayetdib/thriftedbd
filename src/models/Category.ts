@@ -8,6 +8,7 @@ export interface ICategory extends Document {
   level: number;
   order: number;
   isActive: boolean;
+  coverImage?: { url: string; key: string };
   createdAt: Date;
 }
 
@@ -18,6 +19,11 @@ const categorySchema = new Schema<ICategory>({
   level: { type: Number, required: true, default: 0 },
   order: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
+  coverImage: {
+    type: { url: String, key: String },
+    _id: false,
+    default: undefined,
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
