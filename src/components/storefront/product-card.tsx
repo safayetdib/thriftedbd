@@ -3,6 +3,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/localize";
 import { Badge } from "@/components/ui/badge";
+import { ShoppingBagIcon, ArrowRightIcon } from "@phosphor-icons/react";
 
 export type ProductCardData = {
   slug: string;
@@ -29,37 +30,60 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   const title = localize(product.title, locale);
 
   return (
-    <Link href={`/products/${product.slug}`} className="group block">
-      <div className="border-ink-900 bg-ink-100 relative aspect-3/4 border-2">
+    <Link
+      href={`/products/${product.slug}`}
+      className="group block overflow-hidden rounded-xl bg-white"
+    >
+      <div className="bg-ink-100 relative aspect-3/4 overflow-hidden">
         {product.images[0]?.url && (
           <Image
             src={product.images[0].url}
             alt={title}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-            className={`object-cover transition-transform duration-200 ${isSold ? "grayscale" : "group-hover:scale-[1.03]"}`}
+            className={`object-cover transition-transform duration-300 ${isSold ? "grayscale" : "group-hover:scale-[1.05]"}`}
           />
         )}
         {isSold && (
-          <span className="absolute top-2 left-2">
+          <span className="absolute top-3 left-3">
             <Badge variant="sold">{t("sold")}</Badge>
           </span>
         )}
+        {!isSold && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/15">
+            <span className="flex translate-y-3 items-center gap-2 rounded-full bg-white px-5 py-2.5 opacity-0 shadow-lg transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+              <ShoppingBagIcon size={16} className="text-ink-900" />
+              <ArrowRightIcon size={14} className="text-ink-900" />
+            </span>
+          </div>
+        )}
       </div>
-      <div className="mt-2 flex flex-col gap-0.5">
-        <p className="text-ink-900 truncate text-sm font-semibold">{product.brand}</p>
-        <p className="text-ink-600 truncate text-sm">{title}</p>
-        {size && <p className="text-ink-500 text-xs">{size}</p>}
-        <p className="text-price text-ink-900 mt-0.5 font-semibold">
-          {product.compareAtPrice ? (
+      <div className="p-5">
+        <div className="mb-1 flex items-center gap-1.5">
+          <p className="text-body-sm-strong truncate text-green-700">{product.brand}</p>
+          {size && (
             <>
-              <span className="text-sale-500">৳{product.price}</span>{" "}
-              <span className="text-ink-400 line-through">৳{product.compareAtPrice}</span>
+              <span className="text-ink-300 shrink-0">·</span>
+              <p className="text-caption text-ink-500 truncate">{size}</p>
             </>
-          ) : (
-            <>৳{product.price}</>
           )}
-        </p>
+        </div>
+        <p className="text-body-md text-ink-900 mb-3 truncate font-semibold">{title}</p>
+        <div className="flex items-center justify-between">
+          <p className="text-price text-body-md-strong text-ink-900">
+            {product.compareAtPrice ? (
+              <>
+                <span className="text-sale-500">৳{product.price}</span>{" "}
+                <span className="text-ink-400 line-through">৳{product.compareAtPrice}</span>
+              </>
+            ) : (
+              <>৳{product.price}</>
+            )}
+          </p>
+          <span className="text-ink-400 flex items-center transition-colors group-hover:text-green-700">
+            <ArrowRightIcon size={16} />
+          </span>
+        </div>
       </div>
     </Link>
   );

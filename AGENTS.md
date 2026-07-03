@@ -6,82 +6,57 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # thriftedBD — Business & Technical Blueprint
 
-Source of truth for business rules, data model, and operational flow. Read this before making changes to schema, order logic, or admin workflows.
+This document contains high-signal, repo-specific instructions for AI agents working in this repository.
 
-## 1. Business overview
+## 1. Developer Commands & Workflow
+- **Verification Chain:** Run this exact chain before completing any work:
+  `pnpm typecheck && pnpm lint && pnpm test`
+- **Run a Single Test File:** Do not run the full suite repeatedly. Run a single file using:
+  `pnpm vitest run <path-to-test-file>` (e.g., `pnpm vitest run src/lib/services/order.service.test.ts`)
+- **Seeding:** `pnpm run seed` runs `scripts/seed.ts` via tsx.
+- **Prettier:** Run `pnpm run format` to auto-format files.
+- **Git Hook Policy:** Pre-push runs `pnpm typecheck && pnpm lint`.
+- **NO Commits/Pushes:** Never execute `git commit` or `git push`. Leave changes staged/uncommitted.
 
-thriftedBD is an online thrifted/secondhand clothing e-commerce platform operating in Bangladesh.
+## 2. Architecture & File Conventions
+- **App Boundary:** Next.js v16 + React v19. Admin (`/admin`) and storefront are in the same Next.js application.
+- **Middleware Relocation:** Renamed to `src/proxy.ts` (default export stays `proxy`). **DO NOT** recreate `middleware.ts`.
+- **Thin Route Handlers:** Routes (in `src/app/api/.../route.ts`) only handle request parsing/response wrapping. All database reads and writes must live in service files: `src/lib/services/{collection}.service.ts`.
+- **Validation:** Every API route must validate inputs with Zod schemas located in `src/lib/validations/` before database interactions.
+- **Self-Hosted Auth:** NextAuth v5 + JWT credentials provider. No Clerk, Firebase, or Supabase Auth.
+- **@auth/core Hack:** `@auth/core` must remain an explicit `devDependency` in `package.json` to allow TypeScript to resolve module augmentation in `src/types/next-auth.d.ts` (due to pnpm strict isolation).
 
-- Clothing inventory is purchased in bulk through bales, held physically by one of a small number of people (see `owners` below).
-- Individual pieces are manually selected and uploaded to the site — each product is unique, mostly one piece per SKU.
-- The platform is a **unique-item inventory management system**, not a traditional multi-stock e-commerce system.
-- Admin manages inventory, products, and orders through an internal dashboard (`/admin`), in the same Next.js app as the storefront.
+## 3. Critical Domain & Business Invariants
+- **Unique-Item Inventory:** Products are unique secondhand pieces with 0 or 1 stock. Avoid traditional multi-stock assumptions.
+- **No Hard Deletes:** Deactivate or archive entities (`products`, `categories`, `colors`, `owners`, `blacklist`) using status flags (e.g. `isActive`, `status: "ARCHIVED"`) instead of deleting.
+- **Stock Decrements ONLY on Confirmation:** Stock never changes on cart addition or order placement. It only changes on the `PENDING → CONFIRMED` order status transition (once phone call is `CONFIRMED` and any required advance payment is settled).
+- **Stock Restores:** `CANCELLED` and `RETURNED` transitions must increment stock back and set the product back to `ACTIVE`.
+- **Order Total Recalculation:** Recalculate totals on the server at confirmation time; never trust client-provided prices, totals, or stock values.
+- **Snapshot Policy:** Order line items (`items`), owner (`ownerName`, `ownerId`), and price must be fully snapshotted in `orders` at checkout. Later changes to products or owners must not retroactively alter past orders.
+- **No Online Payment API:** bKash/Nagad/Bank transfers are received in personal accounts and verified manually via transaction IDs.
+- **Independent Cash Ledger:** Record all cash movements in the `transactions` collection. Courier remittances (Steadfast/Pathao) are often batch-settled across multiple orders.
+- **Multi-Document Writes:** Writing/updating more than one collection/document (e.g., order confirmation, cancellation, cart-to-order, remittance reconciliation) **must** use a Mongoose session/transaction.
+- **Blacklisted Phones & Risk Flags:** Checking `customer.phone` against the `blacklist` collection must trigger a `"BLACKLISTED_PHONE"` flag and force `advancePayment.required = true`.
+- **Unreachable Phone Orders:** Orders with unreachable confirmation calls must be held/suspended (set `"ON_HOLD"` or `"UNREACHABLE"`), never cancelled.
 
-## 2. Customer journey
+## 4. Internationalization & SEO
+- **Bilingual Content:** Customer-facing fields store `{ en: string, bn?: string }` objects.
+- **Fallback Rule:** If `bn` is missing, fallback to rendering `en`. Do not show empty text.
+- **Latin-only Slugs:** URL slugs (e.g., `products.slug`, `categories.slug`) stay Latin/English. URLs are never translated.
+- **Translate API:** Server-side Google Cloud Translation API (`GOOGLE_TRANSLATE_API_KEY`) is used to auto-translate Bangla fields as editable drafts. If it fails, save `bn` as empty rather than blocking the admin.
+- **SEO & Structured Data:** Every route uses Next.js dynamic `generateMetadata()`. PDPs require `Product` JSON-LD schema. PLPs require `ItemList`. Headings require proper semantic tags (e.g., exactly one `<h1>`).
 
-1. Customer discovers a product on Facebook or the website.
-2. Places an order on the website (name, phone, address, product).
-3. Receives an order confirmation message (SMS/WhatsApp/Email).
-4. thriftedBD calls to confirm the order before dispatch.
-5. Parcel is dispatched via Steadfast or Pathao with tracking.
-6. Customer receives the parcel and pays cash to the courier (COD).
-7. Customer receives a delivery confirmation message.
+## 5. Tooling & Testing Quirks
+- **Shared Replica Set:** Tests run on `MongoMemoryReplSet` instead of single-node `MongoMemoryServer` because multi-document Mongoose transactions require a replica set.
+- **Sequenced Tests:** `fileParallelism: false` is configured in `vitest.config.ts`. Tests must run sequentially to avoid collection collision.
+- **High Timeout on First Run:** First run of tests downloads the MongoDB binary. If downloading takes time, ensure timeout is set high (`hookTimeout: 120000`).
+- **Cloudflare R2 Direct Uploads:** Images upload directly to Cloudflare R2 via presigned URLs generated server-side. The Next.js server never receives or processes file buffers.
 
-## 3. Order handling rules
-
-- Every order requires a phone confirmation call before dispatch. Orders with unreachable numbers are held, not cancelled.
-- Red flags — invalid number, a large order from a new buyer, an unconfirmed address, or a blacklisted phone — trigger an advance payment request before the order can proceed.
-- Confirmed orders are created as parcels on the Steadfast/Pathao merchant dashboard.
-- A tracking link is sent to the customer after dispatch.
-- Failed deliveries get logged against the customer's phone number (`blacklist` collection — replaces the manual spreadsheet).
-
-## 4. Cash handling rules
-
-- Customer pays COD to the courier at delivery.
-- The courier (Steadfast/Pathao) remits collected cash to thriftedBD's bKash or bank account within 1–3 days of delivery confirmation. A single remittance can cover multiple delivered orders at once.
-- Online payments (bKash/Nagad Send Money) are received directly into a personal account — there is no payment gateway API, so these are manually verified by transaction ID.
-- **All cash movement is logged** in the `transactions` collection, separate from individual orders, since remittances are often batched across multiple orders.
-
-## 5. Database schema
-
-11 MongoDB collections: `categories`, `colors`, `owners`, `products`, `orders`, `users`, `customers`, `settings`, `carts`, `transactions`, `blacklist`.
-
-**Full field-by-field reference lives in [`docs/database-schema.md`](./docs/database-schema.md) — read it before writing Mongoose models, API routes that touch the database, or migrations.** It's kept out of this always-loaded file because most tasks (UI, styling, copy) don't need the full schema in context.
-
-## 6. SEO & AI search
-
-**Before building or editing any storefront route, layout, or content component, read [`docs/seo-ai-guidelines.md`](./docs/seo-ai-guidelines.md)** — metadata, structured data (JSON-LD), semantic HTML, image alt text, Core Web Vitals, sitemap/robots, and AI-answer-engine optimization. Kept out of this always-loaded file for the same reason as the DB schema: only needed when actually touching frontend pages.
-
-## 7. Internationalization (English / Bangla)
-
-The site fully supports an English (default) / Bangla toggle, including translated product listings, not just UI chrome. **Before building any storefront route, the language switcher, or admin product forms, read [`docs/i18n-guidelines.md`](./docs/i18n-guidelines.md)** — locale routing, which fields are bilingual, fallback rules, and the slug-stays-Latin rule.
-
-## 8. API, security, and testing conventions
-
-Three more on-demand references, same reasoning as above — read whichever is relevant before touching that part of the codebase:
-- [`docs/api-conventions.md`](./docs/api-conventions.md) — route structure, Zod validation, the service layer, **multi-document transactions** (order confirmation, cancellation, remittance reconciliation all require one), response shape, and status codes.
-- [`docs/security-guidelines.md`](./docs/security-guidelines.md) — input/query safety, auth, secrets, uploads, rate limiting, PII handling.
-- [`docs/testing-rules.md`](./docs/testing-rules.md) — which logic must ship with a test (stock/order-confirmation/payment paths) before merge, and what's explicitly not worth testing.
-
-## 9. Auth: self-hosted, not a managed identity provider
-
-Deliberately **not** using Clerk/Auth0/Supabase Auth/Firebase Auth, even on their free tiers. We need our own `customers` collection regardless (addresses, favorites, order history, bilingual fields), so a managed provider would add a second identity system to sync rather than remove work — and NextAuth + bcrypt already handles the hard parts (CSRF, JWT signing, secure cookies) for free. Stick with NextAuth v5, JWT sessions, two Credentials providers (`admin`, `customer`).
-
-## 10. Core rules for AI agents
-
-1. Keep admin and storefront in the same Next.js application. Do not create a separate backend unless required.
-2. Products are unique thrift pieces — avoid rigid multi-stock e-commerce assumptions.
-3. Support custom/flexible attributes (category tree, color, size) — never hardcode a fixed list where the business needs to add new values.
-4. Never hard delete anything — products, categories, colors, owners, blacklist entries all use a status/`isActive` flag instead.
-5. Stock changes only after order confirmation (`confirmationCall` cleared **and** advance payment cleared if required) — never on cart-add or order placement.
-6. Order-creation API must re-check `product.status === "ACTIVE"` at confirmation time — unique items can sit in multiple carts simultaneously, so a race condition is possible.
-7. Images must upload directly to Cloudflare R2 via presigned URLs — the server never handles image files.
-8. Guest checkout always works; customer accounts are an upgrade (saved addresses, favorites, persistent cart, order history), never a requirement to buy.
-9. Order line items, owner, and price are fully snapshotted at order time — later edits to `products`, `owners`, `categories`, or `colors` must never retroactively change a past order.
-10. Cash movement is logged in `transactions`, independent of `orders`, since courier remittances are frequently batched across multiple delivered orders.
-11. Multi-document writes (order confirmation, cancellation/return, remittance reconciliation) must use a MongoDB transaction — never partial-write across collections.
-12. Bilingual text (`products.title`/`notes`, `categories.name`, `colors.name`) is stored as `{ en, bn? }`; `bn` is optional and falls back to `en`, but slugs are always Latin/English regardless of display language.
-13. Optimize for low cost and future scalability.
-14. **Never run `git commit` (or `git push`).** Make the code/file changes and stop there — the project owner reviews the diff and commits it themselves.
-15. This Next.js version renamed `middleware.ts` to `src/proxy.ts` (export stays default/`proxy`) — confirmed by `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/proxy.md`. Don't recreate `middleware.ts`.
-16. `@auth/core` must stay an explicit `devDependency` even though it's only a transitive dependency of `next-auth` — pnpm's strict `node_modules` isolation means type-augmentation files (`src/types/next-auth.d.ts`) can't resolve `@auth/core/*` otherwise.
+## 6. On-Demand Guides
+For deep specifications, read these specialized files before starting:
+- `docs/database-schema.md` — Field-by-field collection references
+- `docs/api-conventions.md` — REST structure, validation, and status codes
+- `docs/testing-rules.md` — Testing requirements for business-critical logic
+- `docs/seo-ai-guidelines.md` — Metadata, semantic HTML, and LLM discoverability (`llms.txt`)
+- `docs/i18n-guidelines.md` — prefix routing (`/bn/...`), fallback, and translation forms
+- `docs/security-guidelines.md` — PII masking, rate-limiting, and env var secrets

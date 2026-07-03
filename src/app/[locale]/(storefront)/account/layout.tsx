@@ -34,18 +34,20 @@ export default async function AccountLayout({ children }: { children: React.Reac
   return (
     <div className="flex min-h-screen gap-0">
       {/* Sidebar */}
-      <nav className="border-ink-900 flex w-60 shrink-0 flex-col border-r-2 bg-white">
-        <div className="border-ink-900 border-b-2 px-5 py-5">
-          <p className="text-eyebrow text-green-700">thriftedBD</p>
-          <p className="text-ink-900 text-lg font-extrabold">{t("myAccount")}</p>
+      <nav className="border-ink-900 flex w-60 shrink-0 flex-col border-r bg-white">
+        <div className="border-ink-900 border-b px-6 py-5">
+          <p className="text-eyebrow text-caption font-bold tracking-widest text-green-700 uppercase">
+            thriftedBD
+          </p>
+          <p className="text-ink-900 text-body-md font-extrabold">{t("myAccount")}</p>
         </div>
 
-        <ul className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
+        <ul className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3">
           {navItems.map(({ href, label, icon: Icon }) => (
             <li key={href}>
               <Link
                 href={href}
-                className="text-ink-700 hover:border-ink-900 hover:bg-ink-100 flex items-center gap-2.5 border-2 border-transparent px-3 py-2 text-sm font-semibold transition-colors"
+                className="text-ink-700 hover:bg-ink-100 text-body-sm flex items-center gap-2.5 rounded-md px-3 py-2 font-semibold transition-colors"
               >
                 <Icon size={18} />
                 {label}
@@ -54,7 +56,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
           ))}
         </ul>
 
-        <div className="border-ink-900 border-t-2 p-3">
+        <div className="border-ink-900 border-t p-3">
           <LogoutForm>
             <Button variant="secondary" size="sm" className="w-full justify-start">
               <SignOutIcon size={18} /> {t("signOut")}

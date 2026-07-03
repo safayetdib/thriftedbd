@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { createBlacklistAction, updateBlacklistAction, deactivateBlacklistAction } from "./actions";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const CREATE_FIELDS: EntityField[] = [
   { name: "phone", label: "Phone", required: true },
@@ -35,29 +36,28 @@ export default async function AdminBlacklistPage() {
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[600px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[600px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Phone</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Name</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Reason</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Actions</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Phone</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Reason</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {entries.length === 0 && (
-              <tr>
-                <td colSpan={4} className="text-ink-500 px-4 py-8 text-center">
-                  No blacklisted numbers.
-                </td>
-              </tr>
+              <EmptyTableRow colSpan={4} message="No blacklisted numbers." />
             )}
             {entries.map((entry) => (
-              <tr key={String(entry._id)} className="border-ink-200 border-b last:border-0">
-                <td className="text-ink-900 px-4 py-3 font-semibold">{entry.phone}</td>
-                <td className="text-ink-700 px-4 py-3">{entry.name ?? "—"}</td>
-                <td className="text-ink-700 px-4 py-3">{entry.reason}</td>
-                <td className="px-4 py-3">
+              <tr
+                key={String(entry._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">{entry.phone}</td>
+                <td className="text-ink-700 px-5 py-3.5">{entry.name ?? "—"}</td>
+                <td className="text-ink-700 px-5 py-3.5">{entry.reason}</td>
+                <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <EntityFormDialog
                       trigger={

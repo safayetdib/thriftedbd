@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { connectDB } from "@/lib/db";
 import Coupon from "@/models/Coupon";
 import { CouponCopyButton } from "@/components/coupons/coupon-copy-button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { TagIcon } from "@phosphor-icons/react/dist/ssr";
 
 /**
  * Customer coupons page.
@@ -29,11 +31,7 @@ export default async function AccountCouponsPage() {
         </p>
       </div>
 
-      {coupons.length === 0 && (
-        <div className="border-ink-900 flex flex-col items-center gap-4 border-2 bg-white p-8 text-center">
-          <p className="text-ink-700">{t("checkBack")}</p>
-        </div>
-      )}
+      {coupons.length === 0 && <EmptyState icon={<TagIcon size={32} />} title={t("checkBack")} />}
 
       {coupons.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">

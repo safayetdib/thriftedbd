@@ -36,26 +36,29 @@ export default async function AdminUsersPage() {
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[500px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[500px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Email</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Role</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Created</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Actions</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Email</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Role</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Created</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={String(user._id)} className="border-ink-200 border-b last:border-0">
-                <td className="text-ink-900 px-4 py-3 font-semibold">{user.email}</td>
-                <td className="px-4 py-3">
+              <tr
+                key={String(user._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">{user.email}</td>
+                <td className="px-5 py-3.5">
                   <Badge variant="premium">{user.role}</Badge>
                 </td>
-                <td className="text-ink-500 px-4 py-3">
+                <td className="text-ink-500 px-5 py-3.5">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   <EntityFormDialog
                     trigger={
                       <Button variant="outline" size="icon-sm">

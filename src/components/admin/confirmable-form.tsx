@@ -72,8 +72,8 @@ export function ConfirmableForm({
             <Button variant="outline" onClick={() => setPending(null)} disabled={submitting}>
               Cancel
             </Button>
-            <Button variant={confirmVariant} onClick={handleConfirm} disabled={submitting}>
-              {submitting ? "Working…" : confirmLabel}
+            <Button variant={confirmVariant} onClick={handleConfirm} loading={submitting}>
+              {confirmLabel}
             </Button>
           </DialogFooter>
         </DialogContent>

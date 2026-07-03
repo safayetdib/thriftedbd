@@ -77,13 +77,13 @@ export default async function AdminOrderDetailPage({
       </div>
 
       {error && (
-        <p className="border-sale-500 bg-sale-50 text-sale-700 border-2 px-4 py-3 text-sm font-medium">
+        <p className="border-sale-500 bg-sale-50 border-2 px-4 py-3 text-sm font-medium text-white">
           {error}
         </p>
       )}
 
       {order.riskFlags.length > 0 && (
-        <div className="border-sale-500 bg-sale-50 flex flex-wrap gap-2 border-2 p-4">
+        <div className="border-sale-500 bg-sale-50 flex flex-wrap gap-2 border-2 p-4 text-white">
           {order.riskFlags.map((flag: string) => (
             <Badge key={flag} variant="sale">
               {flag}
@@ -261,7 +261,7 @@ export default async function AdminOrderDetailPage({
                       <select
                         id="provider"
                         name="provider"
-                        className="border-ink-900 h-11 border-2 bg-white px-3 text-sm"
+                        className="border-ink-900 h-11 w-full border-2 bg-white px-3 text-sm outline-none focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-green-500/50 focus-visible:ring-offset-2"
                       >
                         <option value="">— Select —</option>
                         <option value="Steadfast">Steadfast</option>

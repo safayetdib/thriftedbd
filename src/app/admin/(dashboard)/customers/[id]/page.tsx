@@ -44,7 +44,7 @@ export default async function AdminCustomerDetailPage({
       <h1 className="text-ink-900 text-2xl font-extrabold">{customer.name}</h1>
 
       {error && (
-        <p className="border-sale-500 bg-sale-50 text-sale-700 border-2 px-4 py-3 text-sm font-medium">
+        <p className="border-sale-500 bg-sale-50 border-2 px-4 py-3 text-sm font-medium text-white">
           {error}
         </p>
       )}

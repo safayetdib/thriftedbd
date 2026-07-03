@@ -56,13 +56,21 @@ export default async function StorefrontLayout({ children }: { children: React.R
 
   return (
     <>
+      <a
+        href="#main-content"
+        className="focus:ring-ink-900 sr-only fixed top-0 left-0 z-[100] m-2 rounded-sm bg-white px-4 py-2 text-sm font-semibold focus:not-sr-only focus:ring-2"
+      >
+        Skip to content
+      </a>
       {announcement && (
         <div className="bg-ink-900 text-ink-100 px-4 py-2 text-center text-sm font-medium">
           {announcement}
         </div>
       )}
       <SiteHeader departments={departments} cartCount={cartCount} />
-      {children}
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <SiteFooter socialLinks={settings.socialLinks} departments={departments} />
     </>
   );

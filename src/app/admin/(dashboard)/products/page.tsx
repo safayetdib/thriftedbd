@@ -5,6 +5,8 @@ import { getAdminProducts } from "@/lib/services/product.service";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const STATUS_FILTERS = ["All", "DRAFT", "ACTIVE", "SOLD", "ARCHIVED"] as const;
 
@@ -58,28 +60,25 @@ export default async function AdminProductsPage({
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[760px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[760px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">SKU</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Title</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Price</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Status</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Created</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">SKU</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Title</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Price</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Status</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Created</th>
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 && (
-              <tr>
-                <td colSpan={5} className="text-ink-500 px-4 py-8 text-center">
-                  No products found.
-                </td>
-              </tr>
-            )}
+            {items.length === 0 && <EmptyTableRow colSpan={5} message="No products found." />}
             {items.map((product) => (
-              <tr key={String(product._id)} className="border-ink-200 border-b last:border-0">
-                <td className="text-ink-500 px-4 py-3">{product.sku}</td>
-                <td className="px-4 py-3">
+              <tr
+                key={String(product._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="text-ink-500 px-5 py-3.5">{product.sku}</td>
+                <td className="px-5 py-3.5">
                   <Link
                     href={`/admin/products/${product._id}`}
                     className="font-semibold text-green-700 hover:underline"
@@ -87,13 +86,13 @@ export default async function AdminProductsPage({
                     {product.title.en}
                   </Link>
                 </td>
-                <td className="text-ink-900 px-4 py-3 font-semibold">৳{product.price}</td>
-                <td className="px-4 py-3">
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">৳{product.price}</td>
+                <td className="px-5 py-3.5">
                   <Badge variant={STATUS_BADGE_VARIANT[product.status] ?? "sold"}>
                     {product.status}
                   </Badge>
                 </td>
-                <td className="text-ink-500 px-4 py-3">
+                <td className="text-ink-500 px-5 py-3.5">
                   {new Date(product.createdAt).toLocaleDateString()}
                 </td>
               </tr>
@@ -102,22 +101,12 @@ export default async function AdminProductsPage({
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/admin/products?${params.status ? `status=${params.status}&` : ""}page=${p}`}
-              className={cn(
-                "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold",
-                p === page ? "bg-ink-900 text-white" : "hover:bg-ink-100 bg-white",
-              )}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        basePath="/admin/products"
+        params={{ status: params.status }}
+      />
     </div>
   );
 }

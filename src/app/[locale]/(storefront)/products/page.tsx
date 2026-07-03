@@ -11,6 +11,9 @@ import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/storefront/search-bar";
 import { FilterSidebar } from "@/components/storefront/filter-sidebar";
 import { SortDropdown } from "@/components/storefront/sort-dropdown";
+import { Pagination } from "@/components/storefront/pagination";
+import { EmptyState } from "@/components/ui/empty-state";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 
 const BASE = "https://thriftedbd.com";
 
@@ -77,7 +80,6 @@ export default async function ProductsPage({
     ? categories.find((c) => c.slug === params.category)
     : undefined;
 
-  // Parse filter params
   const sizes = params.sizes ? params.sizes.split(",") : [];
   const conditions = params.conditions ? params.conditions.split(",") : [];
   const colorIds = params.colors ? params.colors.split(",") : [];
@@ -115,32 +117,31 @@ export default async function ProductsPage({
   };
 
   return (
-    <main className="max-w-container mx-auto w-full px-4 py-8 md:px-8">
+    <main className="max-w-container mx-auto w-full px-4 py-6 md:px-8 md:py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       {/* Search bar */}
-      <div className="mb-8">
+      <div className="mb-6">
         <SearchBar initialQuery={params.q} />
       </div>
 
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-ink-900 text-2xl font-extrabold">
-            {params.q
-              ? t("searchHeading", { query: params.q })
-              : activeCategory
-                ? localize(activeCategory.name, locale)
-                : t("allProducts")}
-          </h1>
-          <p className="text-ink-500 text-sm">{t("itemCount", { count: total })}</p>
-        </div>
+      {/* Page header */}
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-ink-900 text-2xl font-extrabold">
+          {params.q
+            ? t("searchHeading", { query: params.q })
+            : activeCategory
+              ? localize(activeCategory.name, locale)
+              : t("allProducts")}
+        </h1>
+        <p className="text-ink-500 mt-0.5 text-sm">{t("itemCount", { count: total })}</p>
       </div>
 
       {/* Category pills */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-4 flex flex-wrap gap-2 md:mb-6">
         <Link
           href="/products"
           className={cn(
@@ -166,8 +167,8 @@ export default async function ProductsPage({
         ))}
       </div>
 
-      <div className="flex gap-6">
-        {/* Filters sidebar */}
+      {/* Product area: sidebar + grid */}
+      <div className="flex gap-4 md:gap-6">
         <FilterSidebar
           categories={categories}
           colors={colors}
@@ -175,43 +176,24 @@ export default async function ProductsPage({
           currentParams={params}
         />
 
-        {/* Main content */}
-        <div className="flex-1">
-          {/* Sort dropdown */}
-          <div className="mb-4 flex justify-end">
+        <div className="min-w-0 flex-1">
+          {/* Sort dropdown (desktop) */}
+          <div className="mb-4 flex items-center justify-end">
             <SortDropdown currentSort={params.sort} currentParams={params} />
           </div>
 
           {items.length === 0 ? (
-            <p className="text-ink-500 py-16 text-center">{t("noResults")}</p>
+            <EmptyState icon={<MagnifyingGlassIcon size={32} />} title={t("noResults")} />
           ) : (
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
-              {items.map((product) => (
-                <ProductCard key={String(product._id)} product={product} />
-              ))}
-            </div>
-          )}
+            <>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+                {items.map((product) => (
+                  <ProductCard key={String(product._id)} product={product} />
+                ))}
+              </div>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-8 flex gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                const queryParams = new URLSearchParams(params as Record<string, string>);
-                queryParams.set("page", String(p));
-                return (
-                  <Link
-                    key={p}
-                    href={`/products?${queryParams.toString()}`}
-                    className={cn(
-                      "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold",
-                      p === page ? "bg-ink-900 text-white" : "hover:bg-ink-100 bg-white",
-                    )}
-                  >
-                    {p}
-                  </Link>
-                );
-              })}
-            </div>
+              <Pagination currentPage={page} totalPages={totalPages} baseParams={params} />
+            </>
           )}
         </div>
       </div>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CategoryFormDialog } from "@/components/admin/category-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { createCategoryAction, updateCategoryAction, deactivateCategoryAction } from "./actions";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 export default async function AdminCategoriesPage() {
   await connectDB();
@@ -26,31 +27,28 @@ export default async function AdminCategoriesPage() {
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[600px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[600px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Name</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Slug</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Level</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Order</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Actions</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Slug</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Level</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Order</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {categories.length === 0 && (
-              <tr>
-                <td colSpan={5} className="text-ink-500 px-4 py-8 text-center">
-                  No categories yet.
-                </td>
-              </tr>
-            )}
+            {categories.length === 0 && <EmptyTableRow colSpan={5} message="No categories yet." />}
             {categories.map((category) => (
-              <tr key={String(category._id)} className="border-ink-200 border-b last:border-0">
-                <td className="text-ink-900 px-4 py-3 font-semibold">{category.name.en}</td>
-                <td className="text-ink-500 px-4 py-3">{category.slug}</td>
-                <td className="text-ink-700 px-4 py-3">{category.level}</td>
-                <td className="text-ink-700 px-4 py-3">{category.order}</td>
-                <td className="px-4 py-3">
+              <tr
+                key={String(category._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">{category.name.en}</td>
+                <td className="text-ink-500 px-5 py-3.5">{category.slug}</td>
+                <td className="text-ink-700 px-5 py-3.5">{category.level}</td>
+                <td className="text-ink-700 px-5 py-3.5">{category.order}</td>
+                <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <CategoryFormDialog
                       trigger={

@@ -69,13 +69,13 @@ export default async function AdminDashboardPage() {
           <Link
             key={href}
             href={href}
-            className="group border-ink-900 shadow-brutal-sm hover:shadow-brutal-md flex flex-col gap-3 border-2 bg-white p-5 transition-all"
+            className="group border-ink-900 shadow-brutal-sm hover:shadow-brutal-md flex flex-col gap-3 border-2 bg-white p-5 transition-all hover:-translate-y-0.5"
           >
-            <span
+            <div
               className={`border-ink-900 flex size-10 items-center justify-center border-2 text-white ${accent}`}
             >
               <Icon size={20} weight="bold" />
-            </span>
+            </div>
             <p className="text-ink-900 text-3xl font-extrabold">{value}</p>
             <p className="text-eyebrow text-ink-500">{label}</p>
           </Link>

@@ -12,15 +12,14 @@ export function PromotionCard({ promotion }: { promotion: IPromotion }) {
   const locale = useLocale();
   return (
     <div
-      className="border-ink-900 flex flex-col justify-between border-2 p-6 md:p-8"
+      className="flex flex-col justify-between rounded-xl p-6"
       style={{ backgroundColor: promotion.backgroundColor || "#1a1a1a" }}
     >
       <div>
         {localize(promotion.headline, locale) && (
           <h3
-            className="mb-2 font-extrabold"
+            className="text-display-xs mb-2 font-semibold"
             style={{
-              fontSize: "clamp(1.25rem, 4vw, 1.75rem)",
               color: promotion.backgroundColor ? "white" : undefined,
             }}
           >
@@ -30,7 +29,7 @@ export function PromotionCard({ promotion }: { promotion: IPromotion }) {
 
         {localize(promotion.body, locale) && (
           <p
-            className="mb-4 text-sm"
+            className="text-body-sm mb-4"
             style={{
               color: promotion.backgroundColor ? "rgba(255,255,255,0.9)" : undefined,
             }}

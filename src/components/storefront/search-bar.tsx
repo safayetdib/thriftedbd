@@ -35,6 +35,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
         />
         <button
           type="submit"
+          aria-label={t("search")}
           className="border-ink-900 text-ink-700 hover:bg-ink-50 border-l-2 p-3 transition-colors"
         >
           <MagnifyingGlassIcon size={20} />

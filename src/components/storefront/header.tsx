@@ -34,8 +34,8 @@ export function SiteHeader({
   const t = useTranslations("header");
 
   return (
-    <header className="border-ink-900 sticky top-0 z-40 border-b-2 bg-white">
-      <div className="max-w-container mx-auto flex h-16 w-full items-center justify-between px-4 md:px-8">
+    <header className="border-ink-900 sticky top-0 z-40 border-b bg-white">
+      <div className="max-w-container mx-auto flex h-16 w-full items-center justify-between px-6 md:px-8">
         {/* Logo */}
         <Link href="/" className="text-ink-900 shrink-0 text-lg font-extrabold tracking-tight">
           thrifted<span className="text-green-600">BD</span>
@@ -48,7 +48,7 @@ export function SiteHeader({
               {/* Department link */}
               <Link
                 href={`/products?category=${dept.slug}`}
-                className="text-ink-700 hover:text-ink-900 group-hover:text-ink-900 relative flex h-16 items-center px-4 text-sm font-semibold transition-colors"
+                className="text-ink-700 hover:text-ink-900 group-hover:text-ink-900 text-body-sm-strong relative flex h-16 items-center px-4 transition-colors"
               >
                 {dept.name}
                 {/* Active underline on hover */}
@@ -57,9 +57,9 @@ export function SiteHeader({
 
               {/* Mega menu dropdown — only if subcategories exist */}
               {dept.children.length > 0 && (
-                <div className="border-ink-900 pointer-events-none absolute top-full left-1/2 min-w-[480px] -translate-x-1/2 border-2 bg-white opacity-0 shadow-lg transition-all duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
-                  <div className="p-4">
-                    <p className="text-eyebrow text-ink-500 mb-3 text-xs font-bold tracking-widest uppercase">
+                <div className="border-ink-900 pointer-events-none absolute top-full left-1/2 min-w-[480px] -translate-x-1/2 rounded-xl border bg-white opacity-0 shadow-lg transition-all duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+                  <div className="p-5">
+                    <p className="text-eyebrow text-ink-500 text-caption mb-3 font-bold tracking-widest uppercase">
                       {dept.name}
                     </p>
                     <div className="grid grid-cols-3 gap-3">
@@ -67,10 +67,10 @@ export function SiteHeader({
                         <Link
                           key={sub.slug}
                           href={`/products?category=${sub.slug}`}
-                          className="group/sub border-ink-200 hover:border-ink-900 flex flex-col gap-2 border-2 p-2 transition-colors"
+                          className="group/sub border-ink-200 hover:border-ink-900 flex flex-col gap-2 rounded-md border p-2 transition-colors"
                         >
                           {/* Cover image */}
-                          <div className="bg-ink-100 relative aspect-square w-full overflow-hidden">
+                          <div className="bg-ink-100 relative aspect-square w-full overflow-hidden rounded-sm">
                             {sub.coverImage ? (
                               <Image
                                 src={sub.coverImage.url}
@@ -81,11 +81,11 @@ export function SiteHeader({
                               />
                             ) : (
                               <div className="flex h-full items-center justify-center">
-                                <span className="text-ink-300 text-xs">{t("noImage")}</span>
+                                <span className="text-ink-300 text-caption">{t("noImage")}</span>
                               </div>
                             )}
                           </div>
-                          <p className="text-ink-900 text-center text-xs font-semibold">
+                          <p className="text-ink-900 text-caption text-center font-semibold">
                             {sub.name}
                           </p>
                         </Link>
@@ -94,7 +94,7 @@ export function SiteHeader({
                     {/* View all link */}
                     <Link
                       href={`/products?category=${dept.slug}`}
-                      className="mt-3 block text-center text-xs font-semibold text-green-700 hover:underline"
+                      className="text-caption mt-3 block text-center font-semibold text-green-700 hover:underline"
                     >
                       {t("viewAll", { name: dept.name })} →
                     </Link>
@@ -135,7 +135,7 @@ export function SiteHeader({
               <ShoppingBagIcon size={20} />
             </Button>
             {cartCount > 0 && (
-              <span className="border-ink-900 absolute -top-1 -right-1 flex size-5 items-center justify-center border-2 bg-green-500 text-[10px] font-bold text-white">
+              <span className="border-ink-900 absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full border bg-green-500 text-[10px] font-bold text-white">
                 {cartCount}
               </span>
             )}
@@ -163,7 +163,7 @@ function LanguageSwitcher() {
     <Link
       href={href}
       locale={otherLocale}
-      className="border-ink-900 text-ink-900 hover:bg-ink-900 ml-1 flex h-8 items-center border-2 px-2 text-xs font-bold transition-colors hover:text-white"
+      className="border-ink-900 text-ink-900 hover:bg-ink-900 text-caption ml-1 flex h-8 items-center rounded-md border px-2 font-semibold transition-colors hover:text-white"
       aria-label={locale === "en" ? "বাংলায় দেখুন" : "View in English"}
     >
       {locale === "en" ? "বাং" : "EN"}
@@ -189,16 +189,26 @@ function MobileMenu({ departments }: { departments: Department[] }) {
       </Button>
 
       {/* Overlay */}
-      {open && <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setOpen(false)} />}
+      {open && (
+        <div
+          className="fixed inset-0 z-50 bg-black/40"
+          role="presentation"
+          aria-hidden={true}
+          onClick={() => setOpen(false)}
+        />
+      )}
 
       {/* Slide-in panel */}
       <div
-        className={`border-ink-900 fixed top-0 left-0 z-50 flex h-full w-80 max-w-[90vw] flex-col border-r-2 bg-white transition-transform duration-200 ${
+        className={`border-ink-900 fixed top-0 left-0 z-50 flex h-full w-80 max-w-[90vw] flex-col border-r bg-white transition-transform duration-200 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setOpen(false);
+        }}
       >
-        <div className="border-ink-900 flex h-16 items-center justify-between border-b-2 px-4">
-          <span className="text-ink-900 font-extrabold">{t("menu")}</span>
+        <div className="border-ink-900 flex h-16 items-center justify-between border-b px-6">
+          <span className="text-ink-900 text-body-md-strong">{t("menu")}</span>
           <Button
             variant="ghost"
             size="icon-sm"
@@ -209,14 +219,14 @@ function MobileMenu({ departments }: { departments: Department[] }) {
           </Button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-4">
+        <nav className="flex-1 overflow-y-auto px-6 py-4">
           {departments.map((dept) => (
             <div key={dept.slug} className="border-ink-200 border-b">
               <div className="flex items-center justify-between">
                 <Link
                   href={`/products?category=${dept.slug}`}
                   onClick={() => setOpen(false)}
-                  className="text-ink-900 flex-1 py-3 text-sm font-semibold"
+                  className="text-ink-900 text-body-sm-strong flex-1 py-3"
                 >
                   {dept.name}
                 </Link>
@@ -225,6 +235,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
                     onClick={() => setExpanded(expanded === dept.slug ? null : dept.slug)}
                     className="text-ink-500 hover:text-ink-900 px-2 py-3"
                     aria-label={t("expand")}
+                    aria-expanded={expanded === dept.slug}
                   >
                     <CaretDownIcon
                       size={16}
@@ -237,16 +248,16 @@ function MobileMenu({ departments }: { departments: Department[] }) {
               </div>
 
               {expanded === dept.slug && dept.children.length > 0 && (
-                <div className="bg-ink-50 pb-2 pl-4">
+                <div className="pb-2 pl-4">
                   {dept.children.map((sub) => (
                     <Link
                       key={sub.slug}
                       href={`/products?category=${sub.slug}`}
                       onClick={() => setOpen(false)}
-                      className="text-ink-700 hover:text-ink-900 flex items-center gap-2 py-2 text-sm"
+                      className="text-ink-700 hover:text-ink-900 text-body-sm flex items-center gap-2 py-2"
                     >
                       {sub.coverImage && (
-                        <div className="relative size-8 shrink-0 overflow-hidden">
+                        <div className="relative size-8 shrink-0 overflow-hidden rounded-sm">
                           <Image
                             src={sub.coverImage.url}
                             alt={sub.name}
@@ -269,21 +280,21 @@ function MobileMenu({ departments }: { departments: Department[] }) {
             <Link
               href="/account"
               onClick={() => setOpen(false)}
-              className="text-ink-700 py-2 text-sm font-semibold"
+              className="text-ink-700 text-body-sm-strong py-2"
             >
               {t("myAccount")}
             </Link>
             <Link
               href="/favorites"
               onClick={() => setOpen(false)}
-              className="text-ink-700 py-2 text-sm font-semibold"
+              className="text-ink-700 text-body-sm-strong py-2"
             >
               {t("favorites")}
             </Link>
             <Link
               href="/track-order"
               onClick={() => setOpen(false)}
-              className="text-ink-700 py-2 text-sm font-semibold"
+              className="text-ink-700 text-body-sm-strong py-2"
             >
               {t("trackOrder")}
             </Link>

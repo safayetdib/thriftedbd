@@ -64,13 +64,16 @@ export function ProfileForm({ customer }: { customer: Customer }) {
           </div>
 
           {error && (
-            <p className="border-sale-500 bg-sale-50 text-sale-700 border-2 px-3 py-2 text-sm font-medium">
+            <p
+              role="alert"
+              className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+            >
               {error}
             </p>
           )}
 
-          <Button type="submit" variant="primary" disabled={isPending}>
-            {isPending ? t("saving") : t("saveChanges")}
+          <Button type="submit" variant="primary" loading={isPending}>
+            {t("saveChanges")}
           </Button>
         </div>
       </form>

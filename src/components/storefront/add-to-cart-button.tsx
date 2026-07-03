@@ -51,10 +51,10 @@ export function AddToCartButton({ productId }: { productId: string }) {
         variant="primary"
         size="lg"
         onClick={handleAdd}
-        disabled={state === "loading"}
+        loading={state === "loading"}
         className="w-full"
       >
-        {state === "loading" ? t("adding") : t("addToBag")}
+        {t("addToBag")}
       </Button>
       {error && <p className="text-sale-500 text-sm font-medium">{error}</p>}
     </div>

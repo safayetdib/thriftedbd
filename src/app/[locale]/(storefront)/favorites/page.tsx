@@ -6,6 +6,8 @@ import Customer from "@/models/Customer";
 import Product from "@/models/Product";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/storefront/product-card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { HeartIcon } from "@phosphor-icons/react/dist/ssr";
 
 /**
  * Favorites page: customer's saved products.
@@ -41,14 +43,17 @@ export default async function FavoritesPage() {
       </div>
 
       {favoriteProducts.length === 0 && (
-        <div className="border-ink-900 flex flex-col items-center gap-4 border-2 bg-white p-8 text-center">
-          <p className="text-ink-700">{t("empty")}</p>
-          <Link href="/products">
-            <Button variant="primary" size="sm">
-              {t("browseProducts")}
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          icon={<HeartIcon size={32} />}
+          title={t("empty")}
+          action={
+            <Link href="/products">
+              <Button variant="primary" size="sm">
+                {t("browseProducts")}
+              </Button>
+            </Link>
+          }
+        />
       )}
 
       {favoriteProducts.length > 0 && (

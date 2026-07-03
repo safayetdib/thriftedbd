@@ -10,6 +10,7 @@ import { getActivePromotions } from "@/lib/services/promotion.service";
 import { getProductById } from "@/lib/services/product.service";
 import { Button } from "@/components/ui/button";
 import { RemoveFromCartButton } from "@/components/storefront/remove-from-cart-button";
+import { ShoppingBagIcon, CaretRightIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ICartItem } from "@/models/Cart";
 import type { IProduct } from "@/models/Product";
 
@@ -37,66 +38,102 @@ export default async function CartPage() {
 
   if (items.length === 0) {
     return (
-      <main className="max-w-container mx-auto flex w-full flex-col items-center gap-4 px-4 py-24 text-center md:px-8">
+      <main className="max-w-container mx-auto flex w-full flex-col items-center gap-5 px-4 py-24 text-center md:px-8">
+        <ShoppingBagIcon size={40} className="text-ink-300" />
         <h1 className="text-ink-900 text-2xl font-extrabold">{t("emptyTitle")}</h1>
-        <p className="text-ink-500">{t("emptyBlurb")}</p>
+        <p className="text-ink-500 max-w-sm">{t("emptyBlurb")}</p>
         <Link href="/products">
-          <Button variant="primary">{t("browseProducts")}</Button>
+          <Button variant="primary" size="lg">
+            {t("browseProducts")}
+          </Button>
         </Link>
       </main>
     );
   }
 
   return (
-    <main className="max-w-container mx-auto w-full px-4 py-8 md:px-8">
-      <h1 className="text-ink-900 mb-6 text-2xl font-extrabold">{t("title")}</h1>
+    <main className="max-w-container mx-auto w-full px-4 py-6 md:px-8 md:py-8">
+      <h1 className="text-ink-900 mb-6 text-2xl font-extrabold">
+        {t("title")}
+        <span className="text-ink-400 ml-2 text-lg font-normal">
+          {items.length} {items.length === 1 ? "item" : "items"}
+        </span>
+      </h1>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <div className="flex flex-col gap-4 lg:col-span-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
+        <div className="flex flex-col gap-3 lg:col-span-2">
           {items.map((item) => (
             <div
               key={String(item.productId)}
-              className="border-ink-900 flex gap-4 border-2 bg-white p-4"
+              className="border-ink-900 flex gap-4 border-2 bg-white p-3 md:gap-5 md:p-4"
             >
-              <div className="border-ink-900 bg-ink-100 relative size-20 shrink-0 border-2">
+              <div className="border-ink-900 bg-ink-100 relative size-20 shrink-0 border-2 md:size-24">
                 {item.image && (
                   <Image
                     src={item.image}
                     alt={localize(item.title, locale)}
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 )}
               </div>
-              <div className="flex flex-1 flex-col justify-between">
-                <div>
-                  <p className="text-ink-900 font-semibold">{localize(item.title, locale)}</p>
-                  <p className="text-ink-500 text-sm">{t("qty", { count: item.quantity })}</p>
+
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-ink-900 truncate font-semibold">
+                    {localize(item.title, locale)}
+                  </p>
+                  <RemoveFromCartButton productId={String(item.productId)} />
                 </div>
-                <p className="text-price text-ink-900 font-semibold">৳{item.price}</p>
+
+                <div className="mt-auto flex items-center justify-between gap-2">
+                  <p className="text-price text-ink-900 text-lg font-bold">৳{item.price}</p>
+                  <span className="border-ink-900 inline-flex items-center gap-1 border-2 px-2 py-0.5 text-xs font-bold">
+                    {t("qty", { count: item.quantity })}
+                  </span>
+                </div>
               </div>
-              <RemoveFromCartButton productId={String(item.productId)} />
             </div>
           ))}
         </div>
 
-        <div className="border-ink-900 flex flex-col gap-4 border-2 bg-white p-5 lg:col-span-1">
-          <h2 className="text-eyebrow text-ink-500">{t("orderSummary")}</h2>
-          <div className="flex justify-between text-sm">
-            <span className="text-ink-500">{t("subtotal")}</span>
-            <span className="text-ink-900 font-semibold">৳{subtotal}</span>
+        <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="border-ink-900 flex flex-col gap-4 border-2 bg-white p-5 md:p-6">
+            <h2 className="text-eyebrow text-ink-500">{t("orderSummary")}</h2>
+
+            <div className="flex items-center justify-between">
+              <span className="text-ink-600 text-sm">
+                Subtotal ({items.length} {items.length === 1 ? "item" : "items"})
+              </span>
+              <span className="text-ink-900 font-bold">৳{subtotal}</span>
+            </div>
+
+            <div className="bg-ink-200 h-px" />
+
+            <div>
+              <p className="text-ink-500 text-xs leading-relaxed">
+                {t("deliveryNote", {
+                  inside: settings.deliveryFee.insideDhaka,
+                  outside: settings.deliveryFee.outsideDhaka,
+                })}
+              </p>
+            </div>
+
+            <div className="bg-ink-200 h-px" />
+
+            <div className="flex items-center justify-between">
+              <span className="text-ink-900 text-sm font-bold">Total</span>
+              <span className="text-ink-900 text-xl font-extrabold">৳{subtotal}</span>
+            </div>
+
+            <Link href="/checkout" className="mt-1 block">
+              <Button variant="primary" size="lg" className="w-full gap-2">
+                {t("checkout")}
+                <CaretRightIcon size={16} weight="bold" />
+              </Button>
+            </Link>
           </div>
-          <p className="text-ink-500 text-xs">
-            {t("deliveryNote", {
-              inside: settings.deliveryFee.insideDhaka,
-              outside: settings.deliveryFee.outsideDhaka,
-            })}
-          </p>
-          <Link href="/checkout">
-            <Button variant="primary" size="lg" className="w-full">
-              {t("checkout")}
-            </Button>
-          </Link>
         </div>
       </div>
 

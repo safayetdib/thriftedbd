@@ -13,7 +13,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        new: "bg-green-500 text-white",
+        new: "bg-green-500 text-ink-900",
         imported: "bg-white text-ink-900",
         premium: "bg-ink-900 text-amber-400",
         sale: "bg-sale-500 text-white",

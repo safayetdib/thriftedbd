@@ -4,7 +4,8 @@ import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import Order from "@/models/Order";
 import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon, ShoppingBagIcon } from "@phosphor-icons/react/dist/ssr";
+import { EmptyState } from "@/components/ui/empty-state";
 
 /**
  * Customer orders history page.
@@ -42,14 +43,17 @@ export default async function AccountOrdersPage() {
       </div>
 
       {orders.length === 0 && (
-        <div className="border-ink-900 flex flex-col items-center gap-4 border-2 bg-white p-8 text-center">
-          <p className="text-ink-700">{t("empty")}</p>
-          <Link href="/products">
-            <Button variant="primary" size="sm">
-              {t("browseProducts")}
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          icon={<ShoppingBagIcon size={32} />}
+          title={t("empty")}
+          action={
+            <Link href="/products">
+              <Button variant="primary" size="sm">
+                {t("browseProducts")}
+              </Button>
+            </Link>
+          }
+        />
       )}
 
       {orders.length > 0 && (

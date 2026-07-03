@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { connectDB } from "@/lib/db";
 import { getCustomers } from "@/lib/services/customer.service";
-import { cn } from "@/lib/utils";
+import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 export default async function AdminCustomersPage({
   searchParams,
@@ -23,26 +24,23 @@ export default async function AdminCustomersPage({
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[640px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[640px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Name</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Email</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Phone</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Joined</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Email</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Phone</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Joined</th>
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 && (
-              <tr>
-                <td colSpan={4} className="text-ink-500 px-4 py-8 text-center">
-                  No customers yet.
-                </td>
-              </tr>
-            )}
+            {items.length === 0 && <EmptyTableRow colSpan={4} message="No customers yet." />}
             {items.map((customer) => (
-              <tr key={String(customer._id)} className="border-ink-200 border-b last:border-0">
-                <td className="px-4 py-3">
+              <tr
+                key={String(customer._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="px-5 py-3.5">
                   <Link
                     href={`/admin/customers/${customer._id}`}
                     className="font-semibold text-green-700 hover:underline"
@@ -50,9 +48,9 @@ export default async function AdminCustomersPage({
                     {customer.name}
                   </Link>
                 </td>
-                <td className="text-ink-700 px-4 py-3">{customer.email}</td>
-                <td className="text-ink-700 px-4 py-3">{customer.phone}</td>
-                <td className="text-ink-500 px-4 py-3">
+                <td className="text-ink-700 px-5 py-3.5">{customer.email}</td>
+                <td className="text-ink-700 px-5 py-3.5">{customer.phone}</td>
+                <td className="text-ink-500 px-5 py-3.5">
                   {new Date(customer.createdAt).toLocaleDateString()}
                 </td>
               </tr>
@@ -61,22 +59,12 @@ export default async function AdminCustomersPage({
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/admin/customers?page=${p}`}
-              className={cn(
-                "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold",
-                p === page ? "bg-ink-900 text-white" : "hover:bg-ink-100 bg-white",
-              )}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        basePath="/admin/customers"
+        params={{}}
+      />
     </div>
   );
 }

@@ -70,7 +70,10 @@ export function FeaturedProductsForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {error && (
-        <p className="border-sale-500 bg-sale-50 text-sale-700 border-2 px-4 py-3 text-sm font-medium">
+        <p
+          role="alert"
+          className="border-sale-500 bg-sale-50 border-2 px-4 py-3 text-sm font-medium text-white"
+        >
           {error}
         </p>
       )}

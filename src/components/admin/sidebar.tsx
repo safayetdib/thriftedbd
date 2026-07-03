@@ -41,12 +41,14 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-ink-900 flex h-full w-60 shrink-0 flex-col border-r-2 bg-white">
-      <div className="border-ink-900 border-b-2 px-5 py-5">
-        <p className="text-eyebrow text-green-700">thriftedBD</p>
-        <p className="text-ink-900 text-lg font-extrabold">Admin</p>
+    <nav className="border-ink-900 flex h-full w-60 shrink-0 flex-col border-r bg-white">
+      <div className="border-ink-900 border-b px-5 py-4">
+        <p className="text-eyebrow text-caption font-bold tracking-widest text-green-700 uppercase">
+          thriftedBD
+        </p>
+        <p className="text-ink-900 text-body-md font-extrabold">Admin</p>
       </div>
-      <ul className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
+      <ul className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-2">
         {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact ? pathname === href : pathname.startsWith(href);
           return (
@@ -54,8 +56,8 @@ export function AdminSidebar() {
               <Link
                 href={href}
                 className={cn(
-                  "text-ink-700 hover:border-ink-900 hover:bg-ink-100 flex items-center gap-2.5 border-2 border-transparent px-3 py-2 text-sm font-semibold transition-colors",
-                  isActive && "border-ink-900 bg-green-500 text-white hover:bg-green-500",
+                  "text-body-sm flex items-center gap-2.5 rounded-md px-3 py-2 font-semibold transition-colors",
+                  isActive ? "bg-green-500 text-white" : "text-ink-700 hover:bg-ink-100",
                 )}
               >
                 <Icon size={18} weight={isActive ? "fill" : "regular"} />

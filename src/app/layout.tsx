@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
-import { Noto_Sans, Noto_Sans_Bengali } from "next/font/google";
+import { Inter, Noto_Sans, Noto_Sans_Bengali } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import "./globals.css";
 
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+// Noto Sans — fallback for Latin characters (lower-priority than Inter).
 const noto = Noto_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -10,8 +18,8 @@ const noto = Noto_Sans({
   display: "swap",
 });
 
-// Bangla glyphs for the /bn locale — falls into the font stack after Noto
-// Sans, so Latin text keeps its metrics and Bengali script stays crisp.
+// Bangla glyphs for the /bn locale — falls into the font stack after Inter
+// and Noto Sans, so Latin text keeps Inter's metrics while Bengali stays crisp.
 const notoBengali = Noto_Sans_Bengali({
   subsets: ["bengali"],
   weight: ["400", "500", "600", "700", "800"],
@@ -55,7 +63,10 @@ export default async function RootLayout({
   // segment) fall back to "en".
   const locale = await getLocale();
   return (
-    <html lang={locale} className={`${noto.variable} ${notoBengali.variable} h-full antialiased`}>
+    <html
+      lang={locale}
+      className={`${inter.variable} ${noto.variable} ${notoBengali.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col">
         <script
           type="application/ld+json"

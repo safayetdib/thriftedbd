@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { createColorAction, updateColorAction, deactivateColorAction } from "./actions";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const FIELDS: EntityField[] = [
   { name: "name.en", label: "Name (English)", required: true },
@@ -33,34 +34,31 @@ export default async function AdminColorsPage() {
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[500px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[500px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Swatch</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Name</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Hex</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Actions</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Swatch</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Hex</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {colors.length === 0 && (
-              <tr>
-                <td colSpan={4} className="text-ink-500 px-4 py-8 text-center">
-                  No colors yet.
-                </td>
-              </tr>
-            )}
+            {colors.length === 0 && <EmptyTableRow colSpan={4} message="No colors yet." />}
             {colors.map((color) => (
-              <tr key={String(color._id)} className="border-ink-200 border-b last:border-0">
-                <td className="px-4 py-3">
+              <tr
+                key={String(color._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="px-5 py-3.5">
                   <span
                     className="border-ink-900 block size-6 border-2"
                     style={{ backgroundColor: color.hex ?? "#fff" }}
                   />
                 </td>
-                <td className="text-ink-900 px-4 py-3 font-semibold">{color.name.en}</td>
-                <td className="text-ink-500 px-4 py-3">{color.hex ?? "—"}</td>
-                <td className="px-4 py-3">
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">{color.name.en}</td>
+                <td className="text-ink-500 px-5 py-3.5">{color.hex ?? "—"}</td>
+                <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <EntityFormDialog
                       trigger={

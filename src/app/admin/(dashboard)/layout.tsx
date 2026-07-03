@@ -11,10 +11,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="bg-ink-50 flex h-screen">
+      <a
+        href="#main-content"
+        className="focus:ring-ink-900 sr-only fixed top-0 left-0 z-[100] m-2 rounded-sm bg-white px-4 py-2 text-sm font-semibold focus:not-sr-only focus:ring-2"
+      >
+        Skip to content
+      </a>
       <AdminSidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <AdminTopbar email={session.user.email ?? ""} />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main id="main-content" className="flex-1 overflow-y-auto p-6" tabIndex={-1}>
+          {children}
+        </main>
       </div>
     </div>
   );

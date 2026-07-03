@@ -41,14 +41,14 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "border-ink-900 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground flex w-fit items-center justify-between gap-1.5 rounded-lg border-2 bg-white py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 data-[size=default]:h-8 data-[size=sm]:h-7 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "border-ink-900 text-ink-900 aria-invalid:border-sale-500 aria-invalid:ring-sale-500/20 data-placeholder:text-ink-400 flex w-fit items-center justify-between gap-1.5 rounded-md border bg-white whitespace-nowrap transition-colors outline-none select-none focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-green-500/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-2 data-[size=default]:px-4 data-[size=default]:py-3 data-[size=default]:text-base data-[size=sm]:px-3 data-[size=sm]:py-1.5 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}
     >
       {children}
       <SelectPrimitive.Icon
-        render={<CaretDownIcon className="text-muted-foreground pointer-events-none size-4" />}
+        render={<CaretDownIcon className="text-ink-400 pointer-events-none size-4" />}
       />
     </SelectPrimitive.Trigger>
   );

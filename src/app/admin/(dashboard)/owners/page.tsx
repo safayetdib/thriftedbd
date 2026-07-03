@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { createOwnerAction, updateOwnerAction, deactivateOwnerAction } from "./actions";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const FIELDS: EntityField[] = [
   { name: "name", label: "Name", required: true },
@@ -32,27 +33,24 @@ export default async function AdminOwnersPage() {
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[500px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[500px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Name</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Phone</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Actions</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Phone</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {owners.length === 0 && (
-              <tr>
-                <td colSpan={3} className="text-ink-500 px-4 py-8 text-center">
-                  No owners yet.
-                </td>
-              </tr>
-            )}
+            {owners.length === 0 && <EmptyTableRow colSpan={3} message="No owners yet." />}
             {owners.map((owner) => (
-              <tr key={String(owner._id)} className="border-ink-200 border-b last:border-0">
-                <td className="text-ink-900 px-4 py-3 font-semibold">{owner.name}</td>
-                <td className="text-ink-500 px-4 py-3">{owner.phone}</td>
-                <td className="px-4 py-3">
+              <tr
+                key={String(owner._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">{owner.name}</td>
+                <td className="text-ink-500 px-5 py-3.5">{owner.phone}</td>
+                <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <EntityFormDialog
                       trigger={

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { createCouponAction, updateCouponAction, deleteCouponAction } from "./actions";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const FIELDS: EntityField[] = [
   { name: "code", label: "Code", required: true },
@@ -43,49 +44,46 @@ export default async function AdminCouponsPage() {
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[900px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[900px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Code</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Discount</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Min order</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Uses / Limit</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Expires</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Active</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Actions</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Code</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Discount</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Min order</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Uses / Limit</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Expires</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Active</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {coupons.length === 0 && (
-              <tr>
-                <td colSpan={7} className="text-ink-500 px-4 py-8 text-center">
-                  No coupons yet. Create one to get started.
-                </td>
-              </tr>
-            )}
+            {coupons.length === 0 && <EmptyTableRow colSpan={7} message="No coupons yet." />}
             {coupons.map((coupon) => (
-              <tr key={coupon._id.toString()} className="border-ink-900 border-t-2">
-                <td className="px-4 py-3 font-semibold">{coupon.code}</td>
-                <td className="px-4 py-3">
+              <tr
+                key={coupon._id.toString()}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="px-5 py-3.5 font-semibold">{coupon.code}</td>
+                <td className="px-5 py-3.5">
                   {coupon.discountType === "PERCENTAGE"
                     ? `${coupon.discountValue}%`
                     : `৳${coupon.discountValue}`}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   {coupon.minOrderAmount ? `৳${coupon.minOrderAmount}` : "—"}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   {coupon.usedCount} / {coupon.maxUses ?? "∞"}
                 </td>
-                <td className="px-4 py-3 text-xs">
+                <td className="px-5 py-3.5 text-xs">
                   {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString() : "—"}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   <span className={coupon.isActive ? "font-bold text-green-700" : "text-ink-500"}>
                     {coupon.isActive ? "Yes" : "No"}
                   </span>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <EntityFormDialog
                       trigger={

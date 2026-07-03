@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { cn } from "@/lib/utils";
+import { AdminPagination } from "@/components/admin/pagination";
 import {
   createTransactionAction,
   reconcileTransactionAction,
   voidTransactionAction,
 } from "./actions";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const STATUS_FILTERS = ["All", "PENDING", "RECEIVED", "RECONCILED"] as const;
 
@@ -91,35 +93,32 @@ export default async function AdminTransactionsPage({
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[760px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[760px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Type</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Amount</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Method</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Orders</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Status</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Actions</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Type</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Amount</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Method</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Orders</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Status</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 && (
-              <tr>
-                <td colSpan={6} className="text-ink-500 px-4 py-8 text-center">
-                  No transactions found.
-                </td>
-              </tr>
-            )}
+            {items.length === 0 && <EmptyTableRow colSpan={6} message="No transactions found." />}
             {items.map((tx) => (
-              <tr key={String(tx._id)} className="border-ink-200 border-b last:border-0">
-                <td className="text-ink-900 px-4 py-3 font-semibold">{tx.type}</td>
-                <td className="text-ink-900 px-4 py-3">৳{tx.amount}</td>
-                <td className="text-ink-700 px-4 py-3">{tx.method}</td>
-                <td className="text-ink-700 px-4 py-3">{tx.orderIds.length}</td>
-                <td className="px-4 py-3">
+              <tr
+                key={String(tx._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">{tx.type}</td>
+                <td className="text-ink-900 px-5 py-3.5">৳{tx.amount}</td>
+                <td className="text-ink-700 px-5 py-3.5">{tx.method}</td>
+                <td className="text-ink-700 px-5 py-3.5">{tx.orderIds.length}</td>
+                <td className="px-5 py-3.5">
                   <Badge variant={tx.status === "RECONCILED" ? "new" : "sold"}>{tx.status}</Badge>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   {tx.status === "PENDING" && (
                     <div className="flex gap-2">
                       <ConfirmableForm
@@ -152,22 +151,12 @@ export default async function AdminTransactionsPage({
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/admin/transactions?${params.status ? `status=${params.status}&` : ""}page=${p}`}
-              className={cn(
-                "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold",
-                p === page ? "bg-ink-900 text-white" : "hover:bg-ink-100 bg-white",
-              )}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        basePath="/admin/transactions"
+        params={{ status: params.status }}
+      />
     </div>
   );
 }

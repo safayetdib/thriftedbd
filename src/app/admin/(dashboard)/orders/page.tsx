@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/db";
 import { getAdminOrders } from "@/lib/services/order.service";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const STATUS_FILTERS = [
   "All",
@@ -64,29 +66,26 @@ export default async function AdminOrdersPage({
       </div>
 
       <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="w-full min-w-[840px] text-left text-sm">
+        <table className="admin-data-table w-full min-w-[840px] text-left text-sm">
           <thead className="border-ink-900 bg-ink-100 border-b-2">
             <tr>
-              <th className="text-ink-900 px-4 py-3 font-bold">Order #</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Customer</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Items</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Total</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Status</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Risk</th>
-              <th className="text-ink-900 px-4 py-3 font-bold">Placed</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Order #</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Customer</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Items</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Total</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Status</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Risk</th>
+              <th className="text-ink-900 px-5 py-3.5 font-bold">Placed</th>
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 && (
-              <tr>
-                <td colSpan={7} className="text-ink-500 px-4 py-8 text-center">
-                  No orders found.
-                </td>
-              </tr>
-            )}
+            {items.length === 0 && <EmptyTableRow colSpan={7} message="No orders found." />}
             {items.map((order) => (
-              <tr key={String(order._id)} className="border-ink-200 border-b last:border-0">
-                <td className="px-4 py-3">
+              <tr
+                key={String(order._id)}
+                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+              >
+                <td className="px-5 py-3.5">
                   <Link
                     href={`/admin/orders/${order._id}`}
                     className="font-semibold text-green-700 hover:underline"
@@ -94,25 +93,25 @@ export default async function AdminOrdersPage({
                     {order.orderNumber}
                   </Link>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   <p className="text-ink-900 font-medium">{order.customer.name}</p>
                   <p className="text-ink-500">{order.customer.phone}</p>
                 </td>
-                <td className="text-ink-700 px-4 py-3">{order.items.length}</td>
-                <td className="text-ink-900 px-4 py-3 font-semibold">৳{order.total}</td>
-                <td className="px-4 py-3">
+                <td className="text-ink-700 px-5 py-3.5">{order.items.length}</td>
+                <td className="text-ink-900 px-5 py-3.5 font-semibold">৳{order.total}</td>
+                <td className="px-5 py-3.5">
                   <Badge variant={STATUS_BADGE_VARIANT[order.orderStatus] ?? "sold"}>
                     {order.orderStatus}
                   </Badge>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   {order.riskFlags.length > 0 ? (
                     <Badge variant="sale">{order.riskFlags.length} flag(s)</Badge>
                   ) : (
                     <span className="text-ink-400">—</span>
                   )}
                 </td>
-                <td className="text-ink-500 px-4 py-3">
+                <td className="text-ink-500 px-5 py-3.5">
                   {new Date(order.createdAt).toLocaleDateString()}
                 </td>
               </tr>
@@ -121,22 +120,12 @@ export default async function AdminOrdersPage({
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/admin/orders?${params.status ? `status=${params.status}&` : ""}page=${p}`}
-              className={cn(
-                "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold",
-                p === page ? "bg-ink-900 text-white" : "hover:bg-ink-100 bg-white",
-              )}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        basePath="/admin/orders"
+        params={{ status: params.status }}
+      />
     </div>
   );
 }

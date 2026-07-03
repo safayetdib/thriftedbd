@@ -39,6 +39,18 @@ function sizeLabel(size: IProductSize) {
   return undefined;
 }
 
+function sizeMeasurements(size: IProductSize) {
+  if (size.type !== "measurement" || !size.measurements) return null;
+  const { chest, length, sleeve, waist } = size.measurements;
+  const items = [
+    chest && { label: "Chest", value: `${chest}"` },
+    length && { label: "Length", value: `${length}"` },
+    sleeve && { label: "Sleeve", value: `${sleeve}"` },
+    waist && { label: "Waist", value: `${waist}"` },
+  ].filter((x): x is { label: string; value: string } => Boolean(x));
+  return items.length > 0 ? items : null;
+}
+
 const itemConditionMap: Record<string, string> = {
   Excellent: "https://schema.org/LikeNewCondition",
   Good: "https://schema.org/GoodCondition",
@@ -103,7 +115,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const product = await getProductBySlug(slug);
   if (!product || product.status !== "ACTIVE") notFound();
 
-  // Check if customer has this product favorited
   const session = await auth();
   let isFavorited = false;
   if (session?.user?.id && session.user.role === "customer") {
@@ -119,6 +130,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   ]);
 
   const size = sizeLabel(product.size);
+  const measurements = sizeMeasurements(product.size);
+  const isOnSale = Boolean(product.compareAtPrice);
+  const discountPercent = isOnSale
+    ? Math.round((1 - product.price / product.compareAtPrice!) * 100)
+    : 0;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -145,62 +161,107 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   };
 
   return (
-    <main className="max-w-container mx-auto w-full px-4 py-8 md:px-8">
+    <main className="max-w-container mx-auto w-full px-4 py-6 md:px-8 md:py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="text-ink-500 mb-6 flex items-center gap-2 text-sm">
+        <Link href="/products">All Products</Link>
+        {product.categoryPath?.en && (
+          <>
+            <span>/</span>
+            <span>{product.categoryPath.en}</span>
+          </>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-10">
         <ProductGallery images={product.images} alt={localize(product.title, locale)} />
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
+          {/* Brand + Title */}
           <div>
             <p className="text-eyebrow text-ink-500">{product.brand}</p>
-            <h1 className="text-ink-900 mt-1 text-2xl font-extrabold">
+            <h1 className="text-ink-900 mt-1 text-2xl font-extrabold md:text-3xl">
               {localize(product.title, locale)}
             </h1>
           </div>
 
-          <p className="text-price text-ink-900 text-2xl font-extrabold">
-            {product.compareAtPrice ? (
+          {/* Price */}
+          <div className="flex items-baseline gap-3">
+            <p className="text-price text-ink-900 text-3xl font-extrabold">৳{product.price}</p>
+            {isOnSale && (
               <>
-                <span className="text-sale-500">৳{product.price}</span>{" "}
-                <span className="text-ink-400 text-lg line-through">৳{product.compareAtPrice}</span>
+                <p className="text-price text-ink-400 text-lg line-through">
+                  ৳{product.compareAtPrice}
+                </p>
+                <span className="bg-sale-500 rounded-full px-2.5 py-0.5 text-xs font-bold text-white">
+                  -{discountPercent}%
+                </span>
               </>
-            ) : (
-              <>৳{product.price}</>
             )}
-          </p>
-
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="imported">{tEnum(`condition.${product.condition}`)}</Badge>
-            {size && <Badge variant="imported">{size}</Badge>}
           </div>
 
-          {localize(product.notes, locale) && (
-            <p className="text-ink-600 text-sm">{localize(product.notes, locale)}</p>
+          <div className="bg-ink-200 h-px" />
+
+          {/* Size */}
+          {size && (
+            <div>
+              <p className="text-eyebrow text-ink-500 mb-1.5">Size</p>
+              <span className="border-ink-900 inline-block border-2 px-3 py-1 text-sm font-bold">
+                {size}
+              </span>
+              {measurements && (
+                <div className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1">
+                  {measurements.map((m) => (
+                    <div key={m.label} className="flex items-baseline gap-1.5">
+                      <span className="text-ink-500 text-xs">{m.label}</span>
+                      <span className="text-ink-900 text-sm font-semibold">{m.value}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
 
-          <div className="mt-2 flex items-center gap-2">
+          {/* Condition */}
+          <div>
+            <p className="text-eyebrow text-ink-500 mb-1.5">Condition</p>
+            <Badge variant="imported">{tEnum(`condition.${product.condition}`)}</Badge>
+          </div>
+
+          {/* Description */}
+          {localize(product.notes, locale) && (
+            <p className="text-ink-600 text-sm leading-relaxed">
+              {localize(product.notes, locale)}
+            </p>
+          )}
+
+          <div className="bg-ink-200 h-px" />
+
+          {/* CTA */}
+          <div className="flex items-center gap-3">
             <div className="flex-1">
               <AddToCartButton productId={String(product._id)} />
             </div>
             <FavoriteButton productId={String(product._id)} initialFavorited={isFavorited} />
           </div>
 
-          <div className="border-ink-200 mt-4 grid grid-cols-1 gap-4 border-t-2 pt-4 sm:grid-cols-3">
-            <div className="flex flex-col items-start gap-1.5">
-              <ShieldCheckIcon size={20} className="text-green-600" />
-              <p className="text-ink-900 text-xs font-semibold">{t("qualityChecked")}</p>
+          {/* Trust signals */}
+          <div className="border-ink-200 grid grid-cols-1 gap-3 border-t-2 pt-4 sm:grid-cols-3">
+            <div className="flex items-center gap-2.5">
+              <ShieldCheckIcon size={18} className="shrink-0 text-green-600" />
+              <p className="text-ink-700 text-xs font-semibold">{t("qualityChecked")}</p>
             </div>
-            <div className="flex flex-col items-start gap-1.5">
-              <TruckIcon size={20} className="text-green-600" />
-              <p className="text-ink-900 text-xs font-semibold">{t("codPayment")}</p>
+            <div className="flex items-center gap-2.5">
+              <TruckIcon size={18} className="shrink-0 text-green-600" />
+              <p className="text-ink-700 text-xs font-semibold">{t("codPayment")}</p>
             </div>
-            <div className="flex flex-col items-start gap-1.5">
-              <ArrowCounterClockwiseIcon size={20} className="text-green-600" />
-              <p className="text-ink-900 text-xs font-semibold">{t("nationwideDelivery")}</p>
+            <div className="flex items-center gap-2.5">
+              <ArrowCounterClockwiseIcon size={18} className="shrink-0 text-green-600" />
+              <p className="text-ink-700 text-xs font-semibold">{t("nationwideDelivery")}</p>
             </div>
           </div>
         </div>

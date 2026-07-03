@@ -70,13 +70,16 @@ export default function CustomerSignupPage() {
           </div>
 
           {error && (
-            <p className="border-sale-500 bg-sale-50 text-sale-700 border-2 px-3 py-2 text-sm font-medium">
+            <p
+              role="alert"
+              className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+            >
               {error}
             </p>
           )}
 
-          <Button type="submit" variant="primary" className="mt-2 w-full" disabled={isPending}>
-            {isPending ? t("creatingAccount") : t("createAccount")}
+          <Button type="submit" variant="primary" className="mt-2 w-full" loading={isPending}>
+            {t("createAccount")}
           </Button>
         </form>
 
