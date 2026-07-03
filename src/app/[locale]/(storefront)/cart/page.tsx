@@ -9,6 +9,7 @@ import { getSettings } from "@/lib/services/settings.service";
 import { getActivePromotions } from "@/lib/services/promotion.service";
 import { getProductById } from "@/lib/services/product.service";
 import { Button } from "@/components/ui/button";
+import { ProductCard } from "@/components/storefront/product-card";
 import { RemoveFromCartButton } from "@/components/storefront/remove-from-cart-button";
 import { ShoppingBagIcon, CaretRightIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ICartItem } from "@/models/Cart";
@@ -75,6 +76,7 @@ export default async function CartPage() {
                     fill
                     sizes="96px"
                     className="object-cover"
+                    loading="lazy"
                   />
                 )}
               </div>
@@ -170,26 +172,9 @@ export default async function CartPage() {
       {featuredProducts.length > 0 && (
         <section className="mt-12">
           <h2 className="text-ink-900 mb-6 text-lg font-extrabold">{t("completeYourLook")}</h2>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
             {featuredProducts.map((product) => (
-              <Link key={String(product._id)} href={`/products/${product.slug}`}>
-                <div className="border-ink-900 hover:bg-ink-50 flex flex-col gap-2 border-2 p-3 transition-colors">
-                  <div className="border-ink-900 bg-ink-100 relative aspect-square overflow-hidden border-2">
-                    {product.images[0] && (
-                      <Image
-                        src={product.images[0].url}
-                        alt={localize(product.title, locale)}
-                        fill
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                  <p className="text-ink-900 line-clamp-2 text-sm font-semibold">
-                    {localize(product.title, locale)}
-                  </p>
-                  <p className="text-price text-ink-900 font-bold">৳{product.price}</p>
-                </div>
-              </Link>
+              <ProductCard key={String(product._id)} product={product} />
             ))}
           </div>
         </section>

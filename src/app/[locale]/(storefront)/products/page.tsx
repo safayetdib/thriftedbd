@@ -6,14 +6,21 @@ import { connectDB } from "@/lib/db";
 import { getActiveProducts } from "@/lib/services/product.service";
 import { getActiveCategories } from "@/lib/services/category.service";
 import Color from "@/models/Color";
+import type { IProduct } from "@/models/Product";
+import type { ICategory } from "@/models/Category";
+import type { IColor } from "@/models/Color";
+import dynamic from "next/dynamic";
 import { ProductCard } from "@/components/storefront/product-card";
 import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/storefront/search-bar";
-import { FilterSidebar } from "@/components/storefront/filter-sidebar";
 import { SortDropdown } from "@/components/storefront/sort-dropdown";
 import { Pagination } from "@/components/storefront/pagination";
 import { EmptyState } from "@/components/ui/empty-state";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
+
+const FilterSidebar = dynamic(() =>
+  import("@/components/storefront/filter-sidebar").then((mod) => mod.FilterSidebar),
+);
 
 const BASE = "https://thriftedbd.com";
 
@@ -74,8 +81,8 @@ export default async function ProductsPage({
   await connectDB();
   const locale = await getLocale();
   const t = await getTranslations("products");
-  const categories = await getActiveCategories();
-  const colors = await Color.find({ isActive: true }).lean();
+  const categories: ICategory[] = JSON.parse(JSON.stringify(await getActiveCategories()));
+  const colors: IColor[] = JSON.parse(JSON.stringify(await Color.find({ isActive: true }).lean()));
   const activeCategory = params.category
     ? categories.find((c) => c.slug === params.category)
     : undefined;
@@ -87,7 +94,11 @@ export default async function ProductsPage({
   const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
   const maxPrice = params.maxPrice ? Number(params.maxPrice) : undefined;
 
-  const { items, total, limit } = await getActiveProducts({
+  const {
+    items: rawItems,
+    total,
+    limit,
+  } = await getActiveProducts({
     page,
     limit: 24,
     categoryId: activeCategory ? String(activeCategory._id) : undefined,
@@ -100,6 +111,7 @@ export default async function ProductsPage({
     brands,
     sort: (params.sort as "newest" | "price-asc" | "price-desc" | "sale-first") || "newest",
   });
+  const items: IProduct[] = JSON.parse(JSON.stringify(rawItems));
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const departments = categories.filter((c) => c.level === 0);
 

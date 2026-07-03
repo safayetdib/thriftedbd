@@ -11,11 +11,17 @@ import Category from "@/models/Category";
 import type { IProduct } from "@/models/Product";
 import type { ICategory } from "@/models/Category";
 import type { IWhyBuyBlock } from "@/models/Settings";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/storefront/product-card";
-import { HeroCarousel } from "@/components/storefront/hero-carousel";
-import { FaqAccordion } from "@/components/storefront/faq-accordion";
 import { PromotionCard } from "@/components/storefront/promotion-card";
+
+const HeroCarousel = dynamic(() =>
+  import("@/components/storefront/hero-carousel").then((mod) => mod.HeroCarousel),
+);
+const FaqAccordion = dynamic(() =>
+  import("@/components/storefront/faq-accordion").then((mod) => mod.FaqAccordion),
+);
 
 export default async function Home() {
   await connectDB();
@@ -30,21 +36,26 @@ export default async function Home() {
     getActiveCategories(),
   ]);
 
-  const newArrivals: IProduct[] = productsResult.items;
+  const newArrivals: IProduct[] = JSON.parse(JSON.stringify(productsResult.items));
+  const serializedPromotions = JSON.parse(JSON.stringify(promotions));
 
   const homepage = settings.homepage ?? {};
 
   // Fetch featured products
   let featuredProducts: IProduct[] = [];
   if (homepage.featuredProductIds && homepage.featuredProductIds.length > 0) {
-    const items = await Product.find({
-      _id: { $in: homepage.featuredProductIds },
-      status: "ACTIVE",
-    }).lean();
+    const items = JSON.parse(
+      JSON.stringify(
+        await Product.find({
+          _id: { $in: homepage.featuredProductIds },
+          status: "ACTIVE",
+        }).lean(),
+      ),
+    );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     featuredProducts = (homepage.featuredProductIds as any[])
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((id: any) => items.find((p: any) => p._id.toString() === id.toString()))
+      .map((id: any) => items.find((p: any) => p._id === id.toString()))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter((p: any): p is IProduct => !!p);
   }
@@ -126,22 +137,24 @@ export default async function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
-            {newArrivals.map((product) => (
-              <ProductCard key={String(product._id)} product={product} />
+            {newArrivals.map((product, i) => (
+              <ProductCard key={String(product._id)} product={product} priority={i < 4} />
             ))}
           </div>
         </section>
       )}
 
       {/* Offers section */}
-      {promotions.length > 0 && (
+      {serializedPromotions.length > 0 && (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
           <h2 className="text-ink-900 mb-6 text-2xl font-extrabold">{t("specialOffers")}</h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {promotions
-              .filter((p) => p.type === "section")
-              .map((promo) => (
-                <PromotionCard key={promo._id.toString()} promotion={promo} />
+            {serializedPromotions
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .filter((p: any) => p.type === "section")
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .map((promo: any) => (
+                <PromotionCard key={promo._id} promotion={promo} />
               ))}
           </div>
         </section>
@@ -152,8 +165,8 @@ export default async function Home() {
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
           <h2 className="text-ink-900 mb-6 text-2xl font-extrabold">{t("featuredProducts")}</h2>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
-            {featuredProducts.map((product: IProduct) => (
-              <ProductCard key={String(product._id)} product={product} />
+            {featuredProducts.map((product: IProduct, i: number) => (
+              <ProductCard key={String(product._id)} product={product} priority={i < 4} />
             ))}
           </div>
         </section>

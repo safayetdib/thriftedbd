@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { localize } from "@/lib/localize";
@@ -6,8 +7,11 @@ import { connectDB } from "@/lib/db";
 import { getCart } from "@/lib/services/cart.service";
 import { peekCartIdentity } from "@/lib/cart-identity";
 import { getActivePromotions } from "@/lib/services/promotion.service";
-import { CheckoutForm } from "@/components/storefront/checkout-form";
 import type { ICartItem } from "@/models/Cart";
+
+const CheckoutForm = dynamic(() =>
+  import("@/components/storefront/checkout-form").then((mod) => mod.CheckoutForm),
+);
 
 export default async function CheckoutPage() {
   await connectDB();

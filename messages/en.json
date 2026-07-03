@@ -54,6 +54,7 @@
     "itemCount": "{count, plural, one {# item} other {# items}}",
     "all": "All",
     "noResults": "No products found matching your criteria.",
+    "search": "Search",
     "searchPlaceholder": "Search products by name, brand, or category...",
     "sort": {
       "newest": "Newest",

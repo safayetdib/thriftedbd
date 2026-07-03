@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
@@ -208,8 +209,13 @@ export function ProductForm({
         <div className="flex flex-wrap gap-3">
           {images.map((img) => (
             <div key={img.key} className="border-ink-900 relative border-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt="" className="size-28 object-cover" />
+              <Image
+                src={img.url}
+                alt=""
+                width={112}
+                height={112}
+                className="size-28 object-cover"
+              />
               <button
                 type="button"
                 onClick={() => removeImage(img.key)}

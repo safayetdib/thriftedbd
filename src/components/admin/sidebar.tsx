@@ -57,7 +57,7 @@ export function AdminSidebar() {
                 href={href}
                 className={cn(
                   "text-body-sm flex items-center gap-2.5 rounded-md px-3 py-2 font-semibold transition-colors",
-                  isActive ? "bg-green-500 text-white" : "text-ink-700 hover:bg-ink-100",
+                  isActive ? "text-ink-900 bg-green-500" : "text-ink-700 hover:bg-ink-100",
                 )}
               >
                 <Icon size={18} weight={isActive ? "fill" : "regular"} />

@@ -11,20 +11,24 @@ This document contains high-signal, repo-specific instructions for AI agents wor
 ## 1. Developer Commands & Workflow
 - **Verification Chain:** Run this exact chain before completing any work:
   `pnpm typecheck && pnpm lint && pnpm test`
-- **Run a Single Test File:** Do not run the full suite repeatedly. Run a single file using:
-  `pnpm vitest run <path-to-test-file>` (e.g., `pnpm vitest run src/lib/services/order.service.test.ts`)
-- **Seeding:** `pnpm run seed` runs `scripts/seed.ts` via tsx.
-- **Prettier:** Run `pnpm run format` to auto-format files.
+- **Run a Single Test File:** `pnpm vitest run <path-to-test-file>` (e.g., `pnpm vitest run src/lib/services/order.service.test.ts`)
+- **Seeding:** `pnpm run seed` runs `scripts/seed.ts` via tsx. `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD` env vars are only needed here, not at runtime.
+- **Format:** `pnpm run format` (Prettier). Pre-commit (Husky) auto-runs `lint-staged` — ESLint fix + Prettier on staged files.
 - **Git Hook Policy:** Pre-push runs `pnpm typecheck && pnpm lint`.
 - **NO Commits/Pushes:** Never execute `git commit` or `git push`. Leave changes staged/uncommitted.
 
 ## 2. Architecture & File Conventions
+- **Package Manager:** pnpm. Single-package repo (`pnpm-workspace.yaml` only has `ignoredBuiltDependencies`).
 - **App Boundary:** Next.js v16 + React v19. Admin (`/admin`) and storefront are in the same Next.js application.
 - **Middleware Relocation:** Renamed to `src/proxy.ts` (default export stays `proxy`). **DO NOT** recreate `middleware.ts`.
-- **Thin Route Handlers:** Routes (in `src/app/api/.../route.ts`) only handle request parsing/response wrapping. All database reads and writes must live in service files: `src/lib/services/{collection}.service.ts`.
-- **Validation:** Every API route must validate inputs with Zod schemas located in `src/lib/validations/` before database interactions.
-- **Self-Hosted Auth:** NextAuth v5 + JWT credentials provider. No Clerk, Firebase, or Supabase Auth.
-- **@auth/core Hack:** `@auth/core` must remain an explicit `devDependency` in `package.json` to allow TypeScript to resolve module augmentation in `src/types/next-auth.d.ts` (due to pnpm strict isolation).
+- **Thin Route Handlers:** Routes (in `src/app/api/.../route.ts`) only handle request parsing/response wrapping. All database reads and writes live in `src/lib/services/{collection}.service.ts`.
+- **Validation:** Every API route validates inputs with Zod v4 schemas in `src/lib/validations/` before database interactions.
+- **Self-Hosted Auth:** NextAuth v5 + JWT credentials provider. Two credentials providers: `admin` and `customer`.
+- **Auth Helpers:** `requireAdmin()` / `requireCustomer()` in `src/lib/api-auth.ts` return 401/403 `NextResponse` or null.
+- **@auth/core Hack:** `@auth/core` is an explicit `devDependency` — needed for TS module augmentation in `src/types/next-auth.d.ts` under pnpm strict isolation.
+- **Locale Routing:** English is unprefixed (`/products/...`), Bangla gets `/bn/` prefix (`/bn/products/...`). Admin sits outside `[locale]` — never localized. Configured in `src/i18n/routing.ts` using next-intl with `localePrefix: "as-needed"`.
+- **Fonts:** Inter (variable, 400–900), Noto Sans (fallback), Noto Sans Bengali — loaded in `src/app/layout.tsx` as CSS variables.
+- **CSS:** Tailwind CSS v4 with `@tailwindcss/postcss` plugin. Design tokens in `DESIGN.md` (Wise-inspired palette).
 
 ## 3. Critical Domain & Business Invariants
 - **Unique-Item Inventory:** Products are unique secondhand pieces with 0 or 1 stock. Avoid traditional multi-stock assumptions.
@@ -50,6 +54,7 @@ This document contains high-signal, repo-specific instructions for AI agents wor
 - **Shared Replica Set:** Tests run on `MongoMemoryReplSet` instead of single-node `MongoMemoryServer` because multi-document Mongoose transactions require a replica set.
 - **Sequenced Tests:** `fileParallelism: false` is configured in `vitest.config.ts`. Tests must run sequentially to avoid collection collision.
 - **High Timeout on First Run:** First run of tests downloads the MongoDB binary. If downloading takes time, ensure timeout is set high (`hookTimeout: 120000`).
+- **Test Helpers:** `src/lib/test/mongo.ts` exports `connectTestDB`/`disconnectTestDB`/`clearTestDB`. `src/lib/test/fixtures.ts` exports `makeProduct()`, `makeCart()`, etc. Colocate new tests as `*.test.ts` next to the module under test.
 - **Cloudflare R2 Direct Uploads:** Images upload directly to Cloudflare R2 via presigned URLs generated server-side. The Next.js server never receives or processes file buffers.
 
 ## 6. On-Demand Guides

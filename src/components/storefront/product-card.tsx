@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -22,7 +24,13 @@ function sizeLabel(size: ProductCardData["size"]) {
   return undefined;
 }
 
-export function ProductCard({ product }: { product: ProductCardData }) {
+export function ProductCard({
+  product,
+  priority = false,
+}: {
+  product: ProductCardData;
+  priority?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("product");
   const isSold = product.status === "SOLD";
@@ -41,6 +49,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
             alt={title}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+            priority={priority}
             className={`object-cover transition-transform duration-300 ${isSold ? "grayscale" : "group-hover:scale-[1.05]"}`}
           />
         )}

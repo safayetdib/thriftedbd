@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import {
   ShieldCheckIcon,
   TruckIcon,
@@ -9,10 +9,18 @@ import {
 import { connectDB } from "@/lib/db";
 import { getProductBySlug, getSimilarProducts } from "@/lib/services/product.service";
 import { getActivePromotions } from "@/lib/services/promotion.service";
-import { ProductGallery } from "@/components/storefront/product-gallery";
-import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
-import { FavoriteButton } from "@/components/storefront/favorite-button";
 import { Badge } from "@/components/ui/badge";
+import { ProductCard } from "@/components/storefront/product-card";
+
+const ProductGallery = dynamic(() =>
+  import("@/components/storefront/product-gallery").then((mod) => mod.ProductGallery),
+);
+const AddToCartButton = dynamic(() =>
+  import("@/components/storefront/add-to-cart-button").then((mod) => mod.AddToCartButton),
+);
+const FavoriteButton = dynamic(() =>
+  import("@/components/storefront/favorite-button").then((mod) => mod.FavoriteButton),
+);
 import { auth } from "@/lib/auth";
 import Customer from "@/models/Customer";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -128,6 +136,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     getSimilarProducts(String(product._id), String(product.categoryId), product.price),
     getActivePromotions(["pdp", "global"]),
   ]);
+  const serializedSimilar = JSON.parse(JSON.stringify(similarProducts));
 
   const size = sizeLabel(product.size);
   const measurements = sizeMeasurements(product.size);
@@ -297,30 +306,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {similarProducts.length > 0 && (
+      {serializedSimilar.length > 0 && (
         <section className="mt-12">
           <h2 className="text-ink-900 mb-6 text-lg font-extrabold">{t("similarProducts")}</h2>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {similarProducts.map((prod) => (
-              <Link key={String(prod._id)} href={`/products/${prod.slug}`}>
-                <div className="border-ink-900 hover:bg-ink-50 flex flex-col gap-2 border-2 p-3 transition-colors">
-                  <div className="border-ink-900 bg-ink-100 relative aspect-square overflow-hidden border-2">
-                    {prod.images[0] && (
-                      <Image
-                        src={prod.images[0].url}
-                        alt={localize(prod.title, locale)}
-                        fill
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                  <p className="text-ink-900 line-clamp-2 text-sm font-semibold">
-                    {localize(prod.title, locale)}
-                  </p>
-                  <p className="text-price text-ink-900 font-bold">৳{prod.price}</p>
-                </div>
-              </Link>
-            ))}
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
+            {serializedSimilar
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .map((prod: any) => (
+                <ProductCard key={String(prod._id)} product={prod} />
+              ))}
           </div>
         </section>
       )}

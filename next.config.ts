@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "*.r2.dev" },
       { protocol: "https", hostname: "placehold.co" },
+      { protocol: "https", hostname: "cdn.scenesku.com" },
     ],
   },
 };

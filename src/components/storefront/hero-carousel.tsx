@@ -57,6 +57,7 @@ export function HeroCarousel({ slides }: { slides: IHeroSlide[] }) {
               src={currentSlide.imageUrl}
               alt={currentSlide.headline || "Hero slide"}
               fill
+              sizes="(max-width: 768px) 100vw, 1200px"
               className="object-cover"
               priority
             />

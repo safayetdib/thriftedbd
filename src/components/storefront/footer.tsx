@@ -23,7 +23,7 @@ export function SiteFooter({
   const t = useTranslations("footer");
 
   return (
-    <footer className="bg-ink-900 text-ink-300 border-ink-900 mt-auto border-t-2">
+    <footer className="bg-ink-900 text-ink-100 border-ink-900 mt-auto border-t-2">
       {/* Main footer grid */}
       <div className="max-w-container mx-auto px-4 py-12 md:px-8 md:py-16">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -98,7 +98,7 @@ export function SiteFooter({
                   href={socialLinks.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center border-2 text-xs font-bold transition-colors"
+                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
                 >
                   FB
                 </a>
@@ -108,7 +108,7 @@ export function SiteFooter({
                   href={socialLinks.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center border-2 text-xs font-bold transition-colors"
+                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
                 >
                   IG
                 </a>
@@ -118,7 +118,7 @@ export function SiteFooter({
                   href={socialLinks.tiktok}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center border-2 text-xs font-bold transition-colors"
+                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
                 >
                   TK
                 </a>
@@ -128,7 +128,7 @@ export function SiteFooter({
                   href={socialLinks.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center border-2 text-xs font-bold transition-colors"
+                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
                 >
                   YT
                 </a>
@@ -194,12 +194,12 @@ function NewsletterForm() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder={t("emailPlaceholder")}
         required
-        className="border-ink-700 bg-ink-800 text-ink-50 placeholder:text-ink-600 focus:border-ink-400 flex-1 border-2 border-r-0 px-3 py-2 text-sm outline-none"
+        className="border-ink-700 bg-ink-800 text-ink-50 placeholder:text-ink-600 focus:border-ink-400 flex-1 rounded-l-md border-2 border-r-0 px-3 py-2 text-sm outline-none"
       />
       <button
         type="submit"
         disabled={status === "loading"}
-        className="border-ink-700 border-2 bg-green-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-500 disabled:opacity-50"
+        className="border-ink-700 rounded-r-md border-2 bg-green-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-500 disabled:opacity-50"
       >
         {status === "loading" ? "…" : t("go")}
       </button>
