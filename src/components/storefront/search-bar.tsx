@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
 /**
@@ -9,6 +10,7 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
  * Client-side: submits to /products?q=query
  */
 export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
+  const t = useTranslations("products");
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
 
@@ -26,7 +28,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
       <div className="border-ink-900 flex items-center border-2 bg-white">
         <input
           type="text"
-          placeholder="Search products by name, brand, or category..."
+          placeholder={t("searchPlaceholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-1 border-none px-4 py-3 text-sm outline-none"

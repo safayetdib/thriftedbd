@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 
 /**
  * Sort dropdown for products.
@@ -13,6 +14,7 @@ export function SortDropdown({
   currentSort?: string;
   currentParams: Record<string, string | undefined>;
 }) {
+  const t = useTranslations("products.sort");
   const router = useRouter();
 
   const handleSort = (sort: string) => {
@@ -32,10 +34,10 @@ export function SortDropdown({
       onChange={(e) => handleSort(e.target.value)}
       className="border-ink-900 border-2 bg-white px-3 py-2 text-sm font-semibold"
     >
-      <option value="newest">Newest</option>
-      <option value="price-asc">Price: Low to High</option>
-      <option value="price-desc">Price: High to Low</option>
-      <option value="sale-first">Sale Items First</option>
+      <option value="newest">{t("newest")}</option>
+      <option value="price-asc">{t("priceAsc")}</option>
+      <option value="price-desc">{t("priceDesc")}</option>
+      <option value="sale-first">{t("saleFirst")}</option>
     </select>
   );
 }

@@ -1,10 +1,12 @@
-import Link from "next/link";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { localize } from "@/lib/localize";
 import { Badge } from "@/components/ui/badge";
 
 export type ProductCardData = {
   slug: string;
-  title: { en: string };
+  title: { en: string; bn?: string };
   brand: string;
   price: number;
   compareAtPrice?: number;
@@ -20,8 +22,11 @@ function sizeLabel(size: ProductCardData["size"]) {
 }
 
 export function ProductCard({ product }: { product: ProductCardData }) {
+  const locale = useLocale();
+  const t = useTranslations("product");
   const isSold = product.status === "SOLD";
   const size = sizeLabel(product.size);
+  const title = localize(product.title, locale);
 
   return (
     <Link href={`/products/${product.slug}`} className="group block">
@@ -29,7 +34,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         {product.images[0]?.url && (
           <Image
             src={product.images[0].url}
-            alt={product.title.en}
+            alt={title}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
             className={`object-cover transition-transform duration-200 ${isSold ? "grayscale" : "group-hover:scale-[1.03]"}`}
@@ -37,13 +42,13 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         )}
         {isSold && (
           <span className="absolute top-2 left-2">
-            <Badge variant="sold">Sold</Badge>
+            <Badge variant="sold">{t("sold")}</Badge>
           </span>
         )}
       </div>
       <div className="mt-2 flex flex-col gap-0.5">
         <p className="text-ink-900 truncate text-sm font-semibold">{product.brand}</p>
-        <p className="text-ink-600 truncate text-sm">{product.title.en}</p>
+        <p className="text-ink-600 truncate text-sm">{title}</p>
         {size && <p className="text-ink-500 text-xs">{size}</p>}
         <p className="text-price text-ink-900 mt-0.5 font-semibold">
           {product.compareAtPrice ? (

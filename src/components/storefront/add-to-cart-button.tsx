@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 
 export function AddToCartButton({ productId }: { productId: string }) {
+  const t = useTranslations("product");
   const router = useRouter();
   const [state, setState] = useState<"idle" | "loading" | "added" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -20,12 +21,12 @@ export function AddToCartButton({ productId }: { productId: string }) {
         body: JSON.stringify({ productId }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error?.message ?? "Failed to add to cart");
+      if (!res.ok) throw new Error(json.error?.message ?? t("addError"));
       setState("added");
       router.refresh();
     } catch (err) {
       setState("error");
-      setError(err instanceof Error ? err.message : "Failed to add to cart");
+      setError(err instanceof Error ? err.message : t("addError"));
     }
   }
 
@@ -33,11 +34,11 @@ export function AddToCartButton({ productId }: { productId: string }) {
     return (
       <div className="flex gap-3">
         <Button variant="secondary" size="lg" disabled className="flex-1">
-          Added to bag
+          {t("addedToBag")}
         </Button>
         <Link href="/cart">
           <Button variant="outline" size="lg">
-            View bag
+            {t("viewBag")}
           </Button>
         </Link>
       </div>
@@ -53,7 +54,7 @@ export function AddToCartButton({ productId }: { productId: string }) {
         disabled={state === "loading"}
         className="w-full"
       >
-        {state === "loading" ? "Adding…" : "Add to bag"}
+        {state === "loading" ? t("adding") : t("addToBag")}
       </Button>
       {error && <p className="text-sale-500 text-sm font-medium">{error}</p>}
     </div>

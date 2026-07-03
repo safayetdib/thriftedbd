@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, Suspense } from "react";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import {
   ListIcon,
   MagnifyingGlassIcon,
@@ -12,6 +13,7 @@ import {
   XIcon,
   CaretDownIcon,
 } from "@phosphor-icons/react";
+import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 
 type SubCategory = { slug: string; name: string; coverImage?: { url: string; key: string } };
@@ -29,6 +31,8 @@ export function SiteHeader({
   departments: Department[];
   cartCount: number;
 }) {
+  const t = useTranslations("header");
+
   return (
     <header className="border-ink-900 sticky top-0 z-40 border-b-2 bg-white">
       <div className="max-w-container mx-auto flex h-16 w-full items-center justify-between px-4 md:px-8">
@@ -77,7 +81,7 @@ export function SiteHeader({
                               />
                             ) : (
                               <div className="flex h-full items-center justify-center">
-                                <span className="text-ink-300 text-xs">No image</span>
+                                <span className="text-ink-300 text-xs">{t("noImage")}</span>
                               </div>
                             )}
                           </div>
@@ -92,7 +96,7 @@ export function SiteHeader({
                       href={`/products?category=${dept.slug}`}
                       className="mt-3 block text-center text-xs font-semibold text-green-700 hover:underline"
                     >
-                      View all {dept.name} →
+                      {t("viewAll", { name: dept.name })} →
                     </Link>
                   </div>
                 </div>
@@ -108,17 +112,17 @@ export function SiteHeader({
 
           {/* Desktop-only icons */}
           <div className="hidden items-center gap-1 lg:flex">
-            <Link href="/products" aria-label="Search">
+            <Link href="/products" aria-label={t("search")}>
               <Button variant="ghost" size="icon-sm">
                 <MagnifyingGlassIcon size={20} />
               </Button>
             </Link>
-            <Link href="/account" aria-label="Account">
+            <Link href="/account" aria-label={t("account")}>
               <Button variant="ghost" size="icon-sm">
                 <UserIcon size={20} />
               </Button>
             </Link>
-            <Link href="/favorites" aria-label="Wishlist">
+            <Link href="/favorites" aria-label={t("wishlist")}>
               <Button variant="ghost" size="icon-sm">
                 <HeartIcon size={20} />
               </Button>
@@ -127,7 +131,7 @@ export function SiteHeader({
 
           {/* Cart — always visible */}
           <Link href="/cart" className="relative">
-            <Button variant="ghost" size="icon-sm" aria-label="Cart">
+            <Button variant="ghost" size="icon-sm" aria-label={t("cart")}>
               <ShoppingBagIcon size={20} />
             </Button>
             {cartCount > 0 && (
@@ -136,13 +140,39 @@ export function SiteHeader({
               </span>
             )}
           </Link>
+
+          {/* Language toggle — a real route change per docs/i18n-guidelines.md */}
+          <Suspense fallback={null}>
+            <LanguageSwitcher />
+          </Suspense>
         </div>
       </div>
     </header>
   );
 }
 
+function LanguageSwitcher() {
+  const locale = useLocale();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const otherLocale = locale === "en" ? "bn" : "en";
+  const query = searchParams.toString();
+  const href = query ? `${pathname}?${query}` : pathname;
+
+  return (
+    <Link
+      href={href}
+      locale={otherLocale}
+      className="border-ink-900 text-ink-900 hover:bg-ink-900 ml-1 flex h-8 items-center border-2 px-2 text-xs font-bold transition-colors hover:text-white"
+      aria-label={locale === "en" ? "বাংলায় দেখুন" : "View in English"}
+    >
+      {locale === "en" ? "বাং" : "EN"}
+    </Link>
+  );
+}
+
 function MobileMenu({ departments }: { departments: Department[] }) {
+  const t = useTranslations("header");
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -152,7 +182,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
         variant="ghost"
         size="icon-sm"
         className="lg:hidden"
-        aria-label="Open menu"
+        aria-label={t("openMenu")}
         onClick={() => setOpen(true)}
       >
         <ListIcon size={22} />
@@ -168,8 +198,13 @@ function MobileMenu({ departments }: { departments: Department[] }) {
         }`}
       >
         <div className="border-ink-900 flex h-16 items-center justify-between border-b-2 px-4">
-          <span className="text-ink-900 font-extrabold">Menu</span>
-          <Button variant="ghost" size="icon-sm" onClick={() => setOpen(false)} aria-label="Close">
+          <span className="text-ink-900 font-extrabold">{t("menu")}</span>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setOpen(false)}
+            aria-label={t("close")}
+          >
             <XIcon size={20} />
           </Button>
         </div>
@@ -189,7 +224,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
                   <button
                     onClick={() => setExpanded(expanded === dept.slug ? null : dept.slug)}
                     className="text-ink-500 hover:text-ink-900 px-2 py-3"
-                    aria-label="Expand"
+                    aria-label={t("expand")}
                   >
                     <CaretDownIcon
                       size={16}
@@ -236,21 +271,21 @@ function MobileMenu({ departments }: { departments: Department[] }) {
               onClick={() => setOpen(false)}
               className="text-ink-700 py-2 text-sm font-semibold"
             >
-              My account
+              {t("myAccount")}
             </Link>
             <Link
               href="/favorites"
               onClick={() => setOpen(false)}
               className="text-ink-700 py-2 text-sm font-semibold"
             >
-              Favorites
+              {t("favorites")}
             </Link>
             <Link
               href="/track-order"
               onClick={() => setOpen(false)}
               className="text-ink-700 py-2 text-sm font-semibold"
             >
-              Track order
+              {t("trackOrder")}
             </Link>
           </div>
         </nav>

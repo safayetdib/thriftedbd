@@ -34,8 +34,7 @@ const couponSchema = new Schema<ICoupon>(
   { timestamps: true },
 );
 
-// Index: look up by code
-couponSchema.index({ code: 1 });
+// Lookup-by-code index already comes from `unique: true` on the field itself.
 // Index: find active coupons not yet expired
 couponSchema.index({ isActive: 1, expiresAt: 1 });
 

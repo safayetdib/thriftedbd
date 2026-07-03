@@ -4,6 +4,7 @@ import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Color from "@/models/Color";
 import Owner from "@/models/Owner";
+import { withBanglaDraft } from "@/lib/services/translate.service";
 import type { CreateProductInput, UpdateProductInput } from "@/lib/validations/product.schema";
 
 const DEFAULT_LIMIT = 24;
@@ -154,10 +155,12 @@ export async function getAdminProducts(params: { page?: number; limit?: number; 
 }
 
 export async function createProduct(input: CreateProductInput) {
-  const [categoryPath, color, owner] = await Promise.all([
+  const [categoryPath, color, owner, title, notes] = await Promise.all([
     buildCategoryPath(input.categoryId),
     Color.findById(input.colorId).lean(),
     Owner.findById(input.ownerId).lean(),
+    withBanglaDraft(input.title),
+    input.notes ? withBanglaDraft(input.notes) : undefined,
   ]);
 
   if (!color) throw new Error("COLOR_NOT_FOUND");
@@ -166,7 +169,7 @@ export async function createProduct(input: CreateProductInput) {
   return Product.create({
     sku: generateSku(),
     slug: input.slug,
-    title: input.title,
+    title,
     brand: input.brand,
     categoryId: input.categoryId,
     categoryPath,
@@ -180,7 +183,7 @@ export async function createProduct(input: CreateProductInput) {
     owner: owner.name,
     grade: input.grade,
     condition: input.condition,
-    notes: input.notes,
+    notes,
     status: input.status ?? "DRAFT",
   });
 }
@@ -188,6 +191,12 @@ export async function createProduct(input: CreateProductInput) {
 export async function updateProduct(id: string, input: UpdateProductInput) {
   const update: Record<string, unknown> = { ...input };
 
+  if (input.title) {
+    update.title = await withBanglaDraft(input.title);
+  }
+  if (input.notes) {
+    update.notes = await withBanglaDraft(input.notes);
+  }
   if (input.categoryId) {
     update.categoryPath = await buildCategoryPath(input.categoryId);
   }

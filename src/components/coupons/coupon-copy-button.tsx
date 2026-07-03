@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { CopyIcon, CheckIcon } from "@phosphor-icons/react/dist/ssr";
 
@@ -9,6 +10,7 @@ import { CopyIcon, CheckIcon } from "@phosphor-icons/react/dist/ssr";
  * Shows checkmark for 2 seconds after copy.
  */
 export function CouponCopyButton({ code }: { code: string }) {
+  const t = useTranslations("accountCoupons");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -20,7 +22,7 @@ export function CouponCopyButton({ code }: { code: string }) {
   return (
     <Button variant="secondary" size="sm" onClick={handleCopy}>
       {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
-      {copied ? "Copied" : "Copy"}
+      {copied ? t("copied") : t("copy")}
     </Button>
   );
 }

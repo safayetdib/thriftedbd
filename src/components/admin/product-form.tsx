@@ -177,7 +177,18 @@ export function ProductForm({
       setError(result.error);
       return;
     }
-    router.push("/admin/products");
+    // A Bangla draft was auto-translated on the server — open the edit page
+    // so the admin can review/correct it before it's considered final.
+    if (
+      !productId &&
+      result.data &&
+      "autoTranslated" in result.data &&
+      result.data.autoTranslated
+    ) {
+      router.push(`/admin/products/${result.data.id}`);
+    } else {
+      router.push("/admin/products");
+    }
     router.refresh();
   }
 

@@ -74,7 +74,7 @@
   --container-container: 1440px;
 
   /* Typography */
-  --font-sans: var(--font-noto), system-ui, sans-serif;
+  --font-sans: var(--font-noto), var(--font-noto-bengali), system-ui, sans-serif;
 
   /* Motion */
   --ease-brand: cubic-bezier(0.2, 0, 0, 1);

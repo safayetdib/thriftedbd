@@ -33,7 +33,10 @@ export async function createProductAction(input: unknown) {
     const product = await createProduct(parsed.data);
     revalidatePath("/admin/products");
     revalidatePath("/admin");
-    return { data: { id: String(product._id) } };
+    // Bangla was empty on save but filled afterwards -> a machine-translation
+    // draft was added; the form sends the admin to the edit page to review it.
+    const autoTranslated = !parsed.data.title.bn && Boolean(product.title.bn);
+    return { data: { id: String(product._id), autoTranslated } };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create product" };
   }

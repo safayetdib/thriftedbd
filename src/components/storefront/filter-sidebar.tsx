@@ -1,6 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
+import { localize } from "@/lib/localize";
 import type { IColor } from "@/models/Color";
 
 interface FilterSidebarProps {
@@ -16,6 +18,9 @@ interface FilterSidebarProps {
  * Updates URL params on change.
  */
 export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
+  const locale = useLocale();
+  const t = useTranslations("filters");
+  const tEnum = useTranslations("enums");
   const router = useRouter();
 
   const handleFilterChange = (key: string, values: string[]) => {
@@ -40,7 +45,7 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
       <div className="border-ink-900 flex flex-col gap-6 border-2 bg-white p-4">
         {/* Price range */}
         <div>
-          <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">Price range</h3>
+          <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("priceRange")}</h3>
           <div className="text-ink-600 text-xs">
             <p className="mb-2">
               {currentParams.minPrice && currentParams.maxPrice
@@ -48,8 +53,8 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
                 : currentParams.minPrice
                   ? `৳${currentParams.minPrice}+`
                   : currentParams.maxPrice
-                    ? `Up to ৳${currentParams.maxPrice}`
-                    : "Any price"}
+                    ? t("upTo", { max: currentParams.maxPrice })
+                    : t("anyPrice")}
             </p>
             <button
               onClick={() => {
@@ -60,14 +65,14 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
               }}
               className="text-xs font-semibold text-green-700 hover:underline"
             >
-              Clear
+              {t("clear")}
             </button>
           </div>
         </div>
 
         {/* Sizes */}
         <div>
-          <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">Size</h3>
+          <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("size")}</h3>
           <div className="flex flex-wrap gap-1.5">
             {sizes.map((size) => (
               <button
@@ -92,7 +97,7 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
 
         {/* Condition */}
         <div>
-          <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">Condition</h3>
+          <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("condition")}</h3>
           <div className="space-y-2">
             {conditions.map((cond) => (
               <label key={cond} className="flex cursor-pointer items-center gap-2">
@@ -107,7 +112,9 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
                   }}
                   className="border-ink-900 h-4 w-4 border-2"
                 />
-                <span className="text-ink-700 text-sm font-medium">{cond}</span>
+                <span className="text-ink-700 text-sm font-medium">
+                  {tEnum(`condition.${cond}`)}
+                </span>
               </label>
             ))}
           </div>
@@ -116,7 +123,7 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
         {/* Colors */}
         {colors.length > 0 && (
           <div>
-            <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">Color</h3>
+            <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("color")}</h3>
             <div className="max-h-48 space-y-2 overflow-y-auto">
               {colors.map((color) => (
                 <label
@@ -134,7 +141,9 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
                     }}
                     className="border-ink-900 h-4 w-4 border-2"
                   />
-                  <span className="text-ink-700 text-sm font-medium">{color.name.en}</span>
+                  <span className="text-ink-700 text-sm font-medium">
+                    {localize(color.name, locale)}
+                  </span>
                 </label>
               ))}
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { HeartIcon } from "@phosphor-icons/react";
 
 export function FavoriteButton({
@@ -10,6 +11,7 @@ export function FavoriteButton({
   productId: string;
   initialFavorited?: boolean;
 }) {
+  const t = useTranslations("product");
   const [isFav, setIsFav] = useState(initialFavorited);
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +40,7 @@ export function FavoriteButton({
     <button
       onClick={toggle}
       disabled={loading}
-      aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
+      aria-label={isFav ? t("removeFromFavorites") : t("addToFavorites")}
       className="border-ink-900 hover:bg-ink-100 flex h-9 w-9 items-center justify-center border-2 bg-white transition-colors disabled:opacity-50"
     >
       <HeartIcon

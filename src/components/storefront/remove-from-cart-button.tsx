@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { XIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 
 export function RemoveFromCartButton({ productId }: { productId: string }) {
+  const t = useTranslations("cart");
   const router = useRouter();
   const [removing, setRemoving] = useState(false);
 
@@ -21,7 +23,7 @@ export function RemoveFromCartButton({ productId }: { productId: string }) {
       size="icon-sm"
       onClick={handleRemove}
       disabled={removing}
-      aria-label="Remove from cart"
+      aria-label={t("remove")}
     >
       <XIcon size={16} />
     </Button>

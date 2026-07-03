@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 type SocialLinks = {
   facebook?: string;
@@ -19,6 +20,8 @@ export function SiteFooter({
   socialLinks?: SocialLinks;
   departments?: Department[];
 }) {
+  const t = useTranslations("footer");
+
   return (
     <footer className="bg-ink-900 text-ink-300 border-ink-900 mt-auto border-t-2">
       {/* Main footer grid */}
@@ -27,7 +30,7 @@ export function SiteFooter({
           {/* Col 1: Shop */}
           <div>
             <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              Shop
+              {t("shop")}
             </h3>
             <ul className="space-y-2">
               {departments?.map((dept) => (
@@ -45,7 +48,7 @@ export function SiteFooter({
                   href="/products"
                   className="text-ink-400 hover:text-ink-50 text-sm transition-colors"
                 >
-                  All products
+                  {t("allProducts")}
                 </Link>
               </li>
             </ul>
@@ -54,14 +57,14 @@ export function SiteFooter({
           {/* Col 2: Help */}
           <div>
             <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              Help
+              {t("help")}
             </h3>
             <ul className="space-y-2">
               {[
-                { label: "Track my order", href: "/track-order" },
-                { label: "Return policy", href: "/returns" },
-                { label: "FAQ", href: "/#faq" },
-                { label: "Contact us", href: "/contact" },
+                { label: t("trackMyOrder"), href: "/track-order" },
+                { label: t("returnPolicy"), href: "/returns" },
+                { label: t("faq"), href: "/#faq" },
+                { label: t("contactUs"), href: "/contact" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -78,16 +81,16 @@ export function SiteFooter({
           {/* Col 3: Newsletter */}
           <div>
             <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              Stay updated
+              {t("stayUpdated")}
             </h3>
-            <p className="text-ink-400 mb-3 text-sm">Get new arrivals and exclusive deals.</p>
+            <p className="text-ink-400 mb-3 text-sm">{t("newsletterBlurb")}</p>
             <NewsletterForm />
           </div>
 
           {/* Col 4: Connect + Trust */}
           <div>
             <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              Connect
+              {t("connect")}
             </h3>
             <div className="mb-6 flex gap-3">
               {socialLinks?.facebook && (
@@ -134,16 +137,13 @@ export function SiteFooter({
 
             {/* Trust badges */}
             <div className="space-y-2">
-              {[
-                "✓ COD nationwide",
-                "✓ bKash & Nagad",
-                "✓ Quality checked",
-                "✓ Steadfast delivery",
-              ].map((badge) => (
-                <p key={badge} className="text-ink-500 text-xs">
-                  {badge}
-                </p>
-              ))}
+              {[t("badgeCod"), t("badgePayment"), t("badgeQuality"), t("badgeDelivery")].map(
+                (badge) => (
+                  <p key={badge} className="text-ink-500 text-xs">
+                    ✓ {badge}
+                  </p>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -152,10 +152,8 @@ export function SiteFooter({
       {/* Bottom bar */}
       <div className="border-ink-800 border-t px-4 py-4 md:px-8">
         <div className="max-w-container mx-auto flex flex-col items-center justify-between gap-2 sm:flex-row">
-          <p className="text-ink-500 text-xs">
-            © {new Date().getFullYear()} thriftedBD. All rights reserved.
-          </p>
-          <p className="text-ink-600 text-xs">Imported preloved fashion · Bangladesh</p>
+          <p className="text-ink-500 text-xs">{t("rights", { year: new Date().getFullYear() })}</p>
+          <p className="text-ink-600 text-xs">{t("tagline")}</p>
         </div>
       </div>
     </footer>
@@ -163,6 +161,7 @@ export function SiteFooter({
 }
 
 function NewsletterForm() {
+  const t = useTranslations("footer");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -184,7 +183,7 @@ function NewsletterForm() {
   }
 
   if (status === "success") {
-    return <p className="text-sm text-green-400">You&apos;re subscribed!</p>;
+    return <p className="text-sm text-green-400">{t("subscribed")}</p>;
   }
 
   return (
@@ -193,7 +192,7 @@ function NewsletterForm() {
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="your@email.com"
+        placeholder={t("emailPlaceholder")}
         required
         className="border-ink-700 bg-ink-800 text-ink-50 placeholder:text-ink-600 focus:border-ink-400 flex-1 border-2 border-r-0 px-3 py-2 text-sm outline-none"
       />
@@ -202,7 +201,7 @@ function NewsletterForm() {
         disabled={status === "loading"}
         className="border-ink-700 border-2 bg-green-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-500 disabled:opacity-50"
       >
-        {status === "loading" ? "…" : "Go"}
+        {status === "loading" ? "…" : t("go")}
       </button>
     </form>
   );
