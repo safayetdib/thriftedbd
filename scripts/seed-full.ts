@@ -250,17 +250,19 @@ async function seed() {
       productId: id(item.productId as string),
       ownerId: id(item.ownerId as string),
     })),
-    statusHistory: o.statusHistory.map((sh) => ({
-      ...sh,
-      changedBy: (sh as { changedBy?: unknown }).changedBy
-        ? id((sh as { changedBy: string }).changedBy)
-        : undefined,
-    })),
+    statusHistory: o.statusHistory.map((sh) => {
+      const changedBy = (sh as { changedBy?: unknown }).changedBy;
+      return {
+        ...sh,
+        changedBy: typeof changedBy === "string" ? id(changedBy) : undefined,
+      };
+    }),
     confirmationCall: {
       ...o.confirmationCall,
-      calledBy: (o.confirmationCall as { calledBy?: unknown }).calledBy
-        ? id((o.confirmationCall as { calledBy: string }).calledBy)
-        : undefined,
+      calledBy: (() => {
+        const calledBy = (o.confirmationCall as { calledBy?: unknown }).calledBy;
+        return typeof calledBy === "string" ? id(calledBy) : undefined;
+      })(),
     },
   }));
   await Order.insertMany(orderDocs);
