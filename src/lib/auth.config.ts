@@ -10,6 +10,13 @@ import type { NextAuthConfig } from "next-auth";
  * server components).
  */
 export const authConfig: NextAuthConfig = {
+  // Netlify routes every request through its proxy layer, and unlike
+  // Vercel/Cloudflare it isn't in Auth.js's host auto-detect list. Without
+  // this, every /api/auth/* call throws `UntrustedHost` (the generic
+  // "problem with the server configuration" error). It must live here in code
+  // rather than as `AUTH_TRUST_HOST` in netlify.toml's [build.environment],
+  // which only reaches the build step, never the function runtime.
+  trustHost: true,
   session: { strategy: "jwt" },
   providers: [],
   callbacks: {

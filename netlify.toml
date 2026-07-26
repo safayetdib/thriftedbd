@@ -30,10 +30,11 @@
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
   HUSKY = "0" # skip git-hook install during CI build
-  # Auth.js v5 infers the request host automatically on Vercel/Cloudflare
-  # Pages, but Netlify isn't in that auto-detect list - requests pass through
-  # Netlify's proxy layer, so this must be set explicitly or sign-in breaks.
-  AUTH_TRUST_HOST = "true"
+  # NOTE: Auth.js host-trust is handled in code via `trustHost: true` in
+  # src/lib/auth.config.ts - NOT here. Vars under [build.environment] only
+  # reach the build step, never the Function runtime that serves /api/auth/*,
+  # so an AUTH_TRUST_HOST set here silently does nothing and every sign-in
+  # throws UntrustedHost. Do not re-add it here.
 
 # Secrets (MONGODB_URI, AUTH_SECRET, R2_*, GOOGLE_TRANSLATE_API_KEY) are set in
 # the Netlify UI: Site settings -> Environment variables. Do not commit them.
