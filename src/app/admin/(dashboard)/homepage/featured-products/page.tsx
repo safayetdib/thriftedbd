@@ -24,10 +24,10 @@ export default async function FeaturedProductsPage() {
             <ArrowLeftIcon size={16} />
           </Button>
         </Link>
-        <h1 className="text-ink-900 text-2xl font-extrabold">Featured Products</h1>
+        <h1 className="text-ink-900 text-heading-lg">Featured Products</h1>
       </div>
 
-      <p className="text-ink-600 text-sm">
+      <p className="text-charcoal text-body-sm">
         Select up to 10 products to feature on the homepage. They&apos;ll appear in the order you
         select them.
       </p>

@@ -12,7 +12,10 @@ function Dialog({ ...props }: DialogPrimitive.Root.Props) {
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+  // No data-slot here: triggers render a custom element (our Button, which sets
+  // its own data-slot="button"). base-ui merges the two data-slot values
+  // inconsistently between SSR and client, causing a hydration mismatch.
+  return <DialogPrimitive.Trigger {...props} />;
 }
 
 function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
@@ -50,7 +53,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "text-ink-900 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 border-ink-900 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl border bg-white p-6 text-sm shadow-lg duration-150 outline-none sm:max-w-sm",
+          "text-ink-900 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-none bg-white p-6 text-sm shadow-lg duration-150 outline-none sm:max-w-sm",
           className,
         )}
         {...props}
@@ -88,7 +91,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "bg-ink-100/50 border-ink-200 -mx-6 -mb-6 flex flex-col-reverse gap-2 rounded-b-xl border-t p-6 sm:flex-row sm:justify-end",
+        "border-hairline-soft -mx-6 -mb-6 flex flex-col-reverse gap-2 rounded-none border-t bg-white p-6 sm:flex-row sm:justify-end",
         className,
       )}
       {...props}

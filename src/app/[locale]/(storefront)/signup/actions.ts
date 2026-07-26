@@ -1,10 +1,12 @@
 "use server";
 
+import { headers } from "next/headers";
 import { AuthError } from "next-auth";
 import { signIn } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { signupSchema } from "@/lib/validations/customer.schema";
 import { createCustomer } from "@/lib/services/customer.service";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 /**
  * Customer signup action.
@@ -15,6 +17,13 @@ import { createCustomer } from "@/lib/services/customer.service";
  * On error: returns error message
  */
 export async function customerSignupAction(_prevState: string | undefined, formData: FormData) {
+  // Throttle mass account creation: 5 signups per IP per hour.
+  const ip = getClientIp(await headers());
+  const rl = rateLimit(`signup:${ip}`, 5, 60 * 60_000);
+  if (!rl.ok) {
+    return `Too many attempts. Please try again in ${rl.retryAfterSeconds}s.`;
+  }
+
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const name = formData.get("name") as string;

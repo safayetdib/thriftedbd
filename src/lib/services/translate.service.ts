@@ -29,11 +29,14 @@ export async function translateToBangla(text: string): Promise<string | null> {
 
 /**
  * Fills `bn` with a machine-translation draft when the admin left it empty.
- * The draft stays fully editable in the admin form — it's a starting point,
- * not a published translation the admin hasn't seen.
+ *
+ * DISABLED: Bangla is turned off across the admin for now, so this is a no-op
+ * that returns the value unchanged (no API calls, no `bn` drafts). To re-enable
+ * Bangla later, restore the body below and bring back the admin `bn` fields.
  */
 export async function withBanglaDraft<T extends { en?: string; bn?: string }>(text: T): Promise<T> {
-  if (!text.en || text.bn) return text;
-  const bn = await translateToBangla(text.en);
-  return bn ? { ...text, bn } : text;
+  return text;
+  // if (!text.en || text.bn) return text;
+  // const bn = await translateToBangla(text.en);
+  // return bn ? { ...text, bn } : text;
 }

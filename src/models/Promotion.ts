@@ -60,5 +60,12 @@ const promotionSchema = new Schema<IPromotion>(
 promotionSchema.index({ pages: 1, enabled: 1, activeFrom: 1, activeTo: 1 });
 promotionSchema.index({ enabled: 1, order: 1 });
 
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Promotion) {
+  mongoose.deleteModel("Promotion");
+}
+
 export default mongoose.models.Promotion ||
   mongoose.model<IPromotion>("Promotion", promotionSchema);

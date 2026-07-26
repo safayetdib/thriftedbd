@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
 import { ConfirmableForm } from "@/components/admin/confirmable-form";
-import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
 import {
   createTransactionAction,
@@ -16,6 +15,13 @@ import {
 import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const STATUS_FILTERS = ["All", "PENDING", "RECEIVED", "RECONCILED"] as const;
+
+/** See the note on STATUS_CHIP in the orders list — same semantic ramp. */
+const STATUS_CHIP: Record<string, string> = {
+  PENDING: "bg-amber-50 text-ink-900",
+  RECEIVED: "bg-soft-cloud text-ink-900",
+  RECONCILED: "bg-soft-cloud text-success",
+};
 
 const CREATE_FIELDS: EntityField[] = [
   {
@@ -59,7 +65,7 @@ export default async function AdminTransactionsPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Transactions</h1>
+        <h1 className="text-ink-900 text-heading-lg">Transactions</h1>
         <EntityFormDialog
           trigger={
             <Button variant="primary" size="sm">
@@ -81,10 +87,11 @@ export default async function AdminTransactionsPage({
               href={
                 filter === "All" ? "/admin/transactions" : `/admin/transactions?status=${filter}`
               }
-              className={cn(
-                "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold tracking-wide uppercase",
-                isActive ? "bg-ink-900 text-white" : "text-ink-900 hover:bg-ink-100 bg-white",
-              )}
+              className={`text-caption-sm text-eyebrow rounded-pill border px-4 py-1.5 transition-colors ${
+                isActive
+                  ? "border-ink-900 bg-ink-900 text-white"
+                  : "border-hairline text-charcoal hover:bg-soft-cloud hover:text-ink-900 bg-white"
+              }`}
             >
               {filter}
             </Link>
@@ -92,16 +99,16 @@ export default async function AdminTransactionsPage({
         })}
       </div>
 
-      <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="admin-data-table w-full min-w-[760px] text-left text-sm">
-          <thead className="border-ink-900 bg-ink-100 border-b-2">
+      <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <table className="admin-data-table text-body-sm w-full min-w-[760px] text-left">
+          <thead className="border-hairline bg-soft-cloud border-b">
             <tr>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Type</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Amount</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Method</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Orders</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Status</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Type</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Amount</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Method</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Orders</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Status</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -109,14 +116,16 @@ export default async function AdminTransactionsPage({
             {items.map((tx) => (
               <tr
                 key={String(tx._id)}
-                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+                className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
-                <td className="text-ink-900 px-5 py-3.5 font-semibold">{tx.type}</td>
-                <td className="text-ink-900 px-5 py-3.5">৳{tx.amount}</td>
-                <td className="text-ink-700 px-5 py-3.5">{tx.method}</td>
-                <td className="text-ink-700 px-5 py-3.5">{tx.orderIds.length}</td>
+                <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">{tx.type}</td>
+                <td className="text-ink-900 text-price px-5 py-3.5">৳{tx.amount}</td>
+                <td className="text-charcoal px-5 py-3.5">{tx.method}</td>
+                <td className="text-charcoal px-5 py-3.5">{tx.orderIds.length}</td>
                 <td className="px-5 py-3.5">
-                  <Badge variant={tx.status === "RECONCILED" ? "new" : "sold"}>{tx.status}</Badge>
+                  <Badge className={STATUS_CHIP[tx.status] ?? "bg-soft-cloud text-mute"}>
+                    {tx.status}
+                  </Badge>
                 </td>
                 <td className="px-5 py-3.5">
                   {tx.status === "PENDING" && (

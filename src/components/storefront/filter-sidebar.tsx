@@ -7,11 +7,13 @@ import { localize } from "@/lib/localize";
 import { cn } from "@/lib/utils";
 import type { IColor } from "@/models/Color";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FunnelSimpleIcon } from "@phosphor-icons/react";
 
 interface FilterSidebarProps {
   categories: unknown[];
   colors: IColor[];
+  sizes: string[];
   activeCategory?: unknown;
   currentParams: Record<string, string | undefined>;
 }
@@ -26,11 +28,11 @@ function countActiveFilters(params: Record<string, string | undefined>) {
   return count;
 }
 
-const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 const conditions = ["Excellent", "Good", "Fair"];
 
 function FilterContent({
   colors,
+  sizes,
   currentParams,
   onFilterChange,
   onClearAll,
@@ -41,6 +43,7 @@ function FilterContent({
   handlePriceBlur,
 }: {
   colors: IColor[];
+  sizes: string[];
   currentParams: Record<string, string | undefined>;
   onFilterChange: (key: string, values: string[]) => void;
   onClearAll: () => void;
@@ -61,20 +64,17 @@ function FilterContent({
   return (
     <>
       <div className="flex items-center justify-between">
-        <h3 className={cn("text-eyebrow text-ink-700 font-bold")}>Filters</h3>
-        <button
-          onClick={onClearAll}
-          className="text-xs font-semibold text-green-700 hover:underline"
-        >
+        <h3 className={cn("text-heading-md text-ink-900")}>Filters</h3>
+        <button onClick={onClearAll} className="text-caption-md text-mute hover:text-ink-900">
           Clear all
         </button>
       </div>
 
-      <div className="bg-ink-200 h-px" />
+      <div className="bg-hairline h-px" />
 
       {/* Price range */}
       <div>
-        <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("priceRange")}</h3>
+        <h3 className="text-heading-md text-ink-900 mb-3">{t("priceRange")}</h3>
         <div className="flex items-center gap-2">
           <input
             type="number"
@@ -84,9 +84,9 @@ function FilterContent({
             onChange={(e) => setMinPrice(e.target.value)}
             onBlur={handlePriceBlur}
             onKeyDown={(e) => e.key === "Enter" && handlePriceBlur()}
-            className="border-ink-900 w-full border-2 px-2 py-1.5 text-xs font-semibold outline-none"
+            className="bg-soft-cloud text-caption-md placeholder:text-mute focus:border-ink-900 w-full rounded-md border border-transparent px-4 py-2 outline-none focus:bg-white"
           />
-          <span className="text-ink-400 text-xs">—</span>
+          <span className="text-mute text-caption-md">—</span>
           <input
             type="number"
             min={0}
@@ -95,7 +95,7 @@ function FilterContent({
             onChange={(e) => setMaxPrice(e.target.value)}
             onBlur={handlePriceBlur}
             onKeyDown={(e) => e.key === "Enter" && handlePriceBlur()}
-            className="border-ink-900 w-full border-2 px-2 py-1.5 text-xs font-semibold outline-none"
+            className="bg-soft-cloud text-caption-md placeholder:text-mute focus:border-ink-900 w-full rounded-md border border-transparent px-4 py-2 outline-none focus:bg-white"
           />
         </div>
         {(currentParams.minPrice || currentParams.maxPrice) && (
@@ -105,89 +105,91 @@ function FilterContent({
               setMaxPrice("");
               onFilterChange("price", []);
             }}
-            className="mt-1.5 text-xs font-semibold text-green-700 hover:underline"
+            className="text-caption-md text-mute hover:text-ink-900 mt-2"
           >
             {t("clear")}
           </button>
         )}
       </div>
 
-      <div className="bg-ink-200 h-px" />
+      {/* Sizes — Nike filter chips: white pill, ink fill when active. Only shown
+          when the catalog has sizes; the list is built from real products so
+          custom sizes (e.g. `H 19" W 10"`) appear alongside S/M/L. */}
+      {sizes.length > 0 && (
+        <>
+          <div className="bg-hairline h-px" />
+          <div>
+            <h3 className="text-heading-md text-ink-900 mb-3">{t("size")}</h3>
+            <div className="flex flex-wrap gap-2">
+              {sizes.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => {
+                    const newSizes = currentSizes.includes(size)
+                      ? currentSizes.filter((s) => s !== size)
+                      : [...currentSizes, size];
+                    onFilterChange("sizes", newSizes);
+                  }}
+                  className={cn(
+                    "text-caption-sm rounded-pill px-4 py-2 transition-colors",
+                    currentSizes.includes(size)
+                      ? "bg-ink-900 text-white"
+                      : "border-hairline text-ink-900 hover:border-ink-900 border bg-white",
+                  )}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
-      {/* Sizes */}
-      <div>
-        <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("size")}</h3>
-        <div className="flex flex-wrap gap-1.5">
-          {sizes.map((size) => (
-            <button
-              key={size}
-              onClick={() => {
-                const newSizes = currentSizes.includes(size)
-                  ? currentSizes.filter((s) => s !== size)
-                  : [...currentSizes, size];
-                onFilterChange("sizes", newSizes);
-              }}
-              className={cn(
-                "border-ink-900 border-2 px-2 py-1 text-xs font-bold transition-colors",
-                currentSizes.includes(size)
-                  ? "bg-ink-900 text-white"
-                  : "text-ink-900 hover:bg-ink-100 bg-white",
-              )}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-ink-200 h-px" />
+      <div className="bg-hairline h-px" />
 
       {/* Condition */}
       <div>
-        <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("condition")}</h3>
+        <h3 className="text-heading-md text-ink-900 mb-3">{t("condition")}</h3>
         <div className="space-y-2">
           {conditions.map((cond) => (
-            <label key={cond} className="flex cursor-pointer items-center gap-2">
-              <input
-                type="checkbox"
+            <label key={cond} className="flex cursor-pointer items-center gap-2.5">
+              <Checkbox
                 checked={currentConditions.includes(cond)}
-                onChange={(e) => {
-                  const newConditions = e.target.checked
+                onCheckedChange={(checked) => {
+                  const newConditions = checked
                     ? [...currentConditions, cond]
                     : currentConditions.filter((c) => c !== cond);
                   onFilterChange("conditions", newConditions);
                 }}
-                className="border-ink-900 h-4 w-4 border-2"
               />
-              <span className="text-ink-700 text-sm font-medium">{tEnum(`condition.${cond}`)}</span>
+              <span className="text-body-sm text-charcoal">{tEnum(`condition.${cond}`)}</span>
             </label>
           ))}
         </div>
       </div>
 
-      <div className="bg-ink-200 h-px" />
+      <div className="bg-hairline h-px" />
 
       {/* Colors */}
       {colors.length > 0 && (
         <div>
-          <h3 className="text-eyebrow text-ink-700 mb-3 font-bold">{t("color")}</h3>
+          <h3 className="text-heading-md text-ink-900 mb-3">{t("color")}</h3>
           <div className="max-h-48 space-y-2 overflow-y-auto">
             {colors.map((color) => (
-              <label key={color._id.toString()} className="flex cursor-pointer items-center gap-2">
-                <input
-                  type="checkbox"
+              <label
+                key={color._id.toString()}
+                className="flex cursor-pointer items-center gap-2.5"
+              >
+                <Checkbox
                   checked={currentColors.includes(color._id.toString())}
-                  onChange={(e) => {
-                    const newColors = e.target.checked
+                  onCheckedChange={(checked) => {
+                    const newColors = checked
                       ? [...currentColors, color._id.toString()]
                       : currentColors.filter((c) => c !== color._id.toString());
                     onFilterChange("colors", newColors);
                   }}
-                  className="border-ink-900 h-4 w-4 border-2"
                 />
-                <span className="text-ink-700 text-sm font-medium">
-                  {localize(color.name, locale)}
-                </span>
+                <span className="text-body-sm text-charcoal">{localize(color.name, locale)}</span>
               </label>
             ))}
           </div>
@@ -197,7 +199,7 @@ function FilterContent({
   );
 }
 
-export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
+export function FilterSidebar({ colors, sizes, currentParams }: FilterSidebarProps) {
   const router = useRouter();
 
   const [minPrice, setMinPrice] = useState(currentParams.minPrice ?? "");
@@ -236,10 +238,12 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden w-56 shrink-0 md:block">
-        <div className="border-ink-900 sticky top-24 flex flex-col gap-5 border-2 bg-white p-5">
+      {/* Nike's PLP rail is a plain ~220px column — no container border, no card. */}
+      <aside className="hidden w-[220px] shrink-0 md:block">
+        <div className="sticky top-24 flex flex-col gap-6 bg-white">
           <FilterContent
             colors={colors}
+            sizes={sizes}
             currentParams={currentParams}
             onFilterChange={handleFilterChange}
             onClearAll={handleClearAll}
@@ -257,11 +261,11 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
         <Sheet>
           <SheetTrigger
             render={
-              <button className="border-ink-900 hover:bg-ink-100 flex items-center gap-2 border-2 bg-white px-3 py-2 text-sm font-bold transition-colors">
-                <FunnelSimpleIcon size={16} weight="bold" />
+              <button className="border-hairline hover:border-ink-900 text-caption-md rounded-pill text-ink-900 flex items-center gap-2 border bg-white px-4 py-2 transition-colors">
+                <FunnelSimpleIcon size={16} />
                 Filters
                 {activeCount > 0 && (
-                  <span className="bg-ink-900 flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white">
+                  <span className="bg-ink-900 text-caption-sm flex size-5 items-center justify-center rounded-full text-white">
                     {activeCount}
                   </span>
                 )}
@@ -275,6 +279,7 @@ export function FilterSidebar({ colors, currentParams }: FilterSidebarProps) {
             <div className="flex flex-col gap-5 overflow-y-auto pr-2">
               <FilterContent
                 colors={colors}
+                sizes={sizes}
                 currentParams={currentParams}
                 onFilterChange={handleFilterChange}
                 onClearAll={handleClearAll}

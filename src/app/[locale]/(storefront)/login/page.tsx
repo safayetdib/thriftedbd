@@ -16,10 +16,10 @@ export default function CustomerLoginPage() {
   const [error, formAction, isPending] = useActionState(customerLoginAction, undefined);
 
   return (
-    <main className="bg-ink-50 flex min-h-screen items-center justify-center px-4">
-      <div className="border-ink-900 shadow-brutal-md w-full max-w-sm border-2 bg-white p-8">
-        <p className="text-eyebrow text-green-700">thriftedBD</p>
-        <h1 className="text-ink-900 mt-1 text-2xl font-extrabold">{t("signIn")}</h1>
+    <main className="bg-soft-cloud flex min-h-screen items-center justify-center px-4">
+      <div className="border-hairline w-full max-w-sm rounded-none border bg-white p-8">
+        <p className="text-eyebrow text-caption-sm text-ink-900">thriftedBD</p>
+        <h1 className="text-heading-xl text-ink-900 mt-1">{t("signIn")}</h1>
 
         <form action={formAction} className="mt-6 flex flex-col gap-4">
           {callbackUrl && <input type="hidden" name="callbackUrl" value={callbackUrl} />}
@@ -51,7 +51,7 @@ export default function CustomerLoginPage() {
           {error && (
             <p
               role="alert"
-              className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+              className="border-sale-500 bg-sale-50 text-sale-700 text-caption-md rounded-none border px-3 py-2"
             >
               {error}
             </p>
@@ -62,9 +62,12 @@ export default function CustomerLoginPage() {
           </Button>
         </form>
 
-        <div className="text-ink-600 mt-6 text-center text-sm">
+        <div className="text-body-sm text-mute mt-6 text-center">
           {t("noAccount")}{" "}
-          <Link href="/signup" className="text-ink-900 font-semibold underline hover:no-underline">
+          <Link
+            href="/signup"
+            className="text-caption-md text-ink-900 underline hover:no-underline"
+          >
             {t("createOne")}
           </Link>
         </div>

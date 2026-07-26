@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   ListIcon,
   MagnifyingGlassIcon,
@@ -13,7 +12,7 @@ import {
   XIcon,
   CaretDownIcon,
 } from "@phosphor-icons/react";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 
 type SubCategory = { slug: string; name: string; coverImage?: { url: string; key: string } };
@@ -34,11 +33,24 @@ export function SiteHeader({
   const t = useTranslations("header");
 
   return (
-    <header className="border-ink-900 sticky top-0 z-40 border-b bg-white">
+    // Nike's primary nav: white, hairline bottom edge, no shadow.
+    <header className="border-hairline-soft sticky top-0 z-40 border-b bg-white">
       <div className="max-w-container mx-auto flex h-16 w-full items-center justify-between px-6 md:px-8">
-        {/* Logo */}
-        <Link href="/" className="text-ink-900 shrink-0 text-lg font-extrabold tracking-tight">
-          thrifted<span className="text-green-600">BD</span>
+        {/* Brand lockup — the "t" icon paired with the ink wordmark. The icon
+            carries the only brand colour; the wordmark stays ink. Live text is
+            kept (not the logo image) so it stays crisp and indexable. */}
+        <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Image
+            src="/icons/icon.png"
+            alt=""
+            width={32}
+            height={32}
+            className="rounded-[6px]"
+            priority
+          />
+          <span className="text-ink-900 text-heading-lg tracking-tight">
+            thrifted<span className="font-normal">BD</span>
+          </span>
         </Link>
 
         {/* Desktop nav — hidden on mobile */}
@@ -57,20 +69,18 @@ export function SiteHeader({
 
               {/* Mega menu dropdown — only if subcategories exist */}
               {dept.children.length > 0 && (
-                <div className="border-ink-900 pointer-events-none absolute top-full left-1/2 min-w-[480px] -translate-x-1/2 rounded-xl border bg-white opacity-0 shadow-lg transition-all duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
-                  <div className="p-5">
-                    <p className="text-eyebrow text-ink-500 text-caption mb-3 font-bold tracking-widest uppercase">
-                      {dept.name}
-                    </p>
+                <div className="border-hairline-soft pointer-events-none absolute top-full left-1/2 min-w-[480px] -translate-x-1/2 rounded-none border bg-white opacity-0 shadow-md transition-all duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+                  <div className="p-6">
+                    <p className="text-eyebrow text-mute text-caption-sm mb-3">{dept.name}</p>
                     <div className="grid grid-cols-3 gap-3">
                       {dept.children.map((sub) => (
                         <Link
                           key={sub.slug}
                           href={`/products?category=${sub.slug}`}
-                          className="group/sub border-ink-200 hover:border-ink-900 flex flex-col gap-2 rounded-md border p-2 transition-colors"
+                          className="group/sub flex flex-col gap-2 rounded-none"
                         >
-                          {/* Cover image */}
-                          <div className="bg-ink-100 relative aspect-square w-full overflow-hidden rounded-sm">
+                          {/* Cover image — soft cloud stage, zero radius. */}
+                          <div className="bg-soft-cloud relative aspect-square w-full overflow-hidden rounded-none">
                             {sub.coverImage ? (
                               <Image
                                 src={sub.coverImage.url}
@@ -81,11 +91,11 @@ export function SiteHeader({
                               />
                             ) : (
                               <div className="flex h-full items-center justify-center">
-                                <span className="text-ink-300 text-caption">{t("noImage")}</span>
+                                <span className="text-stone text-caption-sm">{t("noImage")}</span>
                               </div>
                             )}
                           </div>
-                          <p className="text-ink-900 text-caption text-center font-semibold">
+                          <p className="text-ink-900 text-caption-md text-center group-hover/sub:underline">
                             {sub.name}
                           </p>
                         </Link>
@@ -94,7 +104,7 @@ export function SiteHeader({
                     {/* View all link */}
                     <Link
                       href={`/products?category=${dept.slug}`}
-                      className="text-caption mt-3 block text-center font-semibold text-green-700 hover:underline"
+                      className="text-link-md text-ink-900 mt-4 block text-center"
                     >
                       {t("viewAll", { name: dept.name })} →
                     </Link>
@@ -135,39 +145,14 @@ export function SiteHeader({
               <ShoppingBagIcon size={20} />
             </Button>
             {cartCount > 0 && (
-              <span className="border-ink-900 absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full border bg-green-500 text-[10px] font-bold text-white">
+              <span className="bg-ink-900 text-caption-sm absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-white">
                 {cartCount}
               </span>
             )}
           </Link>
-
-          {/* Language toggle — a real route change per docs/i18n-guidelines.md */}
-          <Suspense fallback={null}>
-            <LanguageSwitcher />
-          </Suspense>
         </div>
       </div>
     </header>
-  );
-}
-
-function LanguageSwitcher() {
-  const locale = useLocale();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const otherLocale = locale === "en" ? "bn" : "en";
-  const query = searchParams.toString();
-  const href = query ? `${pathname}?${query}` : pathname;
-
-  return (
-    <Link
-      href={href}
-      locale={otherLocale}
-      className="border-ink-900 text-ink-900 hover:bg-ink-900 text-caption ml-1 flex h-8 items-center rounded-md border px-2 font-semibold transition-colors hover:text-white"
-      aria-label={locale === "en" ? "বাংলায় দেখুন" : "View in English"}
-    >
-      {locale === "en" ? "বাং" : "EN"}
-    </Link>
   );
 }
 
@@ -200,14 +185,14 @@ function MobileMenu({ departments }: { departments: Department[] }) {
 
       {/* Slide-in panel */}
       <div
-        className={`border-ink-900 fixed top-0 left-0 z-50 flex h-full w-80 max-w-[90vw] flex-col border-r bg-white transition-transform duration-200 ${
+        className={`border-hairline fixed top-0 left-0 z-50 flex h-full w-80 max-w-[90vw] flex-col border-r bg-white transition-transform duration-200 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         onKeyDown={(e) => {
           if (e.key === "Escape") setOpen(false);
         }}
       >
-        <div className="border-ink-900 flex h-16 items-center justify-between border-b px-6">
+        <div className="border-hairline-soft flex h-16 items-center justify-between border-b px-6">
           <span className="text-ink-900 text-body-md-strong">{t("menu")}</span>
           <Button
             variant="ghost"
@@ -221,7 +206,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
 
         <nav className="flex-1 overflow-y-auto px-6 py-4">
           {departments.map((dept) => (
-            <div key={dept.slug} className="border-ink-200 border-b">
+            <div key={dept.slug} className="border-hairline-soft border-b">
               <div className="flex items-center justify-between">
                 <Link
                   href={`/products?category=${dept.slug}`}
@@ -233,7 +218,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
                 {dept.children.length > 0 && (
                   <button
                     onClick={() => setExpanded(expanded === dept.slug ? null : dept.slug)}
-                    className="text-ink-500 hover:text-ink-900 px-2 py-3"
+                    className="text-mute hover:text-ink-900 px-2 py-3"
                     aria-label={t("expand")}
                     aria-expanded={expanded === dept.slug}
                   >
@@ -257,7 +242,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
                       className="text-ink-700 hover:text-ink-900 text-body-sm flex items-center gap-2 py-2"
                     >
                       {sub.coverImage && (
-                        <div className="relative size-8 shrink-0 overflow-hidden rounded-sm">
+                        <div className="bg-soft-cloud relative size-8 shrink-0 overflow-hidden rounded-none">
                           <Image
                             src={sub.coverImage.url}
                             alt={sub.name}

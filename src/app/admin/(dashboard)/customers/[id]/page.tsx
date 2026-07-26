@@ -11,8 +11,8 @@ import type { ICustomerAddress } from "@/models/Customer";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border-ink-900 border-2 bg-white p-5">
-      <h2 className="text-eyebrow text-ink-500 mb-4">{title}</h2>
+    <div className="border-hairline rounded-none border bg-white p-5">
+      <h2 className="text-eyebrow text-caption-sm text-mute mb-4">{title}</h2>
       {children}
     </div>
   );
@@ -36,15 +36,15 @@ export default async function AdminCustomerDetailPage({
     <div className="flex flex-col gap-6">
       <Link
         href="/admin/customers"
-        className="text-ink-700 hover:text-ink-900 flex items-center gap-1.5 text-sm font-semibold"
+        className="text-charcoal hover:text-ink-900 text-body-sm-strong flex items-center gap-1.5"
       >
         <ArrowLeftIcon size={14} /> Back to customers
       </Link>
 
-      <h1 className="text-ink-900 text-2xl font-extrabold">{customer.name}</h1>
+      <h1 className="text-ink-900 text-heading-lg">{customer.name}</h1>
 
       {error && (
-        <p className="border-sale-500 bg-sale-50 border-2 px-4 py-3 text-sm font-medium text-white">
+        <p className="border-sale-500 bg-sale-50 text-sale-700 text-body-sm rounded-none border px-4 py-3">
           {error}
         </p>
       )}
@@ -72,15 +72,15 @@ export default async function AdminCustomerDetailPage({
 
         <Section title="Addresses">
           {customer.addresses.length === 0 ? (
-            <p className="text-ink-500 text-sm">No saved addresses.</p>
+            <p className="text-mute text-body-sm">No saved addresses.</p>
           ) : (
-            <ul className="flex flex-col gap-3 text-sm">
+            <ul className="text-body-sm flex flex-col gap-3">
               {customer.addresses.map((address: ICustomerAddress, i: number) => (
-                <li key={i} className="border-ink-200 border-b pb-2 last:border-0">
-                  <p className="text-ink-900 font-semibold">
+                <li key={i} className="border-hairline-soft border-b pb-2 last:border-0">
+                  <p className="text-ink-900 text-body-sm-strong">
                     {address.label} {address.isDefault && "(default)"}
                   </p>
-                  <p className="text-ink-700">
+                  <p className="text-charcoal">
                     {address.address}, {address.city}
                   </p>
                 </li>
@@ -90,22 +90,22 @@ export default async function AdminCustomerDetailPage({
         </Section>
 
         <Section title="Favorites">
-          <p className="text-ink-700 text-sm">
+          <p className="text-charcoal text-body-sm">
             {customer.favoriteProductIds.length} saved product(s)
           </p>
         </Section>
 
         <Section title="Account">
-          <dl className="flex flex-col gap-2 text-sm">
+          <dl className="text-body-sm flex flex-col gap-2">
             <div className="flex justify-between">
-              <dt className="text-ink-500">Joined</dt>
-              <dd className="text-ink-900 font-semibold">
+              <dt className="text-mute">Joined</dt>
+              <dd className="text-ink-900 text-body-sm-strong">
                 {new Date(customer.createdAt).toLocaleString()}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-ink-500">Last updated</dt>
-              <dd className="text-ink-900 font-semibold">
+              <dt className="text-mute">Last updated</dt>
+              <dd className="text-ink-900 text-body-sm-strong">
                 {new Date(customer.updatedAt).toLocaleString()}
               </dd>
             </div>

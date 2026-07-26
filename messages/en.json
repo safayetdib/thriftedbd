@@ -125,7 +125,9 @@
     "removeCoupon": "Remove",
     "placeOrder": "Place order",
     "placingOrder": "Placing order…",
-    "placeOrderFailed": "Failed to place order"
+    "placeOrderFailed": "Failed to place order",
+    "editDetails": "Edit details",
+    "confirmPlaceOrder": "Confirm & place order"
   },
   "orderSuccess": {
     "title": "Order confirmed!",

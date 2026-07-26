@@ -26,8 +26,9 @@ async function seed() {
     console.log(`Admin user ${SEED_ADMIN_EMAIL} already exists, skipping.`);
   } else {
     const passwordHash = await bcrypt.hash(SEED_ADMIN_PASSWORD, 12);
-    await User.create({ email: SEED_ADMIN_EMAIL.toLowerCase(), passwordHash, role: "admin" });
-    console.log(`Created admin user ${SEED_ADMIN_EMAIL}.`);
+    // The seeded owner account is the superadmin — it can manage other admins.
+    await User.create({ email: SEED_ADMIN_EMAIL.toLowerCase(), passwordHash, role: "superadmin" });
+    console.log(`Created superadmin user ${SEED_ADMIN_EMAIL}.`);
   }
 
   const existingSettings = await Settings.findOne();

@@ -19,18 +19,18 @@ export default async function AdminCustomersPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Customers</h1>
-        <p className="text-ink-500 text-sm">{total} total</p>
+        <h1 className="text-ink-900 text-heading-lg">Customers</h1>
+        <p className="text-mute text-body-sm">{total} total</p>
       </div>
 
-      <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="admin-data-table w-full min-w-[640px] text-left text-sm">
-          <thead className="border-ink-900 bg-ink-100 border-b-2">
+      <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <table className="admin-data-table text-body-sm w-full min-w-[640px] text-left">
+          <thead className="border-hairline bg-soft-cloud border-b">
             <tr>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Email</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Phone</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Joined</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Name</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Email</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Phone</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Joined</th>
             </tr>
           </thead>
           <tbody>
@@ -38,19 +38,19 @@ export default async function AdminCustomersPage({
             {items.map((customer) => (
               <tr
                 key={String(customer._id)}
-                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+                className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
                 <td className="px-5 py-3.5">
                   <Link
                     href={`/admin/customers/${customer._id}`}
-                    className="font-semibold text-green-700 hover:underline"
+                    className="text-ink-900 text-body-sm-strong hover:underline"
                   >
                     {customer.name}
                   </Link>
                 </td>
-                <td className="text-ink-700 px-5 py-3.5">{customer.email}</td>
-                <td className="text-ink-700 px-5 py-3.5">{customer.phone}</td>
-                <td className="text-ink-500 px-5 py-3.5">
+                <td className="text-charcoal px-5 py-3.5">{customer.email}</td>
+                <td className="text-charcoal px-5 py-3.5">{customer.phone}</td>
+                <td className="text-mute px-5 py-3.5">
                   {new Date(customer.createdAt).toLocaleDateString()}
                 </td>
               </tr>

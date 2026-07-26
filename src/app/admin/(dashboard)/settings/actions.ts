@@ -9,7 +9,7 @@ import { updateSettings } from "@/lib/services/settings.service";
 
 export async function updateSettingsAction(formData: FormData) {
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user || (session.user.role !== "admin" && session.user.role !== "superadmin")) {
     throw new Error("UNAUTHORIZED");
   }
 
@@ -30,7 +30,7 @@ export async function updateSettingsAction(formData: FormData) {
       tiktok: raw.tiktok || undefined,
       youtube: raw.youtube || undefined,
     },
-    announcement: { en: raw.announcementEn || undefined, bn: raw.announcementBn || undefined },
+    announcement: { en: raw.announcementEn || undefined },
     riskThresholds: { largeOrderAmount: Number(raw.largeOrderAmount) },
   };
 

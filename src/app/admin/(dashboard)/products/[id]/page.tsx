@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import { getProductById } from "@/lib/services/product.service";
-import { getActiveCategories } from "@/lib/services/category.service";
+import { getCategoryTreeOptions } from "@/lib/services/category.service";
 import { getActiveColors } from "@/lib/services/color.service";
 import { getActiveOwners } from "@/lib/services/owner.service";
 import { ProductForm } from "@/components/admin/product-form";
@@ -14,9 +14,9 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   const { id } = await params;
 
   await connectDB();
-  const [product, categories, colors, owners] = await Promise.all([
+  const [product, categoryOptions, colors, owners] = await Promise.all([
     getProductById(id),
-    getActiveCategories(),
+    getCategoryTreeOptions(),
     getActiveColors(),
     getActiveOwners(),
   ]);
@@ -25,7 +25,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Edit product</h1>
+        <h1 className="text-ink-900 text-heading-lg">Edit product</h1>
         {product.status !== "ARCHIVED" && (
           <ConfirmableForm
             action={archiveProductAction.bind(null, id)}
@@ -55,14 +55,15 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
             order: img.order ?? i,
           })),
           size: product.size,
-          colorId: String(product.colorId),
+          colorId: product.colorId ? String(product.colorId) : undefined,
           ownerId: String(product.ownerId),
           grade: product.grade,
           condition: product.condition,
+          description: product.description,
           notes: product.notes,
           status: product.status,
         }}
-        categories={categories.map((c) => ({ _id: String(c._id), name: c.name }))}
+        categories={categoryOptions.map((c) => ({ _id: c._id, name: { en: c.label } }))}
         colors={colors.map((c) => ({ _id: String(c._id), name: c.name }))}
         owners={owners.map((o) => ({ _id: String(o._id), name: o.name }))}
       />

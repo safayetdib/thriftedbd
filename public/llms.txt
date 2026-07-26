@@ -1,32 +1,24 @@
 # thriftedBD
 
-thriftedBD is an online thrifted/secondhand clothing e-commerce platform based in Bangladesh.
+> thriftedBD is an online thrift store in Bangladesh selling quality-checked, imported preloved (secondhand) fashion sourced from Korea, Japan, Taiwan and China. Every item is a unique, one-of-a-kind piece with single-quantity stock. Payment is cash on delivery (COD) nationwide, with bKash/Nagad accepted for advance payments.
 
-## What we sell
+## About
 
-Quality-checked, imported preloved fashion sourced from Korea, Japan, Taiwan, and China. Every piece is unique — no duplicate SKUs. Items are individually inspected before listing.
+- Product range: women's and men's tops, bottoms (including palazzos), dresses, bags and backpacks, and other preloved apparel and accessories.
+- Inventory model: each product is unique with 0 or 1 in stock — once sold, it's gone.
+- Quality: every piece is inspected and quality-checked before it is listed.
+- Delivery & payment: cash on delivery across Bangladesh; advance payment via bKash/Nagad may be required for some orders.
+- Language: the site is in English.
 
 ## Key pages
 
-- Homepage: https://thriftedbd.com
-- All products: https://thriftedbd.com/products
-- Cart: https://thriftedbd.com/cart
+- [Home](https://thriftedbd.com): featured collections and new arrivals.
+- [Shop all products](https://thriftedbd.com/products): the full catalogue with category and filter navigation.
+- [Track your order](https://thriftedbd.com/track-order): look up an order by phone number and order number.
+- [Returns](https://thriftedbd.com/returns): return and exchange policy.
+- [Contact](https://thriftedbd.com/contact): customer support and business contact details.
 
-## Delivery & payment
+## Notes
 
-- Cash on delivery (COD) — nationwide across Bangladesh
-- bKash and Nagad online payment also accepted
-- Delivery via Steadfast or Pathao courier
-- Tracking link sent after dispatch
-
-## How orders work
-
-1. Customer browses and adds to bag on the website
-2. Checkout with name, phone, and address (no account required)
-3. thriftedBD calls to confirm the order before dispatch
-4. Parcel is dispatched via courier with a tracking link
-5. Customer pays cash on delivery to the courier
-
-## Contact
-
-Facebook: https://facebook.com/thriftedbd
+- Product, category, and listing pages carry structured data (Product / ItemList / BreadcrumbList schema) for reliable fact extraction.
+- Prices are in Bangladeshi Taka (BDT).

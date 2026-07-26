@@ -30,7 +30,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const isValid = await user.comparePassword(password);
         if (!isValid) return null;
 
-        return { id: user._id.toString(), email: user.email, role: "admin" };
+        // Pass the DB role through (admin | superadmin) rather than hardcoding,
+        // so superadmins are recognised for admin-user management.
+        return { id: user._id.toString(), email: user.email, role: user.role };
       },
     }),
     Credentials({

@@ -48,4 +48,11 @@ customerSchema.methods.comparePassword = function (candidate: string) {
   return bcrypt.compare(candidate, this.passwordHash);
 };
 
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Customer) {
+  mongoose.deleteModel("Customer");
+}
+
 export default mongoose.models.Customer || mongoose.model<ICustomer>("Customer", customerSchema);

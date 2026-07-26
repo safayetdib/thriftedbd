@@ -5,15 +5,15 @@ import { AdminTopbar } from "@/components/admin/topbar";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user || (session.user.role !== "admin" && session.user.role !== "superadmin")) {
     redirect("/admin/login");
   }
 
   return (
-    <div className="bg-ink-50 flex h-screen">
+    <div className="bg-soft-cloud flex h-screen">
       <a
         href="#main-content"
-        className="focus:ring-ink-900 sr-only fixed top-0 left-0 z-[100] m-2 rounded-sm bg-white px-4 py-2 text-sm font-semibold focus:not-sr-only focus:ring-2"
+        className="focus:ring-ink-900 text-body-sm-strong rounded-pill sr-only fixed top-0 left-0 z-[100] m-2 bg-white px-4 py-2 focus:not-sr-only focus:ring-2"
       >
         Skip to content
       </a>

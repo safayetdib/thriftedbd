@@ -10,9 +10,8 @@ import Product from "@/models/Product";
 import Category from "@/models/Category";
 import type { IProduct } from "@/models/Product";
 import type { ICategory } from "@/models/Category";
-import type { IWhyBuyBlock } from "@/models/Settings";
+import type { IWhyBuyBlock, IHeroSlide } from "@/models/Settings";
 import dynamic from "next/dynamic";
-import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/storefront/product-card";
 import { PromotionCard } from "@/components/storefront/promotion-card";
 
@@ -22,6 +21,67 @@ const HeroCarousel = dynamic(() =>
 const FaqAccordion = dynamic(() =>
   import("@/components/storefront/faq-accordion").then((mod) => mod.FaqAccordion),
 );
+
+/**
+ * Default hero slides — the in-repo banner photos (public/banners) paired with
+ * category-relevant copy. Used when the admin hasn't configured hero slides in
+ * Settings; if any CMS slides exist, those take over entirely. `imageKey` is
+ * only meaningful for R2-managed uploads, so it's blank for these static files.
+ */
+const FALLBACK_HERO_SLIDES: IHeroSlide[] = [
+  {
+    imageUrl: "/banners/banner_guy_girl.jpeg",
+    imageKey: "",
+    headline: "Preloved, not less loved",
+    subheadline:
+      "Quality-checked imported thrift from Korea, Japan, Taiwan & China — delivered cash-on-delivery across Bangladesh.",
+    ctaText: "Shop new in",
+    ctaLink: "/products",
+    order: 0,
+    enabled: true,
+  },
+  {
+    imageUrl: "/banners/banner_bags.jpeg",
+    imageKey: "",
+    headline: "Bags with a past",
+    subheadline: "Totes, crossbodies and backpacks — one-of-a-kind thrifted finds, ready to carry.",
+    ctaText: "Shop bags",
+    ctaLink: "/products",
+    order: 1,
+    enabled: true,
+  },
+  {
+    imageUrl: "/banners/banner_girl_tops.jpeg",
+    imageKey: "",
+    headline: "Tops that tell a story",
+    subheadline:
+      "Blouses, tees and knits for her — unique preloved pieces, freshly dropped every week.",
+    ctaText: "Shop women's tops",
+    ctaLink: "/products",
+    order: 2,
+    enabled: true,
+  },
+  {
+    imageUrl: "/banners/banner_gents_tops.jpeg",
+    imageKey: "",
+    headline: "Sharp. Secondhand. Sorted.",
+    subheadline: "Shirts and tees for him — imported thrift, quality-checked and priced to move.",
+    ctaText: "Shop men's tops",
+    ctaLink: "/products",
+    order: 3,
+    enabled: true,
+  },
+  {
+    imageUrl: "/banners/banner_palazzo.jpeg",
+    imageKey: "",
+    headline: "Flow into palazzo season",
+    subheadline: "Breezy wide-leg palazzos — thrifted, one-of-a-kind and made for Dhaka days.",
+    ctaText: "Shop palazzos",
+    ctaLink: "/products",
+    order: 4,
+    enabled: true,
+  },
+];
 
 export default async function Home() {
   await connectDB();
@@ -77,49 +137,28 @@ export default async function Home() {
 
   return (
     <main className="flex flex-1 flex-col">
-      {/* Hero carousel */}
-      {homepage.heroSlides && homepage.heroSlides.length > 0 ? (
-        <HeroCarousel slides={homepage.heroSlides} />
-      ) : (
-        <section className="bg-ink-900 relative flex min-h-[420px] flex-col justify-center px-4 py-20 md:min-h-[560px] md:px-8">
-          <div className="max-w-container mx-auto w-full">
-            <p className="text-eyebrow text-amber-400">{t("eyebrow")}</p>
-            <h1
-              className="text-ink-50 mt-4 max-w-xl font-sans font-extrabold"
-              style={{ fontSize: "clamp(2.25rem, 6vw, 3.5rem)", lineHeight: 1.05 }}
-            >
-              {t("heroTitle")}
-            </h1>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/products">
-                <Button variant="primary" size="lg">
-                  {t("shopNow")}
-                </Button>
-              </Link>
-              <Link href="/products">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-ink-300 text-ink-50 bg-transparent hover:bg-white/10"
-                >
-                  {t("exploreNewIn")}
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Hero carousel — admin-configured slides if any, otherwise the default
+          banner set (public/banners) with category-relevant copy. */}
+      <HeroCarousel
+        slides={
+          homepage.heroSlides && homepage.heroSlides.length > 0
+            ? homepage.heroSlides
+            : FALLBACK_HERO_SLIDES
+        }
+      />
 
       {/* Featured categories */}
       {featuredCategories.length > 0 && (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
-          <h2 className="text-ink-900 mb-6 text-2xl font-extrabold">{t("featuredCategories")}</h2>
+          <h2 className="text-heading-lg text-ink-900 mb-6">{t("featuredCategories")}</h2>
           <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
             {featuredCategories.map((category) => (
               <Link key={category._id.toString()} href={`/products?category=${category.slug}`}>
-                <div className="border-ink-900 hover:bg-ink-50 flex flex-col items-center justify-center border-2 bg-white p-8 text-center transition-colors">
-                  <h3 className="text-ink-900 font-bold">{localize(category.name, locale)}</h3>
-                  <p className="text-ink-500 text-xs">{t("shopNow")}</p>
+                <div className="border-hairline hover:bg-soft-cloud flex flex-col items-center justify-center rounded-none border bg-white p-8 text-center transition-colors">
+                  <h3 className="text-body-strong text-ink-900">
+                    {localize(category.name, locale)}
+                  </h3>
+                  <p className="text-caption-sm text-mute">{t("shopNow")}</p>
                 </div>
               </Link>
             ))}
@@ -131,8 +170,8 @@ export default async function Home() {
       {newArrivals.length > 0 && (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
           <div className="mb-6 flex items-end justify-between">
-            <h2 className="text-ink-900 text-2xl font-extrabold">{t("newArrivals")}</h2>
-            <Link href="/products" className="text-sm font-semibold text-green-600 hover:underline">
+            <h2 className="text-heading-lg text-ink-900">{t("newArrivals")}</h2>
+            <Link href="/products" className="text-caption-md text-ink-900 hover:underline">
               {t("viewAll")}
             </Link>
           </div>
@@ -147,7 +186,7 @@ export default async function Home() {
       {/* Offers section */}
       {serializedPromotions.length > 0 && (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
-          <h2 className="text-ink-900 mb-6 text-2xl font-extrabold">{t("specialOffers")}</h2>
+          <h2 className="text-heading-lg text-ink-900 mb-6">{t("specialOffers")}</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {serializedPromotions
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -163,7 +202,7 @@ export default async function Home() {
       {/* Featured products */}
       {featuredProducts.length > 0 && (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
-          <h2 className="text-ink-900 mb-6 text-2xl font-extrabold">{t("featuredProducts")}</h2>
+          <h2 className="text-heading-lg text-ink-900 mb-6">{t("featuredProducts")}</h2>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
             {featuredProducts.map((product: IProduct, i: number) => (
               <ProductCard key={String(product._id)} product={product} priority={i < 4} />
@@ -175,15 +214,13 @@ export default async function Home() {
       {/* Why buy from us */}
       {homepage.whyBuyBlocks && homepage.whyBuyBlocks.length > 0 ? (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-24">
-          <h2 className="text-ink-900 mb-12 text-2xl font-extrabold">{t("whyShop")}</h2>
+          <h2 className="text-heading-lg text-ink-900 mb-12">{t("whyShop")}</h2>
           <div className="grid gap-8 md:grid-cols-3">
             {homepage.whyBuyBlocks.map((block: IWhyBuyBlock, idx: number) => (
               <div key={idx} className="flex flex-col items-start gap-4">
-                <span className="text-3xl text-green-600">{block.icon}</span>
-                <h4 className="text-ink-900 text-lg font-semibold">
-                  {localize(block.title, locale)}
-                </h4>
-                <p className="text-ink-500 text-sm">{localize(block.description, locale)}</p>
+                <span className="text-ink-900 text-3xl">{block.icon}</span>
+                <h4 className="text-heading-md text-ink-900">{localize(block.title, locale)}</h4>
+                <p className="text-body-sm text-mute">{localize(block.description, locale)}</p>
               </div>
             ))}
           </div>
@@ -193,7 +230,7 @@ export default async function Home() {
       {/* FAQ */}
       {homepage.faqs && homepage.faqs.length > 0 && (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
-          <h2 className="text-ink-900 mb-8 text-2xl font-extrabold">{t("faq")}</h2>
+          <h2 className="text-heading-lg text-ink-900 mb-8">{t("faq")}</h2>
           <div className="max-w-2xl">
             <FaqAccordion faqs={homepage.faqs} />
           </div>

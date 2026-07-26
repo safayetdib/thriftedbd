@@ -21,6 +21,7 @@ export function CategoryFormDialog({
   title,
   initialValues,
   onSubmit,
+  parentOptions,
 }: {
   trigger: React.ReactElement;
   title: string;
@@ -29,20 +30,27 @@ export function CategoryFormDialog({
     slug?: string;
     order?: number;
     coverImage?: CoverImage;
+    parentId?: string | null;
   };
   onSubmit: (values: {
     name: { en: string; bn?: string };
     slug: string;
     order?: number;
     coverImage?: CoverImage;
+    parentId?: string | null;
   }) => Promise<{ error?: string } | void>;
+  /** Top-level categories selectable as a parent (create mode only). */
+  parentOptions?: { id: string; name: string }[];
 }) {
   const router = useRouter();
+  // Parent can only be chosen at creation — reparenting is unsupported, so the
+  // selector is hidden when editing (initialValues present).
+  const isCreate = !initialValues;
   const [open, setOpen] = useState(false);
   const [nameEn, setNameEn] = useState(initialValues?.name?.en ?? "");
-  const [nameBn, setNameBn] = useState(initialValues?.name?.bn ?? "");
   const [slug, setSlug] = useState(initialValues?.slug ?? "");
   const [order, setOrder] = useState(initialValues?.order?.toString() ?? "");
+  const [parentId, setParentId] = useState(initialValues?.parentId ?? "");
   const [coverImage, setCoverImage] = useState<CoverImage | null>(
     initialValues?.coverImage ?? null,
   );
@@ -55,6 +63,15 @@ export function CategoryFormDialog({
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
+
+    if (file.type !== "image/webp") {
+      setError("Only WebP images are allowed.");
+      return;
+    }
+    if (file.size > 500 * 1024) {
+      setError(`Image is ${Math.round(file.size / 1024)}KB — max is 500KB.`);
+      return;
+    }
 
     setUploading(true);
     setError(null);
@@ -104,11 +121,11 @@ export function CategoryFormDialog({
     const payload = {
       name: {
         en: nameEn,
-        bn: nameBn || undefined,
       },
       slug,
       order: order ? Number(order) : undefined,
       coverImage: coverImage || undefined,
+      parentId: isCreate ? parentId || null : undefined,
     };
 
     const result = await onSubmit(payload);
@@ -138,38 +155,40 @@ export function CategoryFormDialog({
             <DialogHeader>
               <DialogTitle>Save these changes?</DialogTitle>
             </DialogHeader>
-            <dl className="flex flex-col gap-2 text-sm">
-              <div className="flex justify-between gap-3">
-                <dt className="text-ink-500">Name (EN)</dt>
-                <dd className="text-ink-900 text-right font-semibold">{nameEn}</dd>
-              </div>
-              {nameBn && (
+            <dl className="text-body-sm flex flex-col gap-2">
+              {isCreate && parentId && (
                 <div className="flex justify-between gap-3">
-                  <dt className="text-ink-500">Name (BN)</dt>
-                  <dd className="text-ink-900 text-right font-semibold">{nameBn}</dd>
+                  <dt className="text-mute">Parent</dt>
+                  <dd className="text-ink-900 text-body-sm-strong text-right">
+                    {parentOptions?.find((o) => o.id === parentId)?.name ?? "—"}
+                  </dd>
                 </div>
               )}
               <div className="flex justify-between gap-3">
-                <dt className="text-ink-500">Slug</dt>
-                <dd className="text-ink-900 text-right font-semibold">{slug}</dd>
+                <dt className="text-mute">Name (EN)</dt>
+                <dd className="text-ink-900 text-body-sm-strong text-right">{nameEn}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-mute">Slug</dt>
+                <dd className="text-ink-900 text-body-sm-strong text-right">{slug}</dd>
               </div>
               {order && (
                 <div className="flex justify-between gap-3">
-                  <dt className="text-ink-500">Order</dt>
-                  <dd className="text-ink-900 text-right font-semibold">{order}</dd>
+                  <dt className="text-mute">Order</dt>
+                  <dd className="text-ink-900 text-body-sm-strong text-right">{order}</dd>
                 </div>
               )}
               {coverImage && (
                 <div className="flex justify-between gap-3">
-                  <dt className="text-ink-500">Cover image</dt>
-                  <dd className="text-ink-900 text-right font-semibold">Uploaded</dd>
+                  <dt className="text-mute">Cover image</dt>
+                  <dd className="text-ink-900 text-body-sm-strong text-right">Uploaded</dd>
                 </div>
               )}
             </dl>
             {error && (
               <p
                 role="alert"
-                className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+                className="border-sale-500 bg-sale-50 text-sale-700 text-body-sm rounded-none border px-3 py-2"
               >
                 {error}
               </p>
@@ -194,6 +213,28 @@ export function CategoryFormDialog({
               <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleReview} className="flex flex-col gap-3">
+              {isCreate && parentOptions && parentOptions.length > 0 && (
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="parentId">Parent category</Label>
+                  <select
+                    id="parentId"
+                    value={parentId}
+                    onChange={(e) => setParentId(e.target.value)}
+                    className="text-ink-900 bg-soft-cloud focus-visible:border-ink-900 h-11 w-full rounded-md border border-transparent px-6 text-sm transition-colors outline-none focus-visible:bg-white"
+                  >
+                    <option value="">None (top-level department)</option>
+                    {parentOptions.map((opt) => (
+                      <option key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="text-mute text-caption-sm">
+                    Pick a parent to make this a subcategory (e.g. Men → Shirt).
+                  </span>
+                </div>
+              )}
+
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="nameEn">Name (English)</Label>
                 <Input
@@ -202,16 +243,6 @@ export function CategoryFormDialog({
                   required
                   value={nameEn}
                   onChange={(e) => setNameEn(e.target.value)}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="nameBn">Name (Bangla, optional)</Label>
-                <Input
-                  id="nameBn"
-                  type="text"
-                  value={nameBn}
-                  onChange={(e) => setNameBn(e.target.value)}
                 />
               </div>
 
@@ -239,8 +270,8 @@ export function CategoryFormDialog({
               <div className="flex flex-col gap-1.5">
                 <Label>Cover image</Label>
                 {coverImage ? (
-                  <div className="border-ink-200 flex items-center justify-between gap-2 border-2 p-2">
-                    <div className="text-ink-700 flex-1 text-sm">Image uploaded</div>
+                  <div className="border-hairline-soft flex items-center justify-between gap-2 rounded-none border p-2">
+                    <div className="text-charcoal text-body-sm flex-1">Image uploaded</div>
                     <Button
                       type="button"
                       variant="outline"
@@ -252,15 +283,15 @@ export function CategoryFormDialog({
                     </Button>
                   </div>
                 ) : (
-                  <label className="border-ink-200 hover:border-ink-400 bg-ink-50 flex cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed p-4 transition-colors">
-                    <UploadSimpleIcon size={20} className="text-ink-500" />
-                    <span className="text-ink-600 text-xs font-semibold">
+                  <label className="border-hairline hover:border-ink-900 bg-soft-cloud flex cursor-pointer flex-col items-center justify-center gap-2 rounded-none border border-dashed p-4 transition-colors">
+                    <UploadSimpleIcon size={20} className="text-mute" />
+                    <span className="text-charcoal text-caption-sm">
                       Click to upload or drag & drop
                     </span>
-                    <span className="text-ink-500 text-xs">JPEG, PNG, WebP (max 8MB)</span>
+                    <span className="text-mute text-caption-sm">WebP only (max 500KB)</span>
                     <input
                       type="file"
-                      accept="image/jpeg,image/png,image/webp"
+                      accept="image/webp"
                       onChange={handleFileSelect}
                       disabled={uploading}
                       className="hidden"
@@ -272,7 +303,7 @@ export function CategoryFormDialog({
               {error && (
                 <p
                   role="alert"
-                  className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+                  className="border-sale-500 bg-sale-50 text-sale-700 text-body-sm rounded-none border px-3 py-2"
                 >
                   {error}
                 </p>

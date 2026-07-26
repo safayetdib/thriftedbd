@@ -11,7 +11,7 @@ function Checkbox({ className, indeterminate, ...props }: CheckboxPrimitive.Root
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "group border-ink-900 flex size-5 items-center justify-center rounded-sm border bg-white transition-colors focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none data-checked:border-green-500 data-checked:bg-green-500 data-disabled:pointer-events-none data-disabled:opacity-50 data-indeterminate:border-green-500 data-indeterminate:bg-green-500",
+        "group border-hairline focus-visible:ring-ink-900 data-checked:border-ink-900 data-checked:bg-ink-900 data-indeterminate:border-ink-900 data-indeterminate:bg-ink-900 flex size-5 items-center justify-center rounded-[3px] border bg-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none data-disabled:pointer-events-none data-disabled:opacity-50",
         className,
       )}
       indeterminate={indeterminate}
@@ -23,9 +23,9 @@ function Checkbox({ className, indeterminate, ...props }: CheckboxPrimitive.Root
         )}
       >
         {indeterminate ? (
-          <MinusIcon className="text-ink-900 size-3" weight="bold" />
+          <MinusIcon className="size-3 text-white" weight="bold" />
         ) : (
-          <CheckIcon className="text-ink-900 size-3" weight="bold" />
+          <CheckIcon className="size-3 text-white" weight="bold" />
         )}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>

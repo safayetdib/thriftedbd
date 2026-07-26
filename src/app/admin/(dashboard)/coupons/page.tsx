@@ -30,7 +30,7 @@ export default async function AdminCouponsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Coupons</h1>
+        <h1 className="text-ink-900 text-heading-lg">Coupons</h1>
         <EntityFormDialog
           trigger={
             <Button variant="primary" size="sm">
@@ -43,17 +43,17 @@ export default async function AdminCouponsPage() {
         />
       </div>
 
-      <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="admin-data-table w-full min-w-[900px] text-left text-sm">
-          <thead className="border-ink-900 bg-ink-100 border-b-2">
+      <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <table className="admin-data-table text-body-sm w-full min-w-[900px] text-left">
+          <thead className="border-hairline bg-soft-cloud border-b">
             <tr>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Code</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Discount</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Min order</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Uses / Limit</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Expires</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Active</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Code</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Discount</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Min order</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Uses / Limit</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Expires</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Active</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -61,9 +61,9 @@ export default async function AdminCouponsPage() {
             {coupons.map((coupon) => (
               <tr
                 key={coupon._id.toString()}
-                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+                className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
-                <td className="px-5 py-3.5 font-semibold">{coupon.code}</td>
+                <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">{coupon.code}</td>
                 <td className="px-5 py-3.5">
                   {coupon.discountType === "PERCENTAGE"
                     ? `${coupon.discountValue}%`
@@ -75,11 +75,17 @@ export default async function AdminCouponsPage() {
                 <td className="px-5 py-3.5">
                   {coupon.usedCount} / {coupon.maxUses ?? "∞"}
                 </td>
-                <td className="px-5 py-3.5 text-xs">
+                <td className="text-charcoal text-caption-sm px-5 py-3.5">
                   {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString() : "—"}
                 </td>
                 <td className="px-5 py-3.5">
-                  <span className={coupon.isActive ? "font-bold text-green-700" : "text-ink-500"}>
+                  <span
+                    className={
+                      coupon.isActive
+                        ? "text-success text-body-sm-strong"
+                        : "text-mute text-body-sm"
+                    }
+                  >
                     {coupon.isActive ? "Yes" : "No"}
                   </span>
                 </td>

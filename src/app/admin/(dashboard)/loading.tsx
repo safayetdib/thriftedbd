@@ -7,7 +7,10 @@ export default function AdminDashboardLoading() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="border-ink-900 flex flex-col gap-2 border-2 bg-white p-5">
+          <div
+            key={i}
+            className="border-hairline flex flex-col gap-2 rounded-none border bg-white p-5"
+          >
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-8 w-16" />
             <Skeleton className="h-3 w-32" />
@@ -15,8 +18,8 @@ export default function AdminDashboardLoading() {
         ))}
       </div>
 
-      <div className="border-ink-900 border-2 bg-white">
-        <div className="border-ink-900 bg-ink-100 border-b-2 p-4">
+      <div className="border-hairline rounded-none border bg-white">
+        <div className="border-hairline bg-soft-cloud border-b p-4">
           <div className="flex gap-8">
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-4 w-32" />
@@ -25,7 +28,7 @@ export default function AdminDashboardLoading() {
           </div>
         </div>
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="border-ink-200 border-b p-4 last:border-0">
+          <div key={i} className="border-hairline-soft border-b p-4 last:border-0">
             <div className="flex gap-8">
               <Skeleton className="h-4 w-20" />
               <Skeleton className="h-4 w-32" />

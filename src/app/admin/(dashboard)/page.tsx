@@ -36,48 +36,42 @@ export default async function AdminDashboardPage() {
       label: "Pending orders",
       value: stats.pendingOrders,
       icon: PackageIcon,
-      accent: "bg-amber-400",
     },
     {
       href: "/admin/products?status=ACTIVE",
       label: "Active products",
       value: stats.activeProducts,
       icon: TagIcon,
-      accent: "bg-green-500",
     },
     {
       href: "/admin/customers",
       label: "Customers",
       value: stats.customers,
       icon: UsersIcon,
-      accent: "bg-denim-500",
     },
     {
       href: "/admin/transactions?status=PENDING",
       label: "Unreconciled transactions",
       value: stats.pendingTransactions,
       icon: CurrencyDollarIcon,
-      accent: "bg-sale-500",
     },
   ];
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-ink-900 text-2xl font-extrabold">Dashboard</h1>
+      <h1 className="text-ink-900 text-heading-lg">Dashboard</h1>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map(({ href, label, value, icon: Icon, accent }) => (
+        {cards.map(({ href, label, value, icon: Icon }) => (
           <Link
             key={href}
             href={href}
-            className="group border-ink-900 shadow-brutal-sm hover:shadow-brutal-md flex flex-col gap-3 border-2 bg-white p-5 transition-all hover:-translate-y-0.5"
+            className="border-hairline hover:border-ink-900 flex flex-col gap-3 rounded-none border bg-white p-5 transition-colors"
           >
-            <div
-              className={`border-ink-900 flex size-10 items-center justify-center border-2 text-white ${accent}`}
-            >
-              <Icon size={20} weight="bold" />
+            <div className="bg-soft-cloud text-ink-900 flex size-10 items-center justify-center rounded-none">
+              <Icon size={20} />
             </div>
-            <p className="text-ink-900 text-3xl font-extrabold">{value}</p>
-            <p className="text-eyebrow text-ink-500">{label}</p>
+            <p className="text-ink-900 text-price text-heading-xl">{value}</p>
+            <p className="text-eyebrow text-caption-sm text-mute">{label}</p>
           </Link>
         ))}
       </div>

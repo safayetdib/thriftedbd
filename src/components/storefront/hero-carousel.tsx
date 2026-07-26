@@ -48,8 +48,11 @@ export function HeroCarousel({ slides }: { slides: IHeroSlide[] }) {
   if (!currentSlide || enabledSlides.length === 0) return null;
 
   return (
-    <section className="bg-ink-900 relative min-h-[420px] overflow-hidden md:min-h-[560px]">
-      <div className="relative h-full w-full">
+    <section className="bg-ink-900 relative flex min-h-[420px] overflow-hidden md:min-h-[560px]">
+      {/* `flex` on the section + `flex-1` here makes the slide stretch to the
+          section's min-height. `h-full` cannot resolve against a min-height
+          parent, which previously left dead space below the content. */}
+      <div className="relative flex w-full flex-1">
         {/* Slide image background */}
         {currentSlide.imageUrl && (
           <div className="absolute inset-0">
@@ -66,25 +69,24 @@ export function HeroCarousel({ slides }: { slides: IHeroSlide[] }) {
         )}
 
         {/* Slide content */}
-        <div className="relative flex h-full flex-col justify-center px-4 py-20 md:px-8">
+        <div className="relative flex w-full flex-col justify-center px-4 py-20 md:px-8">
           <div className="max-w-container mx-auto w-full">
             {currentSlide.headline && (
-              <h1
-                className="text-ink-50 max-w-xl font-sans font-extrabold"
-                style={{ fontSize: "clamp(2.25rem, 6vw, 3.5rem)", lineHeight: 1.05 }}
-              >
+              // The one place the display tier is allowed: uppercase campaign
+              // lockup burned into full-bleed photography.
+              <h1 className="text-display-campaign max-w-2xl text-white">
                 {currentSlide.headline}
               </h1>
             )}
 
             {currentSlide.subheadline && (
-              <p className="text-ink-100 mt-4 max-w-lg text-lg">{currentSlide.subheadline}</p>
+              <p className="text-body-md mt-4 max-w-lg text-white">{currentSlide.subheadline}</p>
             )}
 
             {currentSlide.ctaText && currentSlide.ctaLink && (
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link href={currentSlide.ctaLink}>
-                  <Button variant="primary" size="lg">
+                  <Button variant="on-image" size="lg">
                     {currentSlide.ctaText}
                   </Button>
                 </Link>

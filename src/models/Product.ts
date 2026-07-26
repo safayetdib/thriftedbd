@@ -33,19 +33,22 @@ export interface IProduct extends Document {
   sku: string;
   slug: string;
   title: I18nText;
-  brand: string;
+  brand?: string;
   categoryId: Types.ObjectId;
   categoryPath: I18nText;
   price: number;
   compareAtPrice?: number;
   images: IProductImage[];
-  size: IProductSize;
-  colorId: Types.ObjectId;
-  color: I18nText;
+  size?: IProductSize;
+  colorId?: Types.ObjectId;
+  color?: I18nText;
   ownerId: Types.ObjectId;
   owner: string;
   grade: ProductGrade;
   condition: ProductCondition;
+  /** Customer-facing description — the full write-up, good and bad points. */
+  description?: I18nTextOptional;
+  /** Internal-only notes; never rendered on the storefront. */
   notes?: I18nTextOptional;
   stock: number;
   status: ProductStatus;
@@ -83,19 +86,20 @@ const productSchema = new Schema<IProduct>(
     sku: { type: String, required: true, unique: true },
     slug: { type: String, required: true, unique: true },
     title: { type: i18nTextSchema, required: true },
-    brand: { type: String, required: true },
+    brand: { type: String },
     categoryId: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     categoryPath: { type: i18nTextSchema, required: true },
     price: { type: Number, required: true },
     compareAtPrice: { type: Number },
     images: { type: [productImageSchema], default: [] },
-    size: { type: productSizeSchema, required: true },
-    colorId: { type: Schema.Types.ObjectId, ref: "Color", required: true },
-    color: { type: i18nTextSchema, required: true },
+    size: { type: productSizeSchema },
+    colorId: { type: Schema.Types.ObjectId, ref: "Color" },
+    color: { type: i18nTextSchema },
     ownerId: { type: Schema.Types.ObjectId, ref: "Owner", required: true },
     owner: { type: String, required: true },
     grade: { type: String, enum: ["T", "B", "M", "W", "O"], required: true },
     condition: { type: String, enum: ["Excellent", "Good", "Fair"], required: true },
+    description: { type: i18nTextOptionalSchema },
     notes: { type: i18nTextOptionalSchema },
     stock: { type: Number, required: true, default: 1 },
     status: {
@@ -120,5 +124,12 @@ productSchema.index({ status: 1, price: 1 });
 productSchema.index({ status: 1, "size.standard": 1 });
 productSchema.index({ status: 1, condition: 1 });
 productSchema.index({ status: 1, colorId: 1 });
+
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Product) {
+  mongoose.deleteModel("Product");
+}
 
 export default mongoose.models.Product || mongoose.model<IProduct>("Product", productSchema);

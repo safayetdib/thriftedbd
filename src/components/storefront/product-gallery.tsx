@@ -44,8 +44,8 @@ export function ProductGallery({ images, alt }: { images: { url: string }[]; alt
                 type="button"
                 onClick={() => setActive(i)}
                 className={cn(
-                  "relative size-14 shrink-0 border-2 transition-colors md:size-16",
-                  i === active ? "border-green-500" : "border-ink-300 hover:border-ink-500",
+                  "bg-soft-cloud relative size-14 shrink-0 overflow-hidden border transition-colors md:size-16",
+                  i === active ? "border-ink-900" : "hover:border-hairline border-transparent",
                 )}
               >
                 <Image src={img.url} alt="" fill sizes="64px" className="object-cover" />
@@ -58,7 +58,7 @@ export function ProductGallery({ images, alt }: { images: { url: string }[]; alt
           <button
             type="button"
             onClick={() => setLightboxOpen(true)}
-            className="bg-ink-100 border-ink-900 relative block w-full cursor-zoom-in overflow-hidden border-2 focus-visible:outline-offset-[-2px]"
+            className="bg-soft-cloud relative block w-full cursor-zoom-in overflow-hidden rounded-none focus-visible:outline-offset-[-2px]"
             style={{ aspectRatio: "3/4" }}
           >
             {current?.url && (
@@ -73,7 +73,7 @@ export function ProductGallery({ images, alt }: { images: { url: string }[]; alt
             )}
           </button>
           {hasMultiple && (
-            <span className="text-ink-900 absolute right-3 bottom-3 rounded-full bg-white/80 px-2.5 py-0.5 text-xs font-bold backdrop-blur-xs">
+            <span className="text-ink-900 text-caption-sm absolute right-3 bottom-3 rounded-full bg-white/80 px-3 py-1 backdrop-blur-xs">
               {active + 1} / {images.length}
             </span>
           )}
@@ -94,7 +94,7 @@ export function ProductGallery({ images, alt }: { images: { url: string }[]; alt
           </button>
 
           {hasMultiple && (
-            <span className="absolute top-4 left-4 z-10 rounded-full bg-white/20 px-3 py-1 text-sm font-bold text-white">
+            <span className="text-caption-md absolute top-4 left-4 z-10 rounded-full bg-white/20 px-3 py-1 text-white">
               {active + 1} / {images.length}
             </span>
           )}

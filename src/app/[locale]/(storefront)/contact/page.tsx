@@ -12,23 +12,23 @@ export default async function ContactPage() {
   return (
     <main className="max-w-container mx-auto px-4 py-12 md:px-8 md:py-16">
       <div className="max-w-2xl">
-        <h1 className="text-ink-900 mb-6 text-3xl font-extrabold">{t("title")}</h1>
+        <h1 className="text-heading-xl text-ink-900 mb-6">{t("title")}</h1>
 
         <div className="space-y-6">
           <section>
-            <h2 className="text-ink-900 mb-3 text-lg font-bold">{t("getInTouch")}</h2>
-            <p className="text-ink-700">{t("getInTouchBlurb")}</p>
+            <h2 className="text-heading-lg text-ink-900 mb-3">{t("getInTouch")}</h2>
+            <p className="text-body-md text-charcoal">{t("getInTouchBlurb")}</p>
           </section>
 
           <section>
-            <h3 className="text-ink-900 mb-3 font-semibold">{t("onSocialMedia")}</h3>
+            <h3 className="text-heading-md text-ink-900 mb-3">{t("onSocialMedia")}</h3>
             <div className="flex gap-3">
               {settings.socialLinks?.facebook && (
                 <a
                   href={settings.socialLinks.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-green-700 hover:text-green-800"
+                  className="text-link-md text-ink-900 hover:text-charcoal"
                 >
                   Facebook
                 </a>
@@ -38,7 +38,7 @@ export default async function ContactPage() {
                   href={settings.socialLinks.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-green-700 hover:text-green-800"
+                  className="text-link-md text-ink-900 hover:text-charcoal"
                 >
                   Instagram
                 </a>
@@ -48,7 +48,7 @@ export default async function ContactPage() {
                   href={settings.socialLinks.tiktok}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-green-700 hover:text-green-800"
+                  className="text-link-md text-ink-900 hover:text-charcoal"
                 >
                   TikTok
                 </a>
@@ -57,8 +57,8 @@ export default async function ContactPage() {
           </section>
 
           <section>
-            <h3 className="text-ink-900 mb-3 font-semibold">{t("responseTime")}</h3>
-            <p className="text-ink-700">{t("responseTimeBlurb")}</p>
+            <h3 className="text-heading-md text-ink-900 mb-3">{t("responseTime")}</h3>
+            <p className="text-body-md text-charcoal">{t("responseTimeBlurb")}</p>
           </section>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import type { DefaultSession } from "@auth/core/types";
 
-export type AppRole = "admin" | "customer";
+export type AppRole = "admin" | "superadmin" | "customer";
 
 // next-auth v5 re-exports Session/User/JWT from @auth/core rather than
 // declaring them locally, so the augmentation has to target @auth/core

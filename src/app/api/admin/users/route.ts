@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/api-auth";
+import { requireSuperAdmin } from "@/lib/api-auth";
 import { connectDB } from "@/lib/db";
 import { createUserSchema } from "@/lib/validations/user.schema";
 import { getUsers, createUser } from "@/lib/services/user.service";
 
 export async function GET() {
-  const unauthorized = await requireAdmin();
+  const unauthorized = await requireSuperAdmin();
   if (unauthorized) return unauthorized;
 
   await connectDB();
@@ -14,7 +14,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const unauthorized = await requireAdmin();
+  const unauthorized = await requireSuperAdmin();
   if (unauthorized) return unauthorized;
 
   const body = await request.json();

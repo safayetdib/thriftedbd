@@ -3,119 +3,129 @@
 @import "shadcn/tailwind.css";
 
 /*
-  thriftedBD — WISE Design System foundation.
-  Source of truth: /DESIGN.md (WISE-inspired design analysis).
+  thriftedBD — Nike-inspired Design System foundation.
+  Source of truth: /DESIGN.md (Nike design analysis).
   Do not introduce ad-hoc hex values outside this file.
+
+  Governing idea: photography speaks, the chrome doesn't.
+  ~95% of surface area is ink / canvas / soft-cloud. Colour is
+  reserved for product imagery and price signal (sale red).
 */
 @theme {
   /* =====================================================
-     WISE lime-green palette (replaces thriftedBD green).
-     Primary: #9fe870 — the brand's universal CTA accent.
+     Neutral ramp — the system's entire chrome palette.
+     ink-900 (#111111) is Nike's only "brand colour": primary
+     CTA, active filter chip, headline, body text, swatch dot.
+     ink-50 (#f5f5f5, "soft cloud") stages every product photo.
      ===================================================== */
-  --color-green-50: #e2f6d5;
-  --color-green-100: #dff2d1;
-  --color-green-200: #c5edab;
-  --color-green-300: #b8e8a0;
-  --color-green-400: #a8e385;
-  --color-green-500: #9fe870;
-  --color-green-600: #8cd45c;
-  --color-green-700: #7abd48;
-  --color-green-800: #5a9630;
-  --color-green-900: #3d6e1e;
+  --color-ink-50: #f5f5f5;
+  --color-ink-100: #e5e5e5;
+  --color-ink-200: #cacacb;
+  --color-ink-300: #b4b4b6;
+  --color-ink-400: #9e9ea0;
+  --color-ink-500: #707072;
+  --color-ink-600: #5b5b5d;
+  --color-ink-700: #4b4b4d;
+  --color-ink-800: #39393b;
+  --color-ink-900: #111111;
 
-  /* WISE green variants (semantic overrides) */
-  --color-primary-active: #cdffad;
-  --color-primary-neutral: #c5edab;
-  --color-primary-pale: #e2f6d5;
+  /* Named aliases from DESIGN.md */
+  --color-canvas: #ffffff;
+  --color-soft-cloud: #f5f5f5;
+  --color-charcoal: #39393b;
+  --color-ash: #4b4b4d;
+  --color-mute: #707072;
+  --color-stone: #9e9ea0;
+  --color-hairline: #cacacb;
+  --color-hairline-soft: #e5e5e5;
+  --color-body: #39393b;
 
   /* =====================================================
-     Ink / neutral (warm olive-gray palette).
-     ink (#0e0f0c) is WISE's near-black text colour; body
-     (#454745) for secondary text; mute (#868685) for fine
-     print. Background surfaces are canvas (#ffffff) on
-     canvas-soft (#e8ebe6 sage).
+     LEGACY ALIAS — `green-*` is retained only so the 79
+     existing `bg-green-500` / `text-green-600` call sites keep
+     compiling. In Nike the primary action is BLACK, so these
+     resolve to the ink ramp. Being renamed to ink- and success-
+     tokens in the component sweep; do not add new green usages.
      ===================================================== */
-  --color-ink-50: #e8ebe6;
-  --color-ink-100: #f0f2ee;
-  --color-ink-200: #e0e3de;
-  --color-ink-300: #d0d3ce;
-  --color-ink-400: #a8aca6;
-  --color-ink-500: #868685;
-  --color-ink-600: #636660;
-  --color-ink-700: #454745;
-  --color-ink-800: #2c2d2a;
-  --color-ink-900: #0e0f0c;
-
-  /* WISE neutral overrides */
-  --color-ink-deep: #163300;
-  --color-body: #454745;
-  --color-mute: #868685;
+  --color-green-50: #f5f5f5;
+  --color-green-100: #e5e5e5;
+  --color-green-200: #cacacb;
+  --color-green-300: #b4b4b6;
+  --color-green-400: #4b4b4d;
+  --color-green-500: #111111;
+  --color-green-600: #111111;
+  --color-green-700: #000000;
+  --color-green-800: #000000;
+  --color-green-900: #000000;
 
   /* =====================================================
-     Warning (replaces amber — WISE yellow warning family).
+     Semantic — sale red is the ONLY non-neutral in retail
+     chrome. Applied as price text + "% off" copy, never as a
+     badge fill (DESIGN.md, Colors → Semantic).
      ===================================================== */
+  --color-sale-50: #fdeaea;
+  --color-sale-100: #fbd5d6;
+  --color-sale-500: #d30005;
+  --color-sale-700: #780700;
+
+  --color-success: #007d48;
+  --color-success-bright: #1eaa52;
+  --color-info: #1151ff;
+  --color-info-deep: #0034e3;
+
+  /* Warning — retained for admin status chrome (not in Nike's
+     storefront system, which has no warning colour). */
   --color-amber-50: #fff8e0;
   --color-amber-100: #ffefb3;
   --color-amber-300: #ffd11a;
   --color-amber-400: #f0c000;
   --color-amber-500: #d4aa00;
-  --color-gold-600: #b86700;
-  --color-warning-deep: #b86700;
-  --color-warning-content: #4a3b1c;
 
   /* =====================================================
-     Semantic — Positive / Negative
-     (replaces sale palette with WISE negative family).
+     Editorial accents — reserved for campaign tiles and
+     category tints only. Never for chrome.
      ===================================================== */
-  --color-sale-50: #320707;
-  --color-sale-500: #d03238;
-  --color-sale-700: #a72027;
-
-  --color-positive: #2ead4b;
-  --color-positive-deep: #054d28;
-  --color-negative: #d03238;
-  --color-negative-deep: #a72027;
-  --color-negative-darkest: #a7000d;
-  --color-negative-bg: #320707;
+  --color-accent-pink: #ed1aa0;
+  --color-accent-pink-soft: #ffb0dd;
+  --color-accent-pink-deep: #4c012d;
+  --color-accent-purple-soft: #beaffd;
+  --color-accent-purple-pale: #d6d1ff;
+  --color-accent-teal: #0a7281;
+  --color-denim-500: #1151ff;
 
   /* =====================================================
-     Accent — tertiary palette (replaces denim).
+     Radius — pill geometry on every actionable surface;
+     product cards and editorial tiles take zero radius.
      ===================================================== */
-  --color-denim-500: #38c8ff;
-  --color-accent-orange: #ffc091;
-  --color-accent-cyan: #38c8ff;
-
-  /* =====================================================
-     Radius scale — WISE friendly rounded corners.
-     xl (24px) is the canonical button/card radius.
-     ===================================================== */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-none: 0px;
+  --radius-sm: 18px;
+  --radius-md: 24px;
+  --radius-lg: 30px;
+  --radius-xl: 30px;
   --radius-pill: 9999px;
 
   /* =====================================================
-     Elevation — WISE uses surface contrast (sage canvas +
-     white cards) rather than shadows. Soft shadows are
-     kept only for subtle overlay / modal depth cues.
+     Elevation — Nike uses a 1px hairline, not shadows. The
+     only "shadow" in the system is an inset hairline under
+     sticky bars. Soft shadows kept for modal/overlay depth.
      ===================================================== */
-  --shadow-xs: 0 1px 2px rgba(14, 15, 12, 0.04);
-  --shadow-sm: 0 2px 8px rgba(14, 15, 12, 0.04);
-  --shadow-md: 0 6px 20px rgba(14, 15, 12, 0.06);
-  --shadow-lg: 0 16px 40px rgba(14, 15, 12, 0.08);
+  --shadow-xs: 0 1px 0 var(--color-hairline-soft);
+  --shadow-sm: 0 1px 0 var(--color-hairline-soft);
+  --shadow-md: 0 6px 20px rgba(17, 17, 17, 0.08);
+  --shadow-lg: 0 16px 40px rgba(17, 17, 17, 0.12);
+
+  /* Container — Nike's retail grid runs wider than a marketing band. */
+  --container-container: 1440px;
 
   /* =====================================================
-     Container — WISE marketing band ~1200 px.
-     ===================================================== */
-  --container-container: 1200px;
-
-  /* =====================================================
-     Typography — Inter primary, Noto Sans fallback.
-     WISE uses Wise Sans (weight 900) for hero; Inter
-     (weight 600/400) for everything else.
+     Typography — Nike Futura ND and Helvetica Now are
+     proprietary. Substitutes: Jost (geometric, closest free
+     Futura) for uppercase display; Inter for all UI text.
+     Noto Sans Bengali carries Bangla at every scale.
      ===================================================== */
   --font-sans: var(--font-inter), var(--font-noto), var(--font-noto-bengali), system-ui, sans-serif;
+  --font-display:
+    var(--font-jost), var(--font-inter), var(--font-noto-bengali), system-ui, sans-serif;
 
   /* Motion */
   --ease-brand: cubic-bezier(0.2, 0, 0, 1);
@@ -123,36 +133,36 @@
 
 /*
   shadcn/ui semantic surface mapping — bridges generic
-  component slots to the WISE palette above.
+  component slots to the Nike palette above.
 
-  Key change from the original thriftedBD: primary buttons
-  now carry ink (#0e0f0c) text on lime-green background
-  (WISE signature pairing).
+  Key change from the WISE system: the page background is now
+  pure white (Nike's canvas) rather than a tinted band, and the
+  primary action is black-on-white rather than ink-on-lime.
 */
 @theme inline {
-  --color-background: var(--color-ink-50);
+  --color-background: var(--color-canvas);
   --color-foreground: var(--color-ink-900);
-  --color-card: white;
+  --color-card: var(--color-canvas);
   --color-card-foreground: var(--color-ink-900);
-  --color-popover: white;
+  --color-popover: var(--color-canvas);
   --color-popover-foreground: var(--color-ink-900);
-  --color-primary: var(--color-green-500);
-  --color-primary-foreground: var(--color-ink-900);
-  --color-secondary: var(--color-ink-100);
+  --color-primary: var(--color-ink-900);
+  --color-primary-foreground: var(--color-canvas);
+  --color-secondary: var(--color-soft-cloud);
   --color-secondary-foreground: var(--color-ink-900);
-  --color-muted: var(--color-ink-100);
-  --color-muted-foreground: var(--color-ink-500);
-  --color-accent: var(--color-ink-100);
+  --color-muted: var(--color-soft-cloud);
+  --color-muted-foreground: var(--color-mute);
+  --color-accent: var(--color-soft-cloud);
   --color-accent-foreground: var(--color-ink-900);
-  --color-destructive: var(--color-negative);
-  --color-destructive-foreground: white;
-  --color-border: var(--color-ink-200);
-  --color-input: var(--color-ink-400);
-  --color-ring: var(--color-green-500);
+  --color-destructive: var(--color-sale-500);
+  --color-destructive-foreground: var(--color-canvas);
+  --color-border: var(--color-hairline);
+  --color-input: var(--color-hairline);
+  --color-ring: var(--color-ink-900);
 }
 
 :root {
-  --background: var(--color-ink-50);
+  --background: var(--color-canvas);
   --foreground: var(--color-ink-900);
 }
 
@@ -182,19 +192,20 @@
     text-wrap: balance;
   }
 
+  /* Nike links are not underlined by default — nav, product cards, and
+     category tiles are plain ink and rely on position for affordance.
+     Underline is opt-in via `.text-link-md` or an explicit `underline`. */
   a {
-    @apply text-ink-900 decoration-ink-300 underline underline-offset-2;
-    transition:
-      color 0.2s var(--ease-brand),
-      text-decoration-color 0.2s var(--ease-brand);
+    @apply text-ink-900 no-underline;
+    transition: color 0.2s var(--ease-brand);
   }
   a:hover {
-    @apply text-green-500 decoration-green-500;
+    @apply text-ink-700;
   }
 
   ::selection {
-    background-color: var(--color-green-500);
-    color: var(--color-ink-900);
+    background-color: var(--color-ink-900);
+    color: var(--color-canvas);
   }
 
   ::-webkit-scrollbar {
@@ -213,7 +224,7 @@
   }
 
   *:focus-visible {
-    outline: 2px solid var(--color-green-500);
+    outline: 2px solid var(--color-ink-900);
     outline-offset: 2px;
   }
 
@@ -247,50 +258,93 @@
   }
 
   /*
-    WISE Typography Scale — only the classes actively used in components.
-    Unused display sizes removed from bundle.
-    Reference: /DESIGN.md  Typography section
+    Nike Typography Scale — full ladder from /DESIGN.md.
+    `display-campaign` is the only uppercase scale and is meant to
+    sit burned into full-bleed campaign photography, never on a
+    plain background. Everything else is neutral UI text.
   */
-  .text-display-xs {
-    font-family: var(--font-inter), system-ui, sans-serif;
+  .text-display-campaign {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 96px);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .text-heading-xl {
+    font-family: var(--font-sans);
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .text-heading-lg {
+    font-family: var(--font-sans);
     font-size: 24px;
-    font-weight: 600;
-    line-height: 31.2px;
-    letter-spacing: -0.48px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .text-heading-md {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.75;
+  }
+
+  /* Retained alias — `display-xs` is used across storefront
+     section headings; Nike's nearest equivalent is heading-lg. */
+  .text-display-xs {
+    font-family: var(--font-sans);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
   }
 
   .text-body-md {
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     font-weight: 400;
-    line-height: 24px;
+    line-height: 1.5;
   }
 
-  .text-body-md-strong {
-    font-family: var(--font-inter), system-ui, sans-serif;
+  .text-body-md-strong,
+  .text-body-strong {
+    font-family: var(--font-sans);
     font-size: 16px;
-    font-weight: 600;
-    line-height: 24px;
+    font-weight: 500;
+    line-height: 1.5;
   }
 
   .text-body-sm {
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-size: 14px;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 1.5;
   }
 
-  .text-body-sm-strong {
-    font-family: var(--font-inter), system-ui, sans-serif;
+  .text-body-sm-strong,
+  .text-caption-md {
+    font-family: var(--font-sans);
     font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
+    font-weight: 500;
+    line-height: 1.5;
   }
 
-  .text-caption {
-    font-family: var(--font-inter), system-ui, sans-serif;
+  .text-caption,
+  .text-caption-sm {
+    font-family: var(--font-sans);
     font-size: 12px;
-    font-weight: 400;
-    line-height: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .text-link-md {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.75;
+    text-decoration: underline;
   }
 }

@@ -200,4 +200,11 @@ const orderSchema = new Schema<IOrder>(
 orderSchema.index({ orderStatus: 1, createdAt: -1 });
 orderSchema.index({ customerId: 1, createdAt: -1 });
 
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Order) {
+  mongoose.deleteModel("Order");
+}
+
 export default mongoose.models.Order || mongoose.model<IOrder>("Order", orderSchema);

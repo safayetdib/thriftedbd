@@ -11,10 +11,25 @@ export default async function AdminCategoriesPage() {
   await connectDB();
   const categories = await getActiveCategories();
 
+  // Top-level categories are the only valid parents for a subcategory.
+  const parentOptions = categories
+    .filter((c) => c.level === 0)
+    .map((c) => ({ id: String(c._id), name: c.name.en }));
+
+  // Order rows as a tree: each department immediately followed by its children,
+  // then any leftovers (orphans / deeper levels) so nothing is hidden.
+  const grouped = categories
+    .filter((c) => c.level === 0)
+    .flatMap((dept) => [
+      dept,
+      ...categories.filter((c) => c.level > 0 && String(c.parentId) === String(dept._id)),
+    ]);
+  const rows = [...grouped, ...categories.filter((c) => !grouped.includes(c))];
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Categories</h1>
+        <h1 className="text-ink-900 text-heading-lg">Categories</h1>
         <CategoryFormDialog
           trigger={
             <Button variant="primary" size="sm">
@@ -23,31 +38,35 @@ export default async function AdminCategoriesPage() {
           }
           title="New category"
           onSubmit={createCategoryAction}
+          parentOptions={parentOptions}
         />
       </div>
 
-      <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="admin-data-table w-full min-w-[600px] text-left text-sm">
-          <thead className="border-ink-900 bg-ink-100 border-b-2">
+      <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <table className="admin-data-table text-body-sm w-full min-w-[600px] text-left">
+          <thead className="border-hairline bg-soft-cloud border-b">
             <tr>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Slug</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Level</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Order</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Name</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Slug</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Level</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Order</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {categories.length === 0 && <EmptyTableRow colSpan={5} message="No categories yet." />}
-            {categories.map((category) => (
+            {rows.length === 0 && <EmptyTableRow colSpan={5} message="No categories yet." />}
+            {rows.map((category) => (
               <tr
                 key={String(category._id)}
-                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+                className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
-                <td className="text-ink-900 px-5 py-3.5 font-semibold">{category.name.en}</td>
-                <td className="text-ink-500 px-5 py-3.5">{category.slug}</td>
-                <td className="text-ink-700 px-5 py-3.5">{category.level}</td>
-                <td className="text-ink-700 px-5 py-3.5">{category.order}</td>
+                <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">
+                  {category.level > 0 && <span className="text-stone">↳ </span>}
+                  {category.name.en}
+                </td>
+                <td className="text-mute px-5 py-3.5">{category.slug}</td>
+                <td className="text-charcoal px-5 py-3.5">{category.level}</td>
+                <td className="text-charcoal px-5 py-3.5">{category.order}</td>
                 <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <CategoryFormDialog
@@ -58,7 +77,7 @@ export default async function AdminCategoriesPage() {
                       }
                       title={`Edit ${category.name.en}`}
                       initialValues={{
-                        name: { en: category.name.en, bn: category.name.bn },
+                        name: { en: category.name.en },
                         slug: category.slug,
                         order: category.order,
                         coverImage: category.coverImage,

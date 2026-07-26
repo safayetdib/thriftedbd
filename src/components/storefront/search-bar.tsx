@@ -25,21 +25,18 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className="border-ink-900 flex items-center border-2 bg-white">
+      {/* Nike search pill: soft-cloud fill, 24px radius, turns white on focus. */}
+      <div className="bg-soft-cloud focus-within:border-ink-900 flex items-center rounded-md border border-transparent transition-colors focus-within:bg-white">
+        <button type="submit" aria-label={t("search")} className="text-ink-900 pl-4">
+          <MagnifyingGlassIcon size={20} />
+        </button>
         <input
           type="text"
           placeholder={t("searchPlaceholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 border-none px-4 py-3 text-sm outline-none"
+          className="text-body-md placeholder:text-mute flex-1 border-none bg-transparent px-3 py-2.5 outline-none"
         />
-        <button
-          type="submit"
-          aria-label={t("search")}
-          className="border-ink-900 text-ink-700 hover:bg-ink-50 border-l-2 p-3 transition-colors"
-        >
-          <MagnifyingGlassIcon size={20} />
-        </button>
       </div>
     </form>
   );

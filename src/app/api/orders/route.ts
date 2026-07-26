@@ -4,13 +4,25 @@ import { connectDB } from "@/lib/db";
 import { resolveCartIdentity } from "@/lib/cart-identity";
 import { createOrderSchema } from "@/lib/validations/order.schema";
 import { createOrderFromCart } from "@/lib/services/order.service";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import Order from "@/models/Order";
+
+function rateLimited(retryAfterSeconds: number) {
+  return NextResponse.json(
+    { error: { message: "Too many requests. Please slow down.", code: "RATE_LIMITED" } },
+    { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } },
+  );
+}
 
 /**
  * Public order tracking: GET by phone + orderNumber.
  * No login required — phone + orderNumber together are sufficient.
  */
 export async function GET(request: Request) {
+  // Throttle order-number guessing: 20 lookups per IP per 5 minutes.
+  const track = rateLimit(`track:${getClientIp(request.headers)}`, 20, 5 * 60_000);
+  if (!track.ok) return rateLimited(track.retryAfterSeconds);
+
   const { searchParams } = new URL(request.url);
   const phone = searchParams.get("phone");
   const orderNumber = searchParams.get("orderNumber");
@@ -41,6 +53,10 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  // Throttle order spam: 10 placements per IP per 10 minutes.
+  const place = rateLimit(`order:${getClientIp(request.headers)}`, 10, 10 * 60_000);
+  if (!place.ok) return rateLimited(place.retryAfterSeconds);
+
   const body = await request.json();
   const parsed = createOrderSchema.safeParse(body);
   if (!parsed.success) {

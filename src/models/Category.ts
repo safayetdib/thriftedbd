@@ -30,4 +30,11 @@ const categorySchema = new Schema<ICategory>({
 // One slug per sibling level, not globally unique — see docs/database-schema.md §1.
 categorySchema.index({ parentId: 1, slug: 1 }, { unique: true });
 
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Category) {
+  mongoose.deleteModel("Category");
+}
+
 export default mongoose.models.Category || mongoose.model<ICategory>("Category", categorySchema);

@@ -9,13 +9,14 @@ import {
   createProduct,
   updateProduct,
   archiveProduct,
+  deleteProductPermanently,
   getProductById,
 } from "@/lib/services/product.service";
 import { deleteR2Object } from "@/lib/services/upload.service";
 
 async function requireAdminSession() {
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user || (session.user.role !== "admin" && session.user.role !== "superadmin")) {
     throw new Error("UNAUTHORIZED");
   }
   return session;
@@ -33,10 +34,7 @@ export async function createProductAction(input: unknown) {
     const product = await createProduct(parsed.data);
     revalidatePath("/admin/products");
     revalidatePath("/admin");
-    // Bangla was empty on save but filled afterwards -> a machine-translation
-    // draft was added; the form sends the admin to the edit page to review it.
-    const autoTranslated = !parsed.data.title.bn && Boolean(product.title.bn);
-    return { data: { id: String(product._id), autoTranslated } };
+    return { data: { id: String(product._id) } };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create product" };
   }
@@ -86,4 +84,19 @@ export async function archiveProductAction(productId: string) {
   revalidatePath("/admin/products");
   revalidatePath("/admin");
   redirect("/admin/products");
+}
+
+/**
+ * Permanently deletes an ARCHIVED product and its R2 images. Exposed only on
+ * archived rows in the list; the service also enforces archived-only.
+ */
+export async function deleteProductAction(productId: string) {
+  await requireAdminSession();
+  await connectDB();
+  try {
+    await deleteProductPermanently(productId);
+    revalidatePath("/admin/products");
+  } catch {
+    // NOT_ARCHIVED / PRODUCT_NOT_FOUND — no-op (button only shows for archived).
+  }
 }

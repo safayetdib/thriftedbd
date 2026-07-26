@@ -10,10 +10,10 @@ export default function AdminLoginPage() {
   const [error, formAction, isPending] = useActionState(adminLoginAction, undefined);
 
   return (
-    <main className="bg-ink-50 flex min-h-screen items-center justify-center px-4">
-      <div className="border-ink-900 shadow-brutal-md w-full max-w-sm border-2 bg-white p-8">
-        <p className="text-eyebrow text-green-700">thriftedBD</p>
-        <h1 className="text-ink-900 mt-1 text-2xl font-extrabold">Admin sign in</h1>
+    <main className="bg-soft-cloud flex min-h-screen items-center justify-center px-4">
+      <div className="border-hairline w-full max-w-sm rounded-none border bg-white p-8">
+        <p className="text-eyebrow text-caption-sm text-mute">thriftedBD</p>
+        <h1 className="text-ink-900 text-heading-lg mt-1">Admin sign in</h1>
 
         <form action={formAction} className="mt-8 flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
           {error && (
             <p
               role="alert"
-              className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+              className="border-sale-500 bg-sale-50 text-sale-700 text-body-sm rounded-none border px-3 py-2"
             >
               {error}
             </p>

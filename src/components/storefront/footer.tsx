@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -23,21 +24,21 @@ export function SiteFooter({
   const t = useTranslations("footer");
 
   return (
-    <footer className="bg-ink-900 text-ink-100 border-ink-900 mt-auto border-t-2">
+    // DESIGN.md → Components → footer: canvas background, mute text, caption-md,
+    // separated from the page by a single hairline. Nike never inverts the footer.
+    <footer className="border-hairline text-mute mt-auto border-t bg-white">
       {/* Main footer grid */}
       <div className="max-w-container mx-auto px-4 py-12 md:px-8 md:py-16">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Col 1: Shop */}
           <div>
-            <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              {t("shop")}
-            </h3>
+            <h3 className="text-ink-900 text-heading-md mb-4">{t("shop")}</h3>
             <ul className="space-y-2">
               {departments?.map((dept) => (
                 <li key={dept.slug}>
                   <Link
                     href={`/products?category=${dept.slug}`}
-                    className="text-ink-400 hover:text-ink-50 text-sm transition-colors"
+                    className="text-mute hover:text-ink-900 text-caption-md transition-colors"
                   >
                     {dept.name}
                   </Link>
@@ -46,7 +47,7 @@ export function SiteFooter({
               <li>
                 <Link
                   href="/products"
-                  className="text-ink-400 hover:text-ink-50 text-sm transition-colors"
+                  className="text-mute hover:text-ink-900 text-caption-md transition-colors"
                 >
                   {t("allProducts")}
                 </Link>
@@ -56,9 +57,7 @@ export function SiteFooter({
 
           {/* Col 2: Help */}
           <div>
-            <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              {t("help")}
-            </h3>
+            <h3 className="text-ink-900 text-heading-md mb-4">{t("help")}</h3>
             <ul className="space-y-2">
               {[
                 { label: t("trackMyOrder"), href: "/track-order" },
@@ -69,7 +68,7 @@ export function SiteFooter({
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-ink-400 hover:text-ink-50 text-sm transition-colors"
+                    className="text-mute hover:text-ink-900 text-caption-md transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -80,25 +79,21 @@ export function SiteFooter({
 
           {/* Col 3: Newsletter */}
           <div>
-            <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              {t("stayUpdated")}
-            </h3>
-            <p className="text-ink-400 mb-3 text-sm">{t("newsletterBlurb")}</p>
+            <h3 className="text-ink-900 text-heading-md mb-4">{t("stayUpdated")}</h3>
+            <p className="text-mute text-caption-md mb-3">{t("newsletterBlurb")}</p>
             <NewsletterForm />
           </div>
 
           {/* Col 4: Connect + Trust */}
           <div>
-            <h3 className="text-ink-50 mb-4 text-sm font-extrabold tracking-widest uppercase">
-              {t("connect")}
-            </h3>
+            <h3 className="text-ink-900 text-heading-md mb-4">{t("connect")}</h3>
             <div className="mb-6 flex gap-3">
               {socialLinks?.facebook && (
                 <a
                   href={socialLinks.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
+                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
                 >
                   FB
                 </a>
@@ -108,7 +103,7 @@ export function SiteFooter({
                   href={socialLinks.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
+                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
                 >
                   IG
                 </a>
@@ -118,7 +113,7 @@ export function SiteFooter({
                   href={socialLinks.tiktok}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
+                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
                 >
                   TK
                 </a>
@@ -128,7 +123,7 @@ export function SiteFooter({
                   href={socialLinks.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-ink-700 hover:border-ink-300 hover:text-ink-50 flex size-9 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
+                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
                 >
                   YT
                 </a>
@@ -139,7 +134,7 @@ export function SiteFooter({
             <div className="space-y-2">
               {[t("badgeCod"), t("badgePayment"), t("badgeQuality"), t("badgeDelivery")].map(
                 (badge) => (
-                  <p key={badge} className="text-ink-500 text-xs">
+                  <p key={badge} className="text-mute text-caption-sm">
                     ✓ {badge}
                   </p>
                 ),
@@ -150,10 +145,24 @@ export function SiteFooter({
       </div>
 
       {/* Bottom bar */}
-      <div className="border-ink-800 border-t px-4 py-4 md:px-8">
+      {/* Legal fine-print row — Nike's lowest utility tier. */}
+      <div className="border-hairline-soft border-t px-4 py-4 md:px-8">
         <div className="max-w-container mx-auto flex flex-col items-center justify-between gap-2 sm:flex-row">
-          <p className="text-ink-500 text-xs">{t("rights", { year: new Date().getFullYear() })}</p>
-          <p className="text-ink-600 text-xs">{t("tagline")}</p>
+          {/* Brand lockup — icon + ink wordmark on the white footer. */}
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/icons/icon.png" alt="" width={24} height={24} className="rounded-[5px]" />
+            <Image
+              src="/logos/logo.png"
+              alt="thriftedBD"
+              width={104}
+              height={58}
+              className="h-5 w-auto"
+            />
+          </Link>
+          <p className="text-stone text-caption-sm">
+            {t("rights", { year: new Date().getFullYear() })}
+          </p>
+          <p className="text-stone text-caption-sm">{t("tagline")}</p>
         </div>
       </div>
     </footer>
@@ -183,23 +192,24 @@ function NewsletterForm() {
   }
 
   if (status === "success") {
-    return <p className="text-sm text-green-400">{t("subscribed")}</p>;
+    // Genuine success semantics — one of the few places colour is earned.
+    return <p className="text-caption-md text-success">{t("subscribed")}</p>;
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-0">
+    <form onSubmit={handleSubmit} className="flex gap-2">
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder={t("emailPlaceholder")}
         required
-        className="border-ink-700 bg-ink-800 text-ink-50 placeholder:text-ink-600 focus:border-ink-400 flex-1 rounded-l-md border-2 border-r-0 px-3 py-2 text-sm outline-none"
+        className="bg-soft-cloud text-ink-900 placeholder:text-mute focus:border-ink-900 text-caption-md rounded-pill min-w-0 flex-1 border border-transparent px-4 py-2.5 outline-none focus:bg-white"
       />
       <button
         type="submit"
         disabled={status === "loading"}
-        className="border-ink-700 rounded-r-md border-2 bg-green-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-500 disabled:opacity-50"
+        className="bg-ink-900 hover:bg-ink-800 text-caption-md rounded-pill shrink-0 px-5 py-2.5 text-white transition-colors disabled:opacity-50"
       >
         {status === "loading" ? "…" : t("go")}
       </button>

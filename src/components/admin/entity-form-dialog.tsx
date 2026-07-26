@@ -120,11 +120,11 @@ export function EntityFormDialog({
             <DialogHeader>
               <DialogTitle>Save these changes?</DialogTitle>
             </DialogHeader>
-            <dl className="flex flex-col gap-2 text-sm">
+            <dl className="text-body-sm flex flex-col gap-2">
               {fields.map((field) => (
                 <div key={field.name} className="flex justify-between gap-3">
-                  <dt className="text-ink-500">{field.label}</dt>
-                  <dd className="text-ink-900 text-right font-semibold">
+                  <dt className="text-mute">{field.label}</dt>
+                  <dd className="text-ink-900 text-body-sm-strong text-right">
                     {field.type === "password"
                       ? "•".repeat(values[field.name].length) || "—"
                       : values[field.name] || "—"}
@@ -135,7 +135,7 @@ export function EntityFormDialog({
             {error && (
               <p
                 role="alert"
-                className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+                className="border-sale-500 bg-sale-50 text-sale-700 text-body-sm rounded-none border px-3 py-2"
               >
                 {error}
               </p>
@@ -171,7 +171,7 @@ export function EntityFormDialog({
                       onChange={(e) =>
                         setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
                       }
-                      className="border-ink-900 h-11 border-2 bg-white px-3 text-sm"
+                      className="text-ink-900 bg-soft-cloud focus-visible:border-ink-900 h-11 w-full rounded-md border border-transparent px-6 text-sm transition-colors outline-none focus-visible:bg-white"
                     >
                       <option value="">— Select —</option>
                       {field.options?.map((option) => (
@@ -196,7 +196,7 @@ export function EntityFormDialog({
               {error && (
                 <p
                   role="alert"
-                  className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+                  className="border-sale-500 bg-sale-50 text-sale-700 text-body-sm rounded-none border px-3 py-2"
                 >
                   {error}
                 </p>

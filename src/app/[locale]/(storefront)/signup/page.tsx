@@ -13,10 +13,10 @@ export default function CustomerSignupPage() {
   const [error, formAction, isPending] = useActionState(customerSignupAction, undefined);
 
   return (
-    <main className="bg-ink-50 flex min-h-screen items-center justify-center px-4">
-      <div className="border-ink-900 shadow-brutal-md w-full max-w-sm border-2 bg-white p-8">
-        <p className="text-eyebrow text-green-700">thriftedBD</p>
-        <h1 className="text-ink-900 mt-1 text-2xl font-extrabold">{t("createAccount")}</h1>
+    <main className="bg-soft-cloud flex min-h-screen items-center justify-center px-4">
+      <div className="border-hairline w-full max-w-sm rounded-none border bg-white p-8">
+        <p className="text-eyebrow text-caption-sm text-ink-900">thriftedBD</p>
+        <h1 className="text-heading-xl text-ink-900 mt-1">{t("createAccount")}</h1>
 
         <form action={formAction} className="mt-6 flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
@@ -66,13 +66,13 @@ export default function CustomerSignupPage() {
               disabled={isPending}
               minLength={8}
             />
-            <p className="text-ink-500 text-xs">{t("passwordHint")}</p>
+            <p className="text-caption-sm text-mute">{t("passwordHint")}</p>
           </div>
 
           {error && (
             <p
               role="alert"
-              className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+              className="border-sale-500 bg-sale-50 text-sale-700 text-caption-md rounded-none border px-3 py-2"
             >
               {error}
             </p>
@@ -83,9 +83,9 @@ export default function CustomerSignupPage() {
           </Button>
         </form>
 
-        <div className="text-ink-600 mt-6 text-center text-sm">
+        <div className="text-body-sm text-mute mt-6 text-center">
           {t("haveAccount")}{" "}
-          <Link href="/login" className="text-ink-900 font-semibold underline hover:no-underline">
+          <Link href="/login" className="text-caption-md text-ink-900 underline hover:no-underline">
             {t("signIn")}
           </Link>
         </div>

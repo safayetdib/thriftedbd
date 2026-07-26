@@ -28,10 +28,10 @@ export default async function TrackOrderResultPage({
 
   if (!phone || !orderNumber) {
     return (
-      <main className="bg-ink-50 flex min-h-screen flex-col items-center justify-center px-4 py-8">
-        <div className="border-ink-900 shadow-brutal-md w-full max-w-md border-2 bg-white p-8 text-center">
-          <p className="text-sale-700 font-semibold">{t("invalidRequest")}</p>
-          <p className="text-ink-600 mt-2 text-sm">{t("missingFields")}</p>
+      <main className="bg-soft-cloud flex min-h-screen flex-col items-center justify-center px-4 py-8">
+        <div className="border-hairline w-full max-w-md rounded-none border bg-white p-8 text-center">
+          <p className="text-body-strong text-sale-700">{t("invalidRequest")}</p>
+          <p className="text-body-sm text-mute mt-2">{t("missingFields")}</p>
           <Link href="/track-order" className="mt-4 inline-block">
             <Button variant="primary" size="sm">
               {t("tryAgain")}
@@ -50,10 +50,10 @@ export default async function TrackOrderResultPage({
 
   if (!order) {
     return (
-      <main className="bg-ink-50 flex min-h-screen flex-col items-center justify-center px-4 py-8">
-        <div className="border-ink-900 shadow-brutal-md w-full max-w-md border-2 bg-white p-8 text-center">
-          <p className="text-sale-700 font-semibold">{t("notFound")}</p>
-          <p className="text-ink-600 mt-2 text-sm">{t("checkDetails")}</p>
+      <main className="bg-soft-cloud flex min-h-screen flex-col items-center justify-center px-4 py-8">
+        <div className="border-hairline w-full max-w-md rounded-none border bg-white p-8 text-center">
+          <p className="text-body-strong text-sale-700">{t("notFound")}</p>
+          <p className="text-body-sm text-mute mt-2">{t("checkDetails")}</p>
           <Link href="/track-order" className="mt-4 inline-block">
             <Button variant="primary" size="sm">
               {t("tryAgain")}
@@ -75,22 +75,22 @@ export default async function TrackOrderResultPage({
   const currentStatusIndex = statusSteps.findIndex((s) => s.status === order.orderStatus);
 
   return (
-    <main className="bg-ink-50 flex min-h-screen flex-col gap-6 px-4 py-8">
+    <main className="bg-soft-cloud flex min-h-screen flex-col gap-6 px-4 py-8">
       <div className="mx-auto w-full max-w-2xl">
         {/* Header */}
-        <div className="border-ink-900 border-2 bg-white p-6">
-          <p className="text-eyebrow text-green-700">thriftedBD</p>
-          <h1 className="text-ink-900 mt-2 text-2xl font-extrabold">
+        <div className="border-hairline rounded-none border bg-white p-6">
+          <p className="text-eyebrow text-caption-sm text-ink-900">thriftedBD</p>
+          <h1 className="text-heading-xl text-ink-900 mt-2">
             {t("orderHeading", { number: order.orderNumber })}
           </h1>
-          <p className="text-ink-600 mt-1 text-sm">
+          <p className="text-body-sm text-mute mt-1">
             {t("placedOn", { date: new Date(order.createdAt).toLocaleDateString() })}
           </p>
         </div>
 
         {/* Status Timeline */}
-        <div className="border-ink-900 border-2 bg-white p-6">
-          <h2 className="text-ink-900 mb-6 text-lg font-bold">{t("trackingStatus")}</h2>
+        <div className="border-hairline rounded-none border bg-white p-6">
+          <h2 className="text-heading-lg text-ink-900 mb-6">{t("trackingStatus")}</h2>
 
           <div className="space-y-4">
             {statusSteps.map((step, idx) => {
@@ -101,23 +101,23 @@ export default async function TrackOrderResultPage({
                 <div key={step.status} className="flex items-start gap-4">
                   <div className="flex flex-col items-center">
                     <div
-                      className={`rounded-full p-2 ${isComplete ? "bg-green-500 text-white" : "bg-ink-100 text-ink-500"}`}
+                      className={`rounded-full p-2 ${isComplete ? "bg-ink-900 text-white" : "bg-soft-cloud text-mute"}`}
                     >
                       <Icon size={20} weight="fill" />
                     </div>
                     {idx < statusSteps.length - 1 && (
                       <div
-                        className={`my-1 h-8 w-0.5 ${isComplete ? "bg-green-500" : "bg-ink-200"}`}
+                        className={`my-1 h-8 w-0.5 ${isComplete ? "bg-ink-900" : "bg-hairline"}`}
                       />
                     )}
                   </div>
 
                   <div className="flex-1 pb-4">
-                    <p className={`font-semibold ${isComplete ? "text-ink-900" : "text-ink-600"}`}>
+                    <p className={`text-body-strong ${isComplete ? "text-ink-900" : "text-mute"}`}>
                       {step.label}
                     </p>
                     {step.status === order.orderStatus && (
-                      <p className="text-xs font-bold text-green-700">{t("currentStatus")}</p>
+                      <p className="text-caption-sm text-ink-900">{t("currentStatus")}</p>
                     )}
                   </div>
                 </div>
@@ -127,35 +127,37 @@ export default async function TrackOrderResultPage({
         </div>
 
         {/* Order Details */}
-        <div className="border-ink-900 border-2 bg-white p-6">
-          <h2 className="text-ink-900 mb-4 text-lg font-bold">{t("orderDetails")}</h2>
+        <div className="border-hairline rounded-none border bg-white p-6">
+          <h2 className="text-heading-lg text-ink-900 mb-4">{t("orderDetails")}</h2>
 
-          <div className="space-y-3 text-sm">
+          <div className="text-body-sm space-y-3">
             <div className="flex justify-between">
-              <span className="text-ink-600">{t("subtotal")}:</span>
-              <span className="text-ink-900 font-semibold">
+              <span className="text-mute">{t("subtotal")}:</span>
+              <span className="text-price text-caption-md text-ink-900">
                 ৳{(order.total - order.shippingFee + (order.discountApplied || 0)).toLocaleString()}
               </span>
             </div>
 
             {order.discountApplied > 0 && (
               <div className="flex justify-between">
-                <span className="text-ink-600">{t("discount")}:</span>
-                <span className="font-semibold text-green-700">-৳{order.discountApplied}</span>
+                <span className="text-mute">{t("discount")}:</span>
+                <span className="text-price text-caption-md text-ink-900">
+                  -৳{order.discountApplied}
+                </span>
               </div>
             )}
 
             <div className="flex justify-between">
-              <span className="text-ink-600">{t("shipping")}:</span>
-              <span className="text-ink-900 font-semibold">
+              <span className="text-mute">{t("shipping")}:</span>
+              <span className="text-price text-caption-md text-ink-900">
                 ৳{order.shippingFee.toLocaleString()}
               </span>
             </div>
 
-            <div className="border-ink-200 border-t-2 pt-3">
+            <div className="border-hairline-soft border-t pt-3">
               <div className="flex justify-between">
-                <span className="text-ink-900 font-bold">{t("total")}:</span>
-                <span className="text-ink-900 text-lg font-bold">
+                <span className="text-caption-md text-ink-900">{t("total")}:</span>
+                <span className="text-price text-ink-900 text-lg font-medium">
                   ৳{order.total.toLocaleString()}
                 </span>
               </div>
@@ -164,33 +166,33 @@ export default async function TrackOrderResultPage({
         </div>
 
         {/* Delivery Address */}
-        <div className="border-ink-900 border-2 bg-white p-6">
-          <h2 className="text-ink-900 mb-4 flex items-center gap-2 text-lg font-bold">
+        <div className="border-hairline rounded-none border bg-white p-6">
+          <h2 className="text-heading-lg text-ink-900 mb-4 flex items-center gap-2">
             <MapPin size={20} /> {t("deliveryTo")}
           </h2>
 
-          <div className="text-sm">
-            <p className="text-ink-900 font-semibold">{order.customer.name}</p>
-            <p className="text-ink-700">{order.customer.phone}</p>
-            <p className="text-ink-700">{order.customer.address}</p>
-            {order.customer.city && <p className="text-ink-700">{order.customer.city}</p>}
+          <div className="text-body-sm">
+            <p className="text-caption-md text-ink-900">{order.customer.name}</p>
+            <p className="text-charcoal">{order.customer.phone}</p>
+            <p className="text-charcoal">{order.customer.address}</p>
+            {order.customer.city && <p className="text-charcoal">{order.customer.city}</p>}
           </div>
         </div>
 
         {/* Courier Info */}
         {order.courier?.provider && (
-          <div className="border-ink-900 border-2 bg-white p-6">
-            <h2 className="text-ink-900 mb-4 text-lg font-bold">{t("shippingInfo")}</h2>
+          <div className="border-hairline rounded-none border bg-white p-6">
+            <h2 className="text-heading-lg text-ink-900 mb-4">{t("shippingInfo")}</h2>
 
-            <div className="space-y-2 text-sm">
+            <div className="text-body-sm space-y-2">
               <div className="flex justify-between">
-                <span className="text-ink-600">{t("courier")}:</span>
-                <span className="text-ink-900 font-semibold">{order.courier.provider}</span>
+                <span className="text-mute">{t("courier")}:</span>
+                <span className="text-caption-md text-ink-900">{order.courier.provider}</span>
               </div>
 
               {order.courier.trackingId && (
                 <div className="flex justify-between">
-                  <span className="text-ink-600">{t("trackingId")}:</span>
+                  <span className="text-mute">{t("trackingId")}:</span>
                   <span className="text-ink-900 font-mono">{order.courier.trackingId}</span>
                 </div>
               )}
@@ -200,7 +202,7 @@ export default async function TrackOrderResultPage({
                   href={order.courier.trackingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-green-700 hover:underline"
+                  className="text-caption-md text-ink-900 hover:underline"
                 >
                   {t("viewOnCourier")} →
                 </a>

@@ -34,12 +34,10 @@ export default async function AccountLayout({ children }: { children: React.Reac
   return (
     <div className="flex min-h-screen gap-0">
       {/* Sidebar */}
-      <nav className="border-ink-900 flex w-60 shrink-0 flex-col border-r bg-white">
-        <div className="border-ink-900 border-b px-6 py-5">
-          <p className="text-eyebrow text-caption font-bold tracking-widest text-green-700 uppercase">
-            thriftedBD
-          </p>
-          <p className="text-ink-900 text-body-md font-extrabold">{t("myAccount")}</p>
+      <nav className="border-hairline flex w-60 shrink-0 flex-col border-r bg-white">
+        <div className="border-hairline border-b px-6 py-5">
+          <p className="text-eyebrow text-caption-sm text-ink-900">thriftedBD</p>
+          <p className="text-ink-900 text-body-strong">{t("myAccount")}</p>
         </div>
 
         <ul className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3">
@@ -47,7 +45,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
             <li key={href}>
               <Link
                 href={href}
-                className="text-ink-700 hover:bg-ink-100 text-body-sm flex items-center gap-2.5 rounded-md px-3 py-2 font-semibold transition-colors"
+                className="text-charcoal hover:bg-soft-cloud text-caption-md rounded-pill flex items-center gap-2.5 px-3 py-2 transition-colors"
               >
                 <Icon size={18} />
                 {label}
@@ -56,7 +54,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
           ))}
         </ul>
 
-        <div className="border-ink-900 border-t p-3">
+        <div className="border-hairline border-t p-3">
           <LogoutForm>
             <Button variant="secondary" size="sm" className="w-full justify-start">
               <SignOutIcon size={18} /> {t("signOut")}
@@ -66,7 +64,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
       </nav>
 
       {/* Main content */}
-      <main className="bg-ink-50 flex flex-1 flex-col gap-6 px-6 py-6">
+      <main className="bg-soft-cloud flex flex-1 flex-col gap-6 px-6 py-6">
         <div className="max-w-4xl">{children}</div>
       </main>
     </div>

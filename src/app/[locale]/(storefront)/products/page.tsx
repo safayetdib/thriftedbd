@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/localize";
 import { connectDB } from "@/lib/db";
-import { getActiveProducts } from "@/lib/services/product.service";
+import { getActiveProducts, getAvailableSizes } from "@/lib/services/product.service";
 import { getActiveCategories } from "@/lib/services/category.service";
 import Color from "@/models/Color";
 import type { IProduct } from "@/models/Product";
@@ -83,6 +83,7 @@ export default async function ProductsPage({
   const t = await getTranslations("products");
   const categories: ICategory[] = JSON.parse(JSON.stringify(await getActiveCategories()));
   const colors: IColor[] = JSON.parse(JSON.stringify(await Color.find({ isActive: true }).lean()));
+  const availableSizes = await getAvailableSizes();
   const activeCategory = params.category
     ? categories.find((c) => c.slug === params.category)
     : undefined;
@@ -110,10 +111,24 @@ export default async function ProductsPage({
     colorIds,
     brands,
     sort: (params.sort as "newest" | "price-asc" | "price-desc" | "sale-first") || "newest",
+    // Keep sold items visible (shown as "Sold") so the catalogue reflects real sales.
+    includeSold: true,
   });
   const items: IProduct[] = JSON.parse(JSON.stringify(rawItems));
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const departments = categories.filter((c) => c.level === 0);
+
+  // The department to highlight = the active category itself (if a department)
+  // or its parent (if a subcategory is active), plus that department's children.
+  const activeDept =
+    activeCategory?.level === 0
+      ? activeCategory
+      : activeCategory
+        ? categories.find((c) => String(c._id) === String(activeCategory.parentId))
+        : undefined;
+  const subcategories = activeDept
+    ? categories.filter((c) => c.level > 0 && String(c.parentId) === String(activeDept._id))
+    : [];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -142,14 +157,14 @@ export default async function ProductsPage({
 
       {/* Page header */}
       <div className="mb-4 md:mb-6">
-        <h1 className="text-ink-900 text-2xl font-extrabold">
+        <h1 className="text-heading-xl text-ink-900">
           {params.q
             ? t("searchHeading", { query: params.q })
             : activeCategory
               ? localize(activeCategory.name, locale)
               : t("allProducts")}
         </h1>
-        <p className="text-ink-500 mt-0.5 text-sm">{t("itemCount", { count: total })}</p>
+        <p className="text-body-sm text-mute mt-0.5">{t("itemCount", { count: total })}</p>
       </div>
 
       {/* Category pills */}
@@ -157,8 +172,10 @@ export default async function ProductsPage({
         <Link
           href="/products"
           className={cn(
-            "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold tracking-wide uppercase",
-            !activeCategory ? "bg-ink-900 text-white" : "text-ink-900 hover:bg-ink-100 bg-white",
+            "text-caption-md rounded-pill border px-4 py-1.5 transition-colors",
+            !activeCategory
+              ? "border-ink-900 bg-ink-900 text-white"
+              : "border-hairline text-ink-900 hover:bg-soft-cloud bg-white",
           )}
         >
           {t("all")}
@@ -168,10 +185,10 @@ export default async function ProductsPage({
             key={c.slug}
             href={`/products?category=${c.slug}`}
             className={cn(
-              "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold tracking-wide uppercase",
-              activeCategory?.slug === c.slug
-                ? "bg-ink-900 text-white"
-                : "text-ink-900 hover:bg-ink-100 bg-white",
+              "text-caption-md rounded-pill border px-4 py-1.5 transition-colors",
+              activeDept?.slug === c.slug
+                ? "border-ink-900 bg-ink-900 text-white"
+                : "border-hairline text-ink-900 hover:bg-soft-cloud bg-white",
             )}
           >
             {localize(c.name, locale)}
@@ -179,11 +196,43 @@ export default async function ProductsPage({
         ))}
       </div>
 
+      {/* Subcategory pills — shown when the active department has children. */}
+      {subcategories.length > 0 && activeDept && (
+        <div className="mb-4 flex flex-wrap gap-2 md:mb-6">
+          <Link
+            href={`/products?category=${activeDept.slug}`}
+            className={cn(
+              "text-caption-sm rounded-pill border px-3 py-1 transition-colors",
+              activeCategory?.slug === activeDept.slug
+                ? "border-ink-900 text-ink-900"
+                : "border-hairline text-mute hover:text-ink-900 bg-white",
+            )}
+          >
+            All {localize(activeDept.name, locale)}
+          </Link>
+          {subcategories.map((s) => (
+            <Link
+              key={s.slug}
+              href={`/products?category=${s.slug}`}
+              className={cn(
+                "text-caption-sm rounded-pill border px-3 py-1 transition-colors",
+                activeCategory?.slug === s.slug
+                  ? "border-ink-900 text-ink-900"
+                  : "border-hairline text-mute hover:text-ink-900 bg-white",
+              )}
+            >
+              {localize(s.name, locale)}
+            </Link>
+          ))}
+        </div>
+      )}
+
       {/* Product area: sidebar + grid */}
       <div className="flex gap-4 md:gap-6">
         <FilterSidebar
           categories={categories}
           colors={colors}
+          sizes={availableSizes}
           activeCategory={activeCategory}
           currentParams={params}
         />

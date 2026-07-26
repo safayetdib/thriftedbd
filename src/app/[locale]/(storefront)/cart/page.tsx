@@ -40,9 +40,9 @@ export default async function CartPage() {
   if (items.length === 0) {
     return (
       <main className="max-w-container mx-auto flex w-full flex-col items-center gap-5 px-4 py-24 text-center md:px-8">
-        <ShoppingBagIcon size={40} className="text-ink-300" />
-        <h1 className="text-ink-900 text-2xl font-extrabold">{t("emptyTitle")}</h1>
-        <p className="text-ink-500 max-w-sm">{t("emptyBlurb")}</p>
+        <ShoppingBagIcon size={40} className="text-stone" />
+        <h1 className="text-heading-xl text-ink-900">{t("emptyTitle")}</h1>
+        <p className="text-body-md text-mute max-w-sm">{t("emptyBlurb")}</p>
         <Link href="/products">
           <Button variant="primary" size="lg">
             {t("browseProducts")}
@@ -54,9 +54,9 @@ export default async function CartPage() {
 
   return (
     <main className="max-w-container mx-auto w-full px-4 py-6 md:px-8 md:py-8">
-      <h1 className="text-ink-900 mb-6 text-2xl font-extrabold">
+      <h1 className="text-heading-xl text-ink-900 mb-6">
         {t("title")}
-        <span className="text-ink-400 ml-2 text-lg font-normal">
+        <span className="text-mute ml-2 text-lg font-normal">
           {items.length} {items.length === 1 ? "item" : "items"}
         </span>
       </h1>
@@ -66,9 +66,9 @@ export default async function CartPage() {
           {items.map((item) => (
             <div
               key={String(item.productId)}
-              className="border-ink-900 flex gap-4 border-2 bg-white p-3 md:gap-5 md:p-4"
+              className="border-hairline flex gap-4 rounded-none border bg-white p-3 md:gap-5 md:p-4"
             >
-              <div className="border-ink-900 bg-ink-100 relative size-20 shrink-0 border-2 md:size-24">
+              <div className="bg-soft-cloud relative size-20 shrink-0 rounded-none md:size-24">
                 {item.image && (
                   <Image
                     src={item.image}
@@ -83,15 +83,15 @@ export default async function CartPage() {
 
               <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-ink-900 truncate font-semibold">
+                  <p className="text-body-strong text-ink-900 truncate">
                     {localize(item.title, locale)}
                   </p>
                   <RemoveFromCartButton productId={String(item.productId)} />
                 </div>
 
                 <div className="mt-auto flex items-center justify-between gap-2">
-                  <p className="text-price text-ink-900 text-lg font-bold">৳{item.price}</p>
-                  <span className="border-ink-900 inline-flex items-center gap-1 border-2 px-2 py-0.5 text-xs font-bold">
+                  <p className="text-price text-ink-900 text-lg font-medium">৳{item.price}</p>
+                  <span className="border-hairline text-caption-sm rounded-pill inline-flex items-center gap-1 border px-2 py-0.5">
                     {t("qty", { count: item.quantity })}
                   </span>
                 </div>
@@ -101,20 +101,20 @@ export default async function CartPage() {
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="border-ink-900 flex flex-col gap-4 border-2 bg-white p-5 md:p-6">
-            <h2 className="text-eyebrow text-ink-500">{t("orderSummary")}</h2>
+          <div className="border-hairline flex flex-col gap-4 rounded-none border bg-white p-5 md:p-6">
+            <h2 className="text-eyebrow text-caption-sm text-mute">{t("orderSummary")}</h2>
 
             <div className="flex items-center justify-between">
-              <span className="text-ink-600 text-sm">
+              <span className="text-body-sm text-mute">
                 Subtotal ({items.length} {items.length === 1 ? "item" : "items"})
               </span>
-              <span className="text-ink-900 font-bold">৳{subtotal}</span>
+              <span className="text-price text-body-strong text-ink-900">৳{subtotal}</span>
             </div>
 
-            <div className="bg-ink-200 h-px" />
+            <div className="bg-hairline-soft h-px" />
 
             <div>
-              <p className="text-ink-500 text-xs leading-relaxed">
+              <p className="text-caption-sm text-mute leading-relaxed">
                 {t("deliveryNote", {
                   inside: settings.deliveryFee.insideDhaka,
                   outside: settings.deliveryFee.outsideDhaka,
@@ -122,11 +122,11 @@ export default async function CartPage() {
               </p>
             </div>
 
-            <div className="bg-ink-200 h-px" />
+            <div className="bg-hairline-soft h-px" />
 
             <div className="flex items-center justify-between">
-              <span className="text-ink-900 text-sm font-bold">Total</span>
-              <span className="text-ink-900 text-xl font-extrabold">৳{subtotal}</span>
+              <span className="text-caption-md text-ink-900">Total</span>
+              <span className="text-price text-ink-900 text-xl font-medium">৳{subtotal}</span>
             </div>
 
             <Link href="/checkout" className="mt-1 block">
@@ -141,24 +141,24 @@ export default async function CartPage() {
 
       {promotions.length > 0 && (
         <section className="mt-12 space-y-4">
-          <h2 className="text-ink-900 text-lg font-extrabold">{t("specialOffers")}</h2>
+          <h2 className="text-heading-lg text-ink-900">{t("specialOffers")}</h2>
           <div className="flex flex-col gap-3">
             {promotions.map((promo) => (
               <div
                 key={String(promo._id)}
-                className="border-ink-900 border-2 p-4"
+                className="rounded-none p-4"
                 style={{ backgroundColor: promo.backgroundColor || "#000" }}
               >
-                <h3 className="font-bold text-white">
+                <h3 className="text-body-strong text-white">
                   {localize(promo.headline, locale) || promo.title}
                 </h3>
                 {localize(promo.body, locale) && (
-                  <p className="mt-1 text-sm text-white">{localize(promo.body, locale)}</p>
+                  <p className="text-body-sm mt-1 text-white">{localize(promo.body, locale)}</p>
                 )}
                 {promo.ctaLink && localize(promo.ctaText, locale) && (
                   <a
                     href={promo.ctaLink}
-                    className="mt-2 inline-block text-sm text-white underline"
+                    className="text-caption-md mt-2 inline-block text-white underline"
                   >
                     {localize(promo.ctaText, locale)} →
                   </a>
@@ -171,7 +171,7 @@ export default async function CartPage() {
 
       {featuredProducts.length > 0 && (
         <section className="mt-12">
-          <h2 className="text-ink-900 mb-6 text-lg font-extrabold">{t("completeYourLook")}</h2>
+          <h2 className="text-heading-lg text-ink-900 mb-6">{t("completeYourLook")}</h2>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={String(product._id)} product={product} />

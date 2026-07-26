@@ -20,5 +20,12 @@ const blacklistSchema = new Schema<IBlacklist>({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Blacklist) {
+  mongoose.deleteModel("Blacklist");
+}
+
 export default mongoose.models.Blacklist ||
   mongoose.model<IBlacklist>("Blacklist", blacklistSchema);

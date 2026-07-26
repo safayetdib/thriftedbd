@@ -58,12 +58,12 @@ export default async function StorefrontLayout({ children }: { children: React.R
     <>
       <a
         href="#main-content"
-        className="focus:ring-ink-900 sr-only fixed top-0 left-0 z-[100] m-2 rounded-sm bg-white px-4 py-2 text-sm font-semibold focus:not-sr-only focus:ring-2"
+        className="focus:ring-ink-900 text-caption-md rounded-pill sr-only fixed top-0 left-0 z-[100] m-2 bg-white px-4 py-2 focus:not-sr-only focus:ring-2"
       >
         Skip to content
       </a>
       {announcement && (
-        <div className="bg-ink-900 text-ink-100 px-4 py-2 text-center text-sm font-medium">
+        <div className="bg-ink-900 text-canvas text-caption-md px-4 py-2 text-center">
           {announcement}
         </div>
       )}

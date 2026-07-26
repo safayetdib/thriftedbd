@@ -9,7 +9,7 @@ import { updateCustomerProfile } from "@/lib/services/customer.service";
 
 export async function updateCustomerAction(customerId: string, formData: FormData) {
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user || (session.user.role !== "admin" && session.user.role !== "superadmin")) {
     throw new Error("UNAUTHORIZED");
   }
 

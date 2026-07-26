@@ -17,4 +17,11 @@ const colorSchema = new Schema<IColor>({
 
 colorSchema.index({ "name.en": 1 }, { unique: true });
 
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Color) {
+  mongoose.deleteModel("Color");
+}
+
 export default mongoose.models.Color || mongoose.model<IColor>("Color", colorSchema);

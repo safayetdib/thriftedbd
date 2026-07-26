@@ -61,10 +61,10 @@ export function Pagination({
         href={buildHref(currentPage - 1)}
         aria-label="Previous page"
         className={cn(
-          "border-ink-900 flex items-center gap-1 border-2 px-3 py-2 text-sm font-bold transition-colors",
+          "border-hairline text-caption-md rounded-pill flex items-center gap-1 border px-4 py-2 transition-colors",
           currentPage <= 1
-            ? "border-ink-200 text-ink-300 pointer-events-none"
-            : "text-ink-900 hover:bg-ink-100 bg-white",
+            ? "border-hairline-soft text-stone pointer-events-none"
+            : "text-ink-900 hover:border-ink-900 bg-white",
         )}
         aria-disabled={currentPage <= 1}
         tabIndex={currentPage <= 1 ? -1 : undefined}
@@ -78,7 +78,7 @@ export function Pagination({
           page === "..." ? (
             <span
               key={`ellipsis-${idx}`}
-              className="text-ink-400 flex h-9 w-9 items-center justify-center text-sm"
+              className="text-mute text-caption-md flex size-10 items-center justify-center"
             >
               …
             </span>
@@ -87,10 +87,10 @@ export function Pagination({
               key={page}
               href={buildHref(page)}
               className={cn(
-                "flex h-9 w-9 items-center justify-center border-2 text-xs font-bold transition-colors",
+                "text-caption-md flex size-10 items-center justify-center rounded-full border transition-colors",
                 page === currentPage
                   ? "bg-ink-900 border-ink-900 text-white"
-                  : "border-ink-900 text-ink-900 hover:bg-ink-100 bg-white",
+                  : "border-hairline text-ink-900 hover:border-ink-900 bg-white",
               )}
               aria-current={page === currentPage ? "page" : undefined}
             >
@@ -104,10 +104,10 @@ export function Pagination({
         href={buildHref(currentPage + 1)}
         aria-label="Next page"
         className={cn(
-          "border-ink-900 flex items-center gap-1 border-2 px-3 py-2 text-sm font-bold transition-colors",
+          "border-hairline text-caption-md rounded-pill flex items-center gap-1 border px-4 py-2 transition-colors",
           currentPage >= totalPages
-            ? "border-ink-200 text-ink-300 pointer-events-none"
-            : "text-ink-900 hover:bg-ink-100 bg-white",
+            ? "border-hairline-soft text-stone pointer-events-none"
+            : "text-ink-900 hover:border-ink-900 bg-white",
         )}
         aria-disabled={currentPage >= totalPages}
         tabIndex={currentPage >= totalPages ? -1 : undefined}

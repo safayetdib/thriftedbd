@@ -18,13 +18,10 @@ const FIELDS: EntityField[] = [
   { name: "pages", label: "Pages (comma-separated)", required: true },
   { name: "title", label: "Admin title", required: true },
   { name: "headline.en", label: "Headline (English)" },
-  { name: "headline.bn", label: "Headline (Bangla)" },
   { name: "body.en", label: "Body (English)" },
-  { name: "body.bn", label: "Body (Bangla)" },
   { name: "imageUrl", label: "Image URL" },
   { name: "imageKey", label: "Image key (R2)" },
   { name: "ctaText.en", label: "CTA text (English)" },
-  { name: "ctaText.bn", label: "CTA text (Bangla)" },
   { name: "ctaLink", label: "CTA link" },
   { name: "backgroundColor", label: "Background color (hex)" },
   { name: "activeFrom", label: "Active from (ISO 8601)" },
@@ -40,7 +37,7 @@ export default async function AdminPromotionsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Promotions</h1>
+        <h1 className="text-ink-900 text-heading-lg">Promotions</h1>
         <EntityFormDialog
           trigger={
             <Button variant="primary" size="sm">
@@ -53,17 +50,17 @@ export default async function AdminPromotionsPage() {
         />
       </div>
 
-      <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="admin-data-table w-full min-w-[800px] text-left text-sm">
-          <thead className="border-ink-900 bg-ink-100 border-b-2">
+      <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <table className="admin-data-table text-body-sm w-full min-w-[800px] text-left">
+          <thead className="border-hairline bg-soft-cloud border-b">
             <tr>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Title</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Type</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Pages</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Enabled</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Active from</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Active to</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Title</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Type</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Pages</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Enabled</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Active from</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Active to</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -71,24 +68,32 @@ export default async function AdminPromotionsPage() {
             {promotions.map((promotion) => (
               <tr
                 key={promotion._id.toString()}
-                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+                className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
                 <td className="px-5 py-3.5">{promotion.title}</td>
                 <td className="px-5 py-3.5">
-                  <span className="bg-ink-100 px-2 py-1 text-xs font-semibold">
+                  <span className="bg-soft-cloud text-charcoal text-caption-sm rounded-pill px-2.5 py-1">
                     {promotion.type}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-xs">{promotion.pages.join(", ")}</td>
+                <td className="text-charcoal text-caption-sm px-5 py-3.5">
+                  {promotion.pages.join(", ")}
+                </td>
                 <td className="px-5 py-3.5">
-                  <span className={promotion.enabled ? "font-bold text-green-700" : "text-ink-500"}>
+                  <span
+                    className={
+                      promotion.enabled
+                        ? "text-success text-body-sm-strong"
+                        : "text-mute text-body-sm"
+                    }
+                  >
                     {promotion.enabled ? "Yes" : "No"}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-xs">
+                <td className="text-charcoal text-caption-sm px-5 py-3.5">
                   {promotion.activeFrom ? new Date(promotion.activeFrom).toLocaleDateString() : "—"}
                 </td>
-                <td className="px-5 py-3.5 text-xs">
+                <td className="text-charcoal text-caption-sm px-5 py-3.5">
                   {promotion.activeTo ? new Date(promotion.activeTo).toLocaleDateString() : "—"}
                 </td>
                 <td className="px-5 py-3.5">

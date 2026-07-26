@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 function getPageRange(current: number, total: number) {
   if (total <= 7) {
@@ -59,7 +58,7 @@ export function AdminPagination({
         page === "..." ? (
           <span
             key={`ellipsis-${idx}`}
-            className="text-ink-400 flex h-9 w-9 items-center justify-center text-sm"
+            className="text-stone text-body-sm flex h-9 w-9 items-center justify-center"
           >
             …
           </span>
@@ -67,12 +66,11 @@ export function AdminPagination({
           <Link
             key={page}
             href={buildHref(page)}
-            className={cn(
-              "flex h-9 w-9 items-center justify-center border-2 text-xs font-bold transition-colors",
+            className={`text-caption-sm rounded-pill flex h-9 w-9 items-center justify-center border transition-colors ${
               page === currentPage
                 ? "bg-ink-900 border-ink-900 text-white"
-                : "border-ink-900 text-ink-900 hover:bg-ink-100 bg-white",
-            )}
+                : "border-hairline text-charcoal hover:bg-soft-cloud hover:text-ink-900 bg-white"
+            }`}
             aria-current={page === currentPage ? "page" : undefined}
           >
             {page}

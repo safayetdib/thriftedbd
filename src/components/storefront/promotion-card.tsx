@@ -1,6 +1,7 @@
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/localize";
+import { readableTextOn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { IPromotion } from "@/models/Promotion";
 
@@ -10,30 +11,24 @@ import type { IPromotion } from "@/models/Promotion";
  */
 export function PromotionCard({ promotion }: { promotion: IPromotion }) {
   const locale = useLocale();
+  const background = promotion.backgroundColor || "#1a1a1a";
+  const foreground = readableTextOn(background);
+
   return (
     <div
-      className="flex flex-col justify-between rounded-xl p-6"
-      style={{ backgroundColor: promotion.backgroundColor || "#1a1a1a" }}
+      // Editorial tile — zero radius, like every campaign surface in the system.
+      className="flex flex-col justify-between rounded-none p-6"
+      style={{ backgroundColor: background }}
     >
       <div>
         {localize(promotion.headline, locale) && (
-          <h3
-            className="text-display-xs mb-2 font-semibold"
-            style={{
-              color: promotion.backgroundColor ? "white" : undefined,
-            }}
-          >
+          <h3 className="text-heading-lg mb-2" style={{ color: foreground }}>
             {localize(promotion.headline, locale)}
           </h3>
         )}
 
         {localize(promotion.body, locale) && (
-          <p
-            className="text-body-sm mb-4"
-            style={{
-              color: promotion.backgroundColor ? "rgba(255,255,255,0.9)" : undefined,
-            }}
-          >
+          <p className="text-body-sm mb-4 opacity-90" style={{ color: foreground }}>
             {localize(promotion.body, locale)}
           </p>
         )}

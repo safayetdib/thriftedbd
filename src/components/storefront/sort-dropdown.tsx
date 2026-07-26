@@ -32,7 +32,7 @@ export function SortDropdown({
     <select
       value={currentSort}
       onChange={(e) => handleSort(e.target.value)}
-      className="border-ink-900 border-2 bg-white px-3 py-2 text-sm font-semibold"
+      className="border-hairline hover:border-ink-900 text-caption-md rounded-pill text-ink-900 border bg-white px-4 py-2 transition-colors"
     >
       <option value="newest">{t("newest")}</option>
       <option value="price-asc">{t("priceAsc")}</option>

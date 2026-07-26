@@ -10,8 +10,11 @@ export default auth((req) => {
   const role = req.auth?.user?.role;
 
   // Admin is never localized — auth-gate it and skip the intl handling.
+  // Both "admin" and "superadmin" may enter the panel; superadmin-only areas
+  // (admin-user management) are gated further down at the route/action level.
   if (pathname.startsWith("/admin")) {
-    if (pathname !== "/admin/login" && role !== "admin") {
+    const isAdmin = role === "admin" || role === "superadmin";
+    if (pathname !== "/admin/login" && !isAdmin) {
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
     return NextResponse.next();
@@ -35,6 +38,8 @@ export default auth((req) => {
 });
 
 export const config = {
-  // Run on all pages, but never on API routes, Next internals, or files.
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  // Run on all pages, but never on API routes, Next internals, files, or the
+  // extensionless metadata image routes (opengraph-image/twitter-image) —
+  // those are served by Next's own handler and must not be localized.
+  matcher: ["/((?!api|_next|_vercel|opengraph-image|twitter-image|.*\\..*).*)"],
 };

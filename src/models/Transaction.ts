@@ -40,5 +40,12 @@ const transactionSchema = new Schema<ITransaction>({
 transactionSchema.index({ orderIds: 1 });
 transactionSchema.index({ status: 1 });
 
+// Dev-only: recompile the model when its schema changes. Mongoose caches models
+// on the connection singleton, which survives Next.js HMR, so without this a
+// schema edit would be masked until a full dev-server restart.
+if (process.env.NODE_ENV !== "production" && mongoose.models.Transaction) {
+  mongoose.deleteModel("Transaction");
+}
+
 export default mongoose.models.Transaction ||
   mongoose.model<ITransaction>("Transaction", transactionSchema);

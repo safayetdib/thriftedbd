@@ -5,19 +5,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * thriftedBD badge variants — see design system §7.7.
- * Sharp corners, 2px ink border on every variant (funky/modern direction).
+ * thriftedBD badge variants — Nike design system.
+ * Nike's promo badge is a borderless white pill in caption-sm, floated over
+ * photography. Sale is signalled with red *text*, never a red fill, so the only
+ * chromatic moment on a product tile stays the price. See DESIGN.md →
+ * Components → badge-promo / badge-sale-text.
  */
 const badgeVariants = cva(
-  "group/badge inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-pill border-2 border-ink-900 px-2.5 py-1 text-sm font-semibold whitespace-nowrap transition-all has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge text-caption-sm inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-pill px-3 py-1 whitespace-nowrap transition-colors has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
-        new: "bg-green-500 text-ink-900",
-        imported: "bg-white text-ink-900",
-        premium: "bg-ink-900 text-amber-400",
-        sale: "bg-sale-500 text-white",
-        sold: "border-ink-300 bg-ink-300 text-ink-700",
+        new: "bg-white text-ink-900",
+        imported: "bg-ink-50 text-ink-900",
+        premium: "bg-ink-900 text-white",
+        sale: "bg-white text-sale-500",
+        sold: "bg-ink-50 text-mute",
       },
     },
     defaultVariants: {

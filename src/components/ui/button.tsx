@@ -4,33 +4,34 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * thriftedBD button variants — WISE design system §7.1.
- * Primary actions are lime-green pills with near-black ink text.
- * Filled buttons use a hard offset shadow that flattens on press.
- * See DESIGN.md for the full WISE component spec.
+ * thriftedBD button variants — Nike design system.
+ * Every actionable surface is a full pill. Primary is solid black
+ * on light surfaces; secondary is soft-cloud grey. There are no
+ * shadows and no sharp corners anywhere in the system, and only one
+ * filled CTA appears per surface. See DESIGN.md → Components → Buttons.
  */
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-2 border-2 border-transparent rounded-xl text-base font-semibold whitespace-nowrap transition-all duration-150 ease-brand outline-none select-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-base font-medium whitespace-nowrap transition-colors duration-150 ease-brand outline-none select-none focus-visible:ring-2 focus-visible:ring-ink-900 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        primary:
-          "bg-green-500 text-ink-900 shadow-brutal-sm hover:bg-green-600 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
-        secondary:
-          "bg-ink-50 text-ink-900 shadow-brutal-sm hover:bg-ink-100 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
-        outline:
-          "border-ink-900 bg-white text-ink-900 shadow-brutal-sm hover:bg-ink-100 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
-        ghost: "bg-transparent text-ink-700 hover:bg-ink-100",
-        link: "bg-transparent p-0 text-green-700 hover:underline",
-        destructive:
-          "bg-sale-500 text-white shadow-brutal-sm hover:bg-sale-700 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+        primary: "bg-ink-900 text-white hover:bg-ink-800",
+        secondary: "bg-ink-50 text-ink-900 hover:bg-ink-100",
+        outline: "border border-ink-900 bg-white text-ink-900 hover:bg-ink-50",
+        // On-image CTAs — for campaign photography and ink-900 sections, where
+        // `primary` would render black-on-black. DESIGN.md → button-outline-on-image.
+        "on-image": "bg-white text-ink-900 hover:bg-ink-50",
+        "on-image-ghost": "border border-white bg-transparent text-white hover:bg-white/10",
+        ghost: "bg-transparent text-ink-700 hover:bg-ink-50",
+        link: "bg-transparent p-0 text-ink-900 underline underline-offset-2 hover:text-ink-700",
+        destructive: "bg-sale-500 text-white hover:bg-sale-700",
       },
       size: {
-        sm: "h-9 px-4 text-sm",
-        md: "h-11 px-6",
-        lg: "h-12 px-8",
-        icon: "size-11 rounded-full",
-        "icon-sm": "size-9 rounded-full",
+        sm: "h-10 px-6 text-sm",
+        md: "h-12 px-8",
+        lg: "h-14 px-10",
+        icon: "size-10",
+        "icon-sm": "size-9",
       },
     },
     defaultVariants: {

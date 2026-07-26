@@ -34,8 +34,8 @@ export default async function FavoritesPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-ink-900 text-3xl font-extrabold">{t("title")}</h1>
-        <p className="text-ink-600 mt-1 text-sm">
+        <h1 className="text-heading-xl text-ink-900">{t("title")}</h1>
+        <p className="text-body-sm text-mute mt-1">
           {favoriteProducts.length === 0
             ? t("emptyBlurb")
             : t("savedCount", { count: favoriteProducts.length })}

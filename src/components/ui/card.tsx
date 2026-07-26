@@ -2,8 +2,18 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Nike surfaces are flat: zero radius, no shadow, and separation comes from a
+ * 1px hairline rather than elevation. See DESIGN.md → Elevation & Depth.
+ */
 function Card({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="card" className={cn("rounded-xl bg-white", className)} {...props} />;
+  return (
+    <div
+      data-slot="card"
+      className={cn("border-hairline-soft rounded-none border bg-white", className)}
+      {...props}
+    />
+  );
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {

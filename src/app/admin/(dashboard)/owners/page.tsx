@@ -19,7 +19,7 @@ export default async function AdminOwnersPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Owners</h1>
+        <h1 className="text-ink-900 text-heading-lg">Owners</h1>
         <EntityFormDialog
           trigger={
             <Button variant="primary" size="sm">
@@ -32,13 +32,13 @@ export default async function AdminOwnersPage() {
         />
       </div>
 
-      <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="admin-data-table w-full min-w-[500px] text-left text-sm">
-          <thead className="border-ink-900 bg-ink-100 border-b-2">
+      <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <table className="admin-data-table text-body-sm w-full min-w-[500px] text-left">
+          <thead className="border-hairline bg-soft-cloud border-b">
             <tr>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Name</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Phone</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Actions</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Name</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Phone</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -46,10 +46,10 @@ export default async function AdminOwnersPage() {
             {owners.map((owner) => (
               <tr
                 key={String(owner._id)}
-                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+                className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
-                <td className="text-ink-900 px-5 py-3.5 font-semibold">{owner.name}</td>
-                <td className="text-ink-500 px-5 py-3.5">{owner.phone}</td>
+                <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">{owner.name}</td>
+                <td className="text-mute px-5 py-3.5">{owner.phone}</td>
                 <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <EntityFormDialog

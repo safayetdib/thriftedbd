@@ -41,12 +41,13 @@ export function FavoriteButton({
       onClick={toggle}
       disabled={loading}
       aria-label={isFav ? t("removeFromFavorites") : t("addToFavorites")}
-      className="border-ink-900 hover:bg-ink-100 flex h-9 w-9 items-center justify-center border-2 bg-white transition-colors disabled:opacity-50"
+      // Nike's circular icon button: soft-cloud fill, no border, full round.
+      className="bg-soft-cloud hover:bg-ink-100 flex size-10 items-center justify-center rounded-full transition-colors disabled:opacity-50"
     >
       <HeartIcon
         size={18}
         weight={isFav ? "fill" : "regular"}
-        className={isFav ? "text-sale-500" : "text-ink-700"}
+        className={isFav ? "text-sale-500" : "text-ink-900"}
       />
     </button>
   );

@@ -14,7 +14,8 @@ function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
 }
 
 function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+  // data-slot omitted — see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
+  return <TooltipPrimitive.Trigger {...props} />;
 }
 
 function TooltipPortal({ ...props }: TooltipPrimitive.Portal.Props) {
@@ -33,7 +34,7 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "bg-ink-900 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 border-ink-800 text-caption z-50 overflow-hidden rounded-md border px-3 py-1.5 text-white shadow-sm duration-150",
+            "bg-ink-900 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 text-caption z-50 overflow-hidden rounded-none px-3 py-1.5 text-white duration-150",
             className,
           )}
           {...props}

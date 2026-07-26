@@ -12,7 +12,7 @@ import {
 
 async function requireAdminSession() {
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user || (session.user.role !== "admin" && session.user.role !== "superadmin")) {
     throw new Error("UNAUTHORIZED");
   }
 }
@@ -27,6 +27,12 @@ export async function createCategoryAction(input: unknown) {
     await createCategory(parsed.data);
     revalidatePath("/admin/categories");
   } catch (err) {
+    if (err instanceof Error && err.message === "SLUG_TAKEN") {
+      return { error: "That slug is already used. Pick a unique one (e.g. mens-pants)." };
+    }
+    if (err instanceof Error && err.message === "PARENT_NOT_FOUND") {
+      return { error: "Selected parent category no longer exists." };
+    }
     return { error: err instanceof Error ? err.message : "Failed to create category" };
   }
 }
@@ -41,6 +47,9 @@ export async function updateCategoryAction(id: string, input: unknown) {
     await updateCategory(id, parsed.data);
     revalidatePath("/admin/categories");
   } catch (err) {
+    if (err instanceof Error && err.message === "SLUG_TAKEN") {
+      return { error: "That slug is already used. Pick a unique one (e.g. mens-pants)." };
+    }
     return { error: err instanceof Error ? err.message : "Failed to update category" };
   }
 }

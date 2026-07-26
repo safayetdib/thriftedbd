@@ -1,20 +1,22 @@
 import Link from "next/link";
-import { PlusIcon } from "@phosphor-icons/react/dist/ssr";
+import { PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
 import { connectDB } from "@/lib/db";
 import { getAdminProducts } from "@/lib/services/product.service";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { EmptyTableRow } from "@/components/ui/empty-state";
+import { deleteProductAction } from "./actions";
 
 const STATUS_FILTERS = ["All", "DRAFT", "ACTIVE", "SOLD", "ARCHIVED"] as const;
 
-const STATUS_BADGE_VARIANT: Record<string, "new" | "sale" | "sold" | "premium"> = {
-  DRAFT: "sold",
-  ACTIVE: "new",
-  SOLD: "premium",
-  ARCHIVED: "sale",
+/** See the note on STATUS_CHIP in the orders list — same semantic ramp. */
+const STATUS_CHIP: Record<string, string> = {
+  DRAFT: "bg-soft-cloud text-mute",
+  ACTIVE: "bg-soft-cloud text-success",
+  SOLD: "bg-soft-cloud text-ink-900",
+  ARCHIVED: "bg-soft-cloud text-mute",
 };
 
 export default async function AdminProductsPage({
@@ -33,7 +35,7 @@ export default async function AdminProductsPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-ink-900 text-2xl font-extrabold">Products</h1>
+        <h1 className="text-ink-900 text-heading-lg">Products</h1>
         <Link href="/admin/products/new">
           <Button variant="primary" size="sm">
             <PlusIcon size={16} /> New product
@@ -48,10 +50,11 @@ export default async function AdminProductsPage({
             <Link
               key={filter}
               href={filter === "All" ? "/admin/products" : `/admin/products?status=${filter}`}
-              className={cn(
-                "border-ink-900 border-2 px-3 py-1.5 text-xs font-bold tracking-wide uppercase",
-                isActive ? "bg-ink-900 text-white" : "text-ink-900 hover:bg-ink-100 bg-white",
-              )}
+              className={`text-caption-sm text-eyebrow rounded-pill border px-4 py-1.5 transition-colors ${
+                isActive
+                  ? "border-ink-900 bg-ink-900 text-white"
+                  : "border-hairline text-charcoal hover:bg-soft-cloud hover:text-ink-900 bg-white"
+              }`}
             >
               {filter}
             </Link>
@@ -59,41 +62,57 @@ export default async function AdminProductsPage({
         })}
       </div>
 
-      <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-        <table className="admin-data-table w-full min-w-[760px] text-left text-sm">
-          <thead className="border-ink-900 bg-ink-100 border-b-2">
+      <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <table className="admin-data-table text-body-sm w-full min-w-[760px] text-left">
+          <thead className="border-hairline bg-soft-cloud border-b">
             <tr>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">SKU</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Title</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Price</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Status</th>
-              <th className="text-ink-900 px-5 py-3.5 font-bold">Created</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">SKU</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Title</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Price</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Status</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Created</th>
+              <th className="text-ink-900 text-caption-md px-5 py-3.5">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 && <EmptyTableRow colSpan={5} message="No products found." />}
+            {items.length === 0 && <EmptyTableRow colSpan={6} message="No products found." />}
             {items.map((product) => (
               <tr
                 key={String(product._id)}
-                className="border-ink-200 hover:bg-ink-50 border-b transition-colors last:border-0"
+                className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
-                <td className="text-ink-500 px-5 py-3.5">{product.sku}</td>
+                <td className="text-mute px-5 py-3.5">{product.sku}</td>
                 <td className="px-5 py-3.5">
                   <Link
                     href={`/admin/products/${product._id}`}
-                    className="font-semibold text-green-700 hover:underline"
+                    className="text-ink-900 text-body-sm-strong hover:underline"
                   >
                     {product.title.en}
                   </Link>
                 </td>
-                <td className="text-ink-900 px-5 py-3.5 font-semibold">৳{product.price}</td>
+                <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">৳{product.price}</td>
                 <td className="px-5 py-3.5">
-                  <Badge variant={STATUS_BADGE_VARIANT[product.status] ?? "sold"}>
+                  <Badge className={STATUS_CHIP[product.status] ?? "bg-soft-cloud text-mute"}>
                     {product.status}
                   </Badge>
                 </td>
-                <td className="text-ink-500 px-5 py-3.5">
+                <td className="text-mute px-5 py-3.5">
                   {new Date(product.createdAt).toLocaleDateString()}
+                </td>
+                <td className="px-5 py-3.5">
+                  {product.status === "ARCHIVED" && (
+                    <ConfirmableForm
+                      action={deleteProductAction.bind(null, String(product._id))}
+                      title={`Delete "${product.title.en}" permanently?`}
+                      description="This removes the product record and deletes its images from R2 storage. This cannot be undone."
+                      confirmLabel="Delete permanently"
+                      confirmVariant="destructive"
+                    >
+                      <Button type="submit" variant="outline" size="icon-sm">
+                        <TrashIcon size={14} />
+                      </Button>
+                    </ConfirmableForm>
+                  )}
                 </td>
               </tr>
             ))}

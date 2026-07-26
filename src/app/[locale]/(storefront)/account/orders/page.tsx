@@ -24,20 +24,20 @@ export default async function AccountOrdersPage() {
   const formatPrice = (amount: number) => `৳${amount.toLocaleString()}`;
 
   const statusColors: Record<string, string> = {
-    PENDING: "bg-ink-100 text-ink-700",
-    CONFIRMED: "bg-blue-100 text-blue-700",
-    PACKED: "bg-purple-100 text-purple-700",
-    SHIPPED: "bg-yellow-100 text-yellow-700",
-    DELIVERED: "bg-green-100 text-green-700",
-    CANCELLED: "bg-sale-100 text-sale-700",
-    RETURNED: "bg-sale-100 text-sale-700",
+    PENDING: "bg-soft-cloud text-mute",
+    CONFIRMED: "bg-soft-cloud text-ink-900",
+    PACKED: "bg-soft-cloud text-ink-900",
+    SHIPPED: "bg-soft-cloud text-ink-900",
+    DELIVERED: "bg-soft-cloud text-success",
+    CANCELLED: "bg-soft-cloud text-sale-500",
+    RETURNED: "bg-soft-cloud text-sale-500",
   };
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-ink-900 text-2xl font-extrabold">{t("title")}</h1>
-        <p className="text-ink-600 text-sm">
+        <h1 className="text-heading-xl text-ink-900">{t("title")}</h1>
+        <p className="text-body-sm text-mute">
           {orders.length === 0 ? t("emptyBlurb") : t("orderCount", { count: orders.length })}
         </p>
       </div>
@@ -57,28 +57,32 @@ export default async function AccountOrdersPage() {
       )}
 
       {orders.length > 0 && (
-        <div className="border-ink-900 overflow-x-auto border-2 bg-white">
-          <table className="w-full min-w-[700px] text-left text-sm">
-            <thead className="border-ink-900 bg-ink-100 border-b-2">
+        <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+          <table className="text-body-sm w-full min-w-[700px] text-left">
+            <thead className="border-hairline bg-soft-cloud border-b">
               <tr>
-                <th className="text-ink-900 px-4 py-3 font-bold">{t("colOrder")}</th>
-                <th className="text-ink-900 px-4 py-3 font-bold">{t("colDate")}</th>
-                <th className="text-ink-900 px-4 py-3 font-bold">{t("colItems")}</th>
-                <th className="text-ink-900 px-4 py-3 font-bold">{t("colTotal")}</th>
-                <th className="text-ink-900 px-4 py-3 font-bold">{t("colStatus")}</th>
-                <th className="text-ink-900 px-4 py-3 font-bold">{t("colAction")}</th>
+                <th className="text-caption-md text-ink-900 px-4 py-3">{t("colOrder")}</th>
+                <th className="text-caption-md text-ink-900 px-4 py-3">{t("colDate")}</th>
+                <th className="text-caption-md text-ink-900 px-4 py-3">{t("colItems")}</th>
+                <th className="text-caption-md text-ink-900 px-4 py-3">{t("colTotal")}</th>
+                <th className="text-caption-md text-ink-900 px-4 py-3">{t("colStatus")}</th>
+                <th className="text-caption-md text-ink-900 px-4 py-3">{t("colAction")}</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order._id.toString()} className="border-ink-900 border-t-2">
-                  <td className="px-4 py-3 font-semibold">{order.orderNumber}</td>
-                  <td className="px-4 py-3 text-xs">{formatDate(order.createdAt)}</td>
+                <tr key={order._id.toString()} className="border-hairline-soft border-t">
+                  <td className="text-caption-md px-4 py-3">{order.orderNumber}</td>
+                  <td className="text-caption-sm text-mute px-4 py-3">
+                    {formatDate(order.createdAt)}
+                  </td>
                   <td className="px-4 py-3">{order.items.length}</td>
-                  <td className="px-4 py-3 font-semibold">{formatPrice(order.total)}</td>
+                  <td className="text-price text-caption-md px-4 py-3">
+                    {formatPrice(order.total)}
+                  </td>
                   <td className="px-4 py-3">
                     <span
-                      className={`rounded-pill inline-block px-2 py-1 text-xs font-semibold ${statusColors[order.orderStatus] || "bg-ink-100 text-ink-700"}`}
+                      className={`rounded-pill text-caption-sm inline-block px-2 py-1 ${statusColors[order.orderStatus] || "bg-soft-cloud text-mute"}`}
                     >
                       {tEnum(`orderStatus.${order.orderStatus}`)}
                     </span>

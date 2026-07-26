@@ -32,21 +32,21 @@ export default async function CheckoutPage() {
 
   return (
     <main className="max-w-container mx-auto w-full px-4 py-6 md:px-8 md:py-8">
-      <h1 className="text-ink-900 mb-6 text-2xl font-extrabold">{t("title")}</h1>
+      <h1 className="text-heading-xl text-ink-900 mb-6">{t("title")}</h1>
 
       {promotions.length > 0 && (
         <div className="mb-6 space-y-3">
           {promotions.map((promo) => (
             <div
               key={String(promo._id)}
-              className="border-ink-900 border-2 p-3"
+              className="rounded-none p-3"
               style={{ backgroundColor: promo.backgroundColor || "#000" }}
             >
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-caption-md text-white">
                 {localize(promo.headline, locale) || promo.title}
               </h3>
               {localize(promo.body, locale) && (
-                <p className="mt-1 text-xs text-white">{localize(promo.body, locale)}</p>
+                <p className="text-caption-sm mt-1 text-white">{localize(promo.body, locale)}</p>
               )}
             </div>
           ))}
@@ -59,13 +59,13 @@ export default async function CheckoutPage() {
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="border-ink-900 flex flex-col gap-4 border-2 bg-white p-5 md:p-6">
-            <h2 className="text-eyebrow text-ink-500">{t("orderSummary")}</h2>
+          <div className="border-hairline flex flex-col gap-4 rounded-none border bg-white p-5 md:p-6">
+            <h2 className="text-eyebrow text-caption-sm text-mute">{t("orderSummary")}</h2>
 
             <div className="flex flex-col gap-3">
               {items.map((item) => (
                 <div key={String(item.productId)} className="flex items-center gap-3">
-                  <div className="border-ink-900 bg-ink-100 relative size-10 shrink-0 border-2">
+                  <div className="bg-soft-cloud relative size-10 shrink-0 rounded-none">
                     {item.image && (
                       <Image
                         src={item.image}
@@ -77,11 +77,11 @@ export default async function CheckoutPage() {
                     )}
                   </div>
                   <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
-                    <span className="text-ink-700 truncate text-sm">
+                    <span className="text-body-sm text-charcoal truncate">
                       {localize(item.title, locale)}{" "}
-                      <span className="text-ink-400">×{item.quantity}</span>
+                      <span className="text-mute">×{item.quantity}</span>
                     </span>
-                    <span className="text-ink-900 shrink-0 text-sm font-semibold">
+                    <span className="text-price text-caption-md text-ink-900 shrink-0">
                       ৳{item.price * item.quantity}
                     </span>
                   </div>
@@ -89,21 +89,21 @@ export default async function CheckoutPage() {
               ))}
             </div>
 
-            <div className="bg-ink-200 h-px" />
+            <div className="bg-hairline-soft h-px" />
 
             <div className="flex items-center justify-between">
-              <span className="text-ink-600 text-sm">{t("subtotal")}</span>
-              <span className="text-ink-900 font-bold">৳{subtotal}</span>
+              <span className="text-body-sm text-mute">{t("subtotal")}</span>
+              <span className="text-price text-body-strong text-ink-900">৳{subtotal}</span>
             </div>
 
-            <div className="bg-ink-200 h-px" />
+            <div className="bg-hairline-soft h-px" />
 
             <div className="flex items-center justify-between">
-              <span className="text-ink-900 text-sm font-bold">Total</span>
-              <span className="text-ink-900 text-xl font-extrabold">৳{subtotal}</span>
+              <span className="text-caption-md text-ink-900">Total</span>
+              <span className="text-price text-ink-900 text-xl font-medium">৳{subtotal}</span>
             </div>
 
-            <p className="text-ink-500 text-xs leading-relaxed">{t("deliveryFeeNote")}</p>
+            <p className="text-caption-sm text-mute leading-relaxed">{t("deliveryFeeNote")}</p>
           </div>
         </div>
       </div>

@@ -21,12 +21,12 @@ export function ProfileForm({ customer }: { customer: Customer }) {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-ink-900 text-2xl font-extrabold">{t("title")}</h1>
-        <p className="text-ink-600 text-sm">{t("blurb")}</p>
+        <h1 className="text-heading-xl text-ink-900">{t("title")}</h1>
+        <p className="text-body-sm text-mute">{t("blurb")}</p>
       </div>
 
       <form action={formAction} className="flex flex-col gap-6">
-        <div className="border-ink-900 flex flex-col gap-4 border-2 bg-white p-5">
+        <div className="border-hairline flex flex-col gap-4 rounded-none border bg-white p-5">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="email">{t("email")}</Label>
             <Input
@@ -34,9 +34,9 @@ export function ProfileForm({ customer }: { customer: Customer }) {
               type="email"
               value={customer.email}
               disabled
-              className="bg-ink-50 cursor-not-allowed"
+              className="bg-soft-cloud cursor-not-allowed"
             />
-            <p className="text-ink-500 text-xs">{t("emailLocked")}</p>
+            <p className="text-caption-sm text-mute">{t("emailLocked")}</p>
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -66,7 +66,7 @@ export function ProfileForm({ customer }: { customer: Customer }) {
           {error && (
             <p
               role="alert"
-              className="border-sale-500 bg-sale-50 border-2 px-3 py-2 text-sm font-medium text-white"
+              className="border-sale-500 bg-sale-50 text-sale-700 text-caption-md rounded-none border px-3 py-2"
             >
               {error}
             </p>

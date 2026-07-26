@@ -10,7 +10,8 @@ function Popover({ ...props }: PopoverPrimitive.Root.Props) {
 }
 
 function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+  // data-slot omitted — see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
+  return <PopoverPrimitive.Trigger {...props} />;
 }
 
 function PopoverPortal({ ...props }: PopoverPrimitive.Portal.Props) {
@@ -40,7 +41,7 @@ function PopoverContent({
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(
-            "text-ink-900 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 border-ink-900 z-50 w-72 rounded-lg border bg-white p-4 text-sm shadow-lg duration-150 outline-none",
+            "text-ink-900 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 border-hairline z-50 w-72 rounded-none border bg-white p-4 text-sm shadow-md duration-150 outline-none",
             className,
           )}
           {...props}

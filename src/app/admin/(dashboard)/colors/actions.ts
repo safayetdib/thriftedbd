@@ -8,7 +8,7 @@ import { createColor, updateColor, deactivateColor } from "@/lib/services/color.
 
 async function requireAdminSession() {
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user || (session.user.role !== "admin" && session.user.role !== "superadmin")) {
     throw new Error("UNAUTHORIZED");
   }
 }

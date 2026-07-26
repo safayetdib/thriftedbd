@@ -32,12 +32,15 @@ const productSizeInput = z.object({
 });
 
 export const createProductSchema = z.object({
+  // Optional — the slug is auto-generated from the title + a unique code in the
+  // service layer. Accepted here only to allow an explicit override if ever set.
   slug: z
     .string()
     .min(1)
-    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "slug must be lowercase, Latin, hyphen-separated"),
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "slug must be lowercase, Latin, hyphen-separated")
+    .optional(),
   title: i18nTextInput,
-  brand: z.string().min(1),
+  brand: z.string().optional(),
   categoryId: z.string().min(1),
   price: z.number().int().positive(),
   compareAtPrice: z.number().int().positive().optional(),
@@ -47,11 +50,12 @@ export const createProductSchema = z.object({
   // (e.g. a price-only update). Default to [] in the service layer instead,
   // only at creation time.
   images: z.array(productImageInput).optional(),
-  size: productSizeInput,
-  colorId: z.string().min(1),
+  size: productSizeInput.optional(),
+  colorId: z.string().optional(),
   ownerId: z.string().min(1),
   grade: z.enum(["T", "B", "M", "W", "O"]),
   condition: z.enum(["Excellent", "Good", "Fair"]),
+  description: i18nTextOptionalInput.optional(),
   notes: i18nTextOptionalInput.optional(),
   status: z.enum(["DRAFT", "ACTIVE", "SOLD", "ARCHIVED"]).optional(),
 });

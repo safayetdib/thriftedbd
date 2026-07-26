@@ -7,8 +7,8 @@ import { updateSettingsAction } from "./actions";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border-ink-900 flex flex-col gap-4 border-2 bg-white p-5">
-      <h2 className="text-eyebrow text-ink-500">{title}</h2>
+    <div className="border-hairline flex flex-col gap-4 rounded-none border bg-white p-5">
+      <h2 className="text-eyebrow text-caption-sm text-mute">{title}</h2>
       {children}
     </div>
   );
@@ -25,10 +25,10 @@ export default async function AdminSettingsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-ink-900 text-2xl font-extrabold">Settings</h1>
+      <h1 className="text-ink-900 text-heading-lg">Settings</h1>
 
       {error && (
-        <p className="border-sale-500 bg-sale-50 border-2 px-4 py-3 text-sm font-medium text-white">
+        <p className="border-sale-500 bg-sale-50 text-sale-700 text-body-sm rounded-none border px-4 py-3">
           {error}
         </p>
       )}
@@ -120,23 +120,13 @@ export default async function AdminSettingsPage({
         </Section>
 
         <Section title="Announcement bar">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="announcementEn">English</Label>
-              <Input
-                id="announcementEn"
-                name="announcementEn"
-                defaultValue={settings.announcement?.en}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="announcementBn">Bangla</Label>
-              <Input
-                id="announcementBn"
-                name="announcementBn"
-                defaultValue={settings.announcement?.bn}
-              />
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="announcementEn">English</Label>
+            <Input
+              id="announcementEn"
+              name="announcementEn"
+              defaultValue={settings.announcement?.en}
+            />
           </div>
         </Section>
 
