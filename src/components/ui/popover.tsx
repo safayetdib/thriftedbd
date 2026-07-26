@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 
 import { cn } from "@/lib/utils";
@@ -10,7 +9,7 @@ function Popover({ ...props }: PopoverPrimitive.Root.Props) {
 }
 
 function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
-  // data-slot omitted — see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
+  // data-slot omitted - see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
   return <PopoverPrimitive.Trigger {...props} />;
 }
 
@@ -86,11 +85,11 @@ function PopoverDescription({ className, ...props }: PopoverPrimitive.Descriptio
 
 export {
   Popover,
-  PopoverTrigger,
-  PopoverPortal,
+  PopoverArrow,
   PopoverClose,
   PopoverContent,
-  PopoverArrow,
-  PopoverTitle,
   PopoverDescription,
+  PopoverPortal,
+  PopoverTitle,
+  PopoverTrigger,
 };

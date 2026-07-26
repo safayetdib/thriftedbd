@@ -1,12 +1,12 @@
 "use server";
 
-import { headers } from "next/headers";
-import { AuthError } from "next-auth";
 import { signIn } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
-import { signupSchema } from "@/lib/validations/customer.schema";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { createCustomer } from "@/lib/services/customer.service";
-import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { signupSchema } from "@/lib/validations/customer.schema";
+import { AuthError } from "next-auth";
+import { headers } from "next/headers";
 
 /**
  * Customer signup action.
@@ -55,7 +55,7 @@ export async function customerSignupAction(_prevState: string | undefined, formD
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      return "Account created but sign in failed — please sign in manually";
+      return "Account created but sign in failed - please sign in manually";
     }
     throw error;
   }

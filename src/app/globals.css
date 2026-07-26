@@ -3,7 +3,7 @@
 @import "shadcn/tailwind.css";
 
 /*
-  thriftedBD — Nike-inspired Design System foundation.
+  thriftedBD - Nike-inspired Design System foundation.
   Source of truth: /DESIGN.md (Nike design analysis).
   Do not introduce ad-hoc hex values outside this file.
 
@@ -13,7 +13,7 @@
 */
 @theme {
   /* =====================================================
-     Neutral ramp — the system's entire chrome palette.
+     Neutral ramp - the system's entire chrome palette.
      ink-900 (#111111) is Nike's only "brand colour": primary
      CTA, active filter chip, headline, body text, swatch dot.
      ink-50 (#f5f5f5, "soft cloud") stages every product photo.
@@ -41,7 +41,7 @@
   --color-body: #39393b;
 
   /* =====================================================
-     LEGACY ALIAS — `green-*` is retained only so the 79
+     LEGACY ALIAS - `green-*` is retained only so the 79
      existing `bg-green-500` / `text-green-600` call sites keep
      compiling. In Nike the primary action is BLACK, so these
      resolve to the ink ramp. Being renamed to ink- and success-
@@ -59,7 +59,7 @@
   --color-green-900: #000000;
 
   /* =====================================================
-     Semantic — sale red is the ONLY non-neutral in retail
+     Semantic - sale red is the ONLY non-neutral in retail
      chrome. Applied as price text + "% off" copy, never as a
      badge fill (DESIGN.md, Colors → Semantic).
      ===================================================== */
@@ -73,7 +73,7 @@
   --color-info: #1151ff;
   --color-info-deep: #0034e3;
 
-  /* Warning — retained for admin status chrome (not in Nike's
+  /* Warning - retained for admin status chrome (not in Nike's
      storefront system, which has no warning colour). */
   --color-amber-50: #fff8e0;
   --color-amber-100: #ffefb3;
@@ -82,7 +82,7 @@
   --color-amber-500: #d4aa00;
 
   /* =====================================================
-     Editorial accents — reserved for campaign tiles and
+     Editorial accents - reserved for campaign tiles and
      category tints only. Never for chrome.
      ===================================================== */
   --color-accent-pink: #ed1aa0;
@@ -94,7 +94,7 @@
   --color-denim-500: #1151ff;
 
   /* =====================================================
-     Radius — pill geometry on every actionable surface;
+     Radius - pill geometry on every actionable surface;
      product cards and editorial tiles take zero radius.
      ===================================================== */
   --radius-none: 0px;
@@ -105,7 +105,7 @@
   --radius-pill: 9999px;
 
   /* =====================================================
-     Elevation — Nike uses a 1px hairline, not shadows. The
+     Elevation - Nike uses a 1px hairline, not shadows. The
      only "shadow" in the system is an inset hairline under
      sticky bars. Soft shadows kept for modal/overlay depth.
      ===================================================== */
@@ -114,11 +114,11 @@
   --shadow-md: 0 6px 20px rgba(17, 17, 17, 0.08);
   --shadow-lg: 0 16px 40px rgba(17, 17, 17, 0.12);
 
-  /* Container — Nike's retail grid runs wider than a marketing band. */
+  /* Container - Nike's retail grid runs wider than a marketing band. */
   --container-container: 1440px;
 
   /* =====================================================
-     Typography — Nike Futura ND and Helvetica Now are
+     Typography - Nike Futura ND and Helvetica Now are
      proprietary. Substitutes: Jost (geometric, closest free
      Futura) for uppercase display; Inter for all UI text.
      Noto Sans Bengali carries Bangla at every scale.
@@ -132,7 +132,7 @@
 }
 
 /*
-  shadcn/ui semantic surface mapping — bridges generic
+  shadcn/ui semantic surface mapping - bridges generic
   component slots to the Nike palette above.
 
   Key change from the WISE system: the page background is now
@@ -192,7 +192,7 @@
     text-wrap: balance;
   }
 
-  /* Nike links are not underlined by default — nav, product cards, and
+  /* Nike links are not underlined by default - nav, product cards, and
      category tiles are plain ink and rely on position for affordance.
      Underline is opt-in via `.text-link-md` or an explicit `underline`. */
   a {
@@ -258,7 +258,7 @@
   }
 
   /*
-    Nike Typography Scale — full ladder from /DESIGN.md.
+    Nike Typography Scale - full ladder from /DESIGN.md.
     `display-campaign` is the only uppercase scale and is meant to
     sit burned into full-bleed campaign photography, never on a
     plain background. Everything else is neutral UI text.
@@ -293,7 +293,7 @@
     line-height: 1.75;
   }
 
-  /* Retained alias — `display-xs` is used across storefront
+  /* Retained alias - `display-xs` is used across storefront
      section headings; Nike's nearest equivalent is heading-lg. */
   .text-display-xs {
     font-family: var(--font-sans);

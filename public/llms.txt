@@ -5,7 +5,7 @@
 ## About
 
 - Product range: women's and men's tops, bottoms (including palazzos), dresses, bags and backpacks, and other preloved apparel and accessories.
-- Inventory model: each product is unique with 0 or 1 in stock — once sold, it's gone.
+- Inventory model: each product is unique with 0 or 1 in stock - once sold, it's gone.
 - Quality: every piece is inspected and quality-checked before it is listed.
 - Delivery & payment: cash on delivery across Bangladesh; advance payment via bKash/Nagad may be required for some orders.
 - Language: the site is in English.

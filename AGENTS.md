@@ -1,10 +1,10 @@
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes - APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
-# thriftedBD — Business & Technical Blueprint
+# thriftedBD - Business & Technical Blueprint
 
 This document contains high-signal, repo-specific instructions for AI agents working in this repository.
 
@@ -13,7 +13,7 @@ This document contains high-signal, repo-specific instructions for AI agents wor
   `pnpm typecheck && pnpm lint && pnpm test`
 - **Run a Single Test File:** `pnpm vitest run <path-to-test-file>` (e.g., `pnpm vitest run src/lib/services/order.service.test.ts`)
 - **Seeding:** `pnpm run seed` runs `scripts/seed.ts` via tsx. `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD` env vars are only needed here, not at runtime.
-- **Format:** `pnpm run format` (Prettier). Pre-commit (Husky) auto-runs `lint-staged` — ESLint fix + Prettier on staged files.
+- **Format:** `pnpm run format` (Prettier). Pre-commit (Husky) auto-runs `lint-staged` - ESLint fix + Prettier on staged files.
 - **Git Hook Policy:** Pre-push runs `pnpm typecheck && pnpm lint`.
 - **NO Commits/Pushes:** Never execute `git commit` or `git push`. Leave changes staged/uncommitted.
 
@@ -25,9 +25,9 @@ This document contains high-signal, repo-specific instructions for AI agents wor
 - **Validation:** Every API route validates inputs with Zod v4 schemas in `src/lib/validations/` before database interactions.
 - **Self-Hosted Auth:** NextAuth v5 + JWT credentials provider. Two credentials providers: `admin` and `customer`.
 - **Auth Helpers:** `requireAdmin()` / `requireCustomer()` in `src/lib/api-auth.ts` return 401/403 `NextResponse` or null.
-- **@auth/core Hack:** `@auth/core` is an explicit `devDependency` — needed for TS module augmentation in `src/types/next-auth.d.ts` under pnpm strict isolation.
-- **Locale Routing:** English is unprefixed (`/products/...`), Bangla gets `/bn/` prefix (`/bn/products/...`). Admin sits outside `[locale]` — never localized. Configured in `src/i18n/routing.ts` using next-intl with `localePrefix: "as-needed"`.
-- **Fonts:** Inter (variable, 400–900), Noto Sans (fallback), Noto Sans Bengali — loaded in `src/app/layout.tsx` as CSS variables.
+- **@auth/core Hack:** `@auth/core` is an explicit `devDependency` - needed for TS module augmentation in `src/types/next-auth.d.ts` under pnpm strict isolation.
+- **Locale Routing:** English is unprefixed (`/products/...`), Bangla gets `/bn/` prefix (`/bn/products/...`). Admin sits outside `[locale]` - never localized. Configured in `src/i18n/routing.ts` using next-intl with `localePrefix: "as-needed"`.
+- **Fonts:** Inter (variable, 400–900), Noto Sans (fallback), Noto Sans Bengali - loaded in `src/app/layout.tsx` as CSS variables.
 - **CSS:** Tailwind CSS v4 with `@tailwindcss/postcss` plugin. Design tokens in `DESIGN.md` (Wise-inspired palette).
 
 ## 3. Critical Domain & Business Invariants
@@ -59,9 +59,9 @@ This document contains high-signal, repo-specific instructions for AI agents wor
 
 ## 6. On-Demand Guides
 For deep specifications, read these specialized files before starting:
-- `docs/database-schema.md` — Field-by-field collection references
-- `docs/api-conventions.md` — REST structure, validation, and status codes
-- `docs/testing-rules.md` — Testing requirements for business-critical logic
-- `docs/seo-ai-guidelines.md` — Metadata, semantic HTML, and LLM discoverability (`llms.txt`)
-- `docs/i18n-guidelines.md` — prefix routing (`/bn/...`), fallback, and translation forms
-- `docs/security-guidelines.md` — PII masking, rate-limiting, and env var secrets
+- `docs/database-schema.md` - Field-by-field collection references
+- `docs/api-conventions.md` - REST structure, validation, and status codes
+- `docs/testing-rules.md` - Testing requirements for business-critical logic
+- `docs/seo-ai-guidelines.md` - Metadata, semantic HTML, and LLM discoverability (`llms.txt`)
+- `docs/i18n-guidelines.md` - prefix routing (`/bn/...`), fallback, and translation forms
+- `docs/security-guidelines.md` - PII masking, rate-limiting, and env var secrets

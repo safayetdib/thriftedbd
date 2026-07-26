@@ -1,16 +1,16 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
+import { SOCIAL_DEFAULTS, type SocialLinks } from "@/lib/social-links";
+import {
+  FacebookLogoIcon,
+  InstagramLogoIcon,
+  TiktokLogoIcon,
+  YoutubeLogoIcon,
+} from "@phosphor-icons/react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-
-type SocialLinks = {
-  facebook?: string;
-  instagram?: string;
-  tiktok?: string;
-  youtube?: string;
-};
 
 type Department = { slug: string; name: string };
 
@@ -88,46 +88,29 @@ export function SiteFooter({
           <div>
             <h3 className="text-ink-900 text-heading-md mb-4">{t("connect")}</h3>
             <div className="mb-6 flex gap-3">
-              {socialLinks?.facebook && (
+              {(
+                [
+                  ["Facebook", socialLinks?.facebook || SOCIAL_DEFAULTS.facebook, FacebookLogoIcon],
+                  [
+                    "Instagram",
+                    socialLinks?.instagram || SOCIAL_DEFAULTS.instagram,
+                    InstagramLogoIcon,
+                  ],
+                  ["TikTok", socialLinks?.tiktok || SOCIAL_DEFAULTS.tiktok, TiktokLogoIcon],
+                  ["YouTube", socialLinks?.youtube || SOCIAL_DEFAULTS.youtube, YoutubeLogoIcon],
+                ] as const
+              ).map(([label, href, Icon]) => (
                 <a
-                  href={socialLinks.facebook}
+                  key={label}
+                  href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
+                  aria-label={label}
+                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
                 >
-                  FB
+                  <Icon size={20} weight="fill" />
                 </a>
-              )}
-              {socialLinks?.instagram && (
-                <a
-                  href={socialLinks.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
-                >
-                  IG
-                </a>
-              )}
-              {socialLinks?.tiktok && (
-                <a
-                  href={socialLinks.tiktok}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
-                >
-                  TK
-                </a>
-              )}
-              {socialLinks?.youtube && (
-                <a
-                  href={socialLinks.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-soft-cloud text-ink-900 hover:bg-ink-900 text-caption-sm flex size-10 items-center justify-center rounded-full transition-colors hover:text-white"
-                >
-                  YT
-                </a>
-              )}
+              ))}
             </div>
 
             {/* Trust badges */}
@@ -145,24 +128,32 @@ export function SiteFooter({
       </div>
 
       {/* Bottom bar */}
-      {/* Legal fine-print row — Nike's lowest utility tier. */}
-      <div className="border-hairline-soft border-t px-4 py-4 md:px-8">
-        <div className="max-w-container mx-auto flex flex-col items-center justify-between gap-2 sm:flex-row">
-          {/* Brand lockup — icon + ink wordmark on the white footer. */}
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/icons/icon.png" alt="" width={24} height={24} className="rounded-[5px]" />
-            <Image
-              src="/logos/logo.png"
-              alt="thriftedBD"
-              width={104}
-              height={58}
-              className="h-5 w-auto"
-            />
+      {/* Legal fine-print row - Nike's lowest utility tier. */}
+      <div className="border-hairline-soft border-t px-4 py-5 md:px-8">
+        <div className="max-w-container mx-auto flex flex-col items-center justify-between gap-3 sm:flex-row">
+          {/* Brand lockup - mirrors the header: "t" icon + live-text wordmark. */}
+          <Link href="/" className="flex shrink-0 items-center gap-2">
+            <Image src="/icons/icon.png" alt="" width={32} height={32} className="rounded-[6px]" />
+            <span className="text-ink-900 text-heading-lg tracking-tight">
+              thrifted<span className="font-normal">BD</span>
+            </span>
           </Link>
-          <p className="text-stone text-caption-sm">
-            {t("rights", { year: new Date().getFullYear() })}
-          </p>
-          <p className="text-stone text-caption-sm">{t("tagline")}</p>
+          <div className="flex flex-col items-center gap-1 sm:items-end">
+            <p className="text-stone text-caption-sm">
+              {t("rights", { year: new Date().getFullYear() })} · {t("tagline")}
+            </p>
+            <p className="text-stone text-caption-sm">
+              {t("developedBy")}{" "}
+              <a
+                href="https://safayetadib.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-mute hover:text-ink-900 underline underline-offset-2 transition-colors"
+              >
+                Safayet
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
@@ -192,12 +183,12 @@ function NewsletterForm() {
   }
 
   if (status === "success") {
-    // Genuine success semantics — one of the few places colour is earned.
+    // Genuine success semantics - one of the few places colour is earned.
     return <p className="text-caption-md text-success">{t("subscribed")}</p>;
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex gap-2 pr-14">
       <input
         type="email"
         value={email}

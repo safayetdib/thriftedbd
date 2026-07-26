@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { XIcon } from "@phosphor-icons/react";
 
 function Drawer({ ...props }: DrawerPrimitive.Root.Props) {
@@ -12,7 +12,7 @@ function Drawer({ ...props }: DrawerPrimitive.Root.Props) {
 }
 
 function DrawerTrigger({ ...props }: DrawerPrimitive.Trigger.Props) {
-  // data-slot omitted — see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
+  // data-slot omitted - see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
   return <DrawerPrimitive.Trigger {...props} />;
 }
 
@@ -114,11 +114,11 @@ function DrawerDescription({ className, ...props }: DrawerPrimitive.Description.
 
 export {
   Drawer,
-  DrawerTrigger,
   DrawerClose,
   DrawerContent,
-  DrawerHeader,
-  DrawerFooter,
-  DrawerTitle,
   DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
 };

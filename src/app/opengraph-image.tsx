@@ -2,10 +2,10 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-// Branded share card — the "t" icon + the colourful thriftedBD wordmark on a
+// Branded share card - the "t" icon + the colourful thriftedBD wordmark on a
 // clean canvas. Deliberately NOT a lifestyle banner (those are reserved for
 // hero/section backgrounds), so shared links read as the brand, not a product.
-export const alt = "thriftedBD — imported preloved fashion, cash on delivery across Bangladesh";
+export const alt = "thriftedBD - imported preloved fashion, cash on delivery across Bangladesh";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

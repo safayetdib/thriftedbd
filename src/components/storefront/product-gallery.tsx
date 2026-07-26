@@ -126,10 +126,10 @@ export function ProductGallery({ images, alt }: { images: { url: string }[]; alt
           )}
 
           <div
-            className="flex h-full w-full items-center justify-center px-16"
+            className="flex h-full w-full items-center justify-center px-4 md:px-16"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative h-[85vh] w-full max-w-[90vw]">
+            <div className="relative h-[80vh] w-full max-w-[90vw] md:h-[85vh]">
               <Image
                 src={current.url}
                 alt={alt}

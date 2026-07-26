@@ -29,7 +29,7 @@ export async function addCartItem(identity: CartIdentity, productId: string) {
   }
   // Unique-item inventory: a product still showing ACTIVE can already be in
   // another customer's cart, so this re-check matters even though it doesn't
-  // fully close the race — the real guard is the re-check at order confirmation.
+  // fully close the race - the real guard is the re-check at order confirmation.
   if (product.status !== "ACTIVE") {
     throw new Error("PRODUCT_NOT_ACTIVE");
   }

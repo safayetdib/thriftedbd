@@ -1,11 +1,11 @@
-import { PlusIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
+import { Button } from "@/components/ui/button";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 import { connectDB } from "@/lib/db";
 import { getAllCoupons } from "@/lib/services/coupon.service";
-import { Button } from "@/components/ui/button";
-import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
-import { createCouponAction, updateCouponAction, deleteCouponAction } from "./actions";
-import { EmptyTableRow } from "@/components/ui/empty-state";
+import { PencilSimpleIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import { createCouponAction, deleteCouponAction, updateCouponAction } from "./actions";
 
 const FIELDS: EntityField[] = [
   { name: "code", label: "Code", required: true },
@@ -70,13 +70,13 @@ export default async function AdminCouponsPage() {
                     : `৳${coupon.discountValue}`}
                 </td>
                 <td className="px-5 py-3.5">
-                  {coupon.minOrderAmount ? `৳${coupon.minOrderAmount}` : "—"}
+                  {coupon.minOrderAmount ? `৳${coupon.minOrderAmount}` : "-"}
                 </td>
                 <td className="px-5 py-3.5">
                   {coupon.usedCount} / {coupon.maxUses ?? "∞"}
                 </td>
                 <td className="text-charcoal text-caption-sm px-5 py-3.5">
-                  {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString() : "—"}
+                  {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString() : "-"}
                 </td>
                 <td className="px-5 py-3.5">
                   <span

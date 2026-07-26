@@ -123,7 +123,7 @@ const settingsSchema = new Schema<ISettings>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Singleton — exactly one document is ever expected, enforced at the
+// Singleton - exactly one document is ever expected, enforced at the
 // service layer (find-or-create), not by a unique index on a fixed field.
 // Dev-only: recompile the model when its schema changes. Mongoose caches models
 // on the connection singleton, which survives Next.js HMR, so without this a

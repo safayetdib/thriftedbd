@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "thriftedBD API",
-    "description": "Local API collection for thriftedBD. Run requests top-to-bottom within a folder — later requests depend on IDs captured by earlier ones into environment variables. Use the 'thriftedBD Local' environment alongside this collection.",
+    "description": "Local API collection for thriftedBD. Run requests top-to-bottom within a folder - later requests depend on IDs captured by earlier ones into environment variables. Use the 'thriftedBD Local' environment alongside this collection.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

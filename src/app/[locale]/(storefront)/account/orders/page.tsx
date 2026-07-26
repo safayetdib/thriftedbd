@@ -1,11 +1,11 @@
-import { getTranslations } from "next-intl/server";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Link } from "@/i18n/navigation";
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import Order from "@/models/Order";
-import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, ShoppingBagIcon } from "@phosphor-icons/react/dist/ssr";
-import { EmptyState } from "@/components/ui/empty-state";
+import { getTranslations } from "next-intl/server";
 
 /**
  * Customer orders history page.
@@ -56,8 +56,44 @@ export default async function AccountOrdersPage() {
         />
       )}
 
+      {/* Mobile: one card per order - the 700px table below can't shrink. */}
       {orders.length > 0 && (
-        <div className="border-hairline overflow-x-auto rounded-none border bg-white">
+        <div className="flex flex-col gap-3 md:hidden">
+          {orders.map((order) => (
+            <div
+              key={order._id.toString()}
+              className="border-hairline flex flex-col gap-3 rounded-none border bg-white p-4"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-caption-md text-ink-900">{order.orderNumber}</p>
+                <span
+                  className={`rounded-pill text-caption-sm shrink-0 px-2 py-1 ${statusColors[order.orderStatus] || "bg-soft-cloud text-mute"}`}
+                >
+                  {tEnum(`orderStatus.${order.orderStatus}`)}
+                </span>
+              </div>
+              <div className="text-caption-sm text-mute flex items-center justify-between gap-2">
+                <span>
+                  {formatDate(order.createdAt)} · {t("itemCount", { count: order.items.length })}
+                </span>
+                <span className="text-price text-caption-md text-ink-900">
+                  {formatPrice(order.total)}
+                </span>
+              </div>
+              <Link
+                href={`/track-order?phone=${encodeURIComponent(order.customer.phone)}&orderNumber=${order.orderNumber}`}
+              >
+                <Button variant="secondary" size="sm" className="w-full">
+                  {t("track")} <ArrowRightIcon size={14} />
+                </Button>
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {orders.length > 0 && (
+        <div className="border-hairline hidden overflow-x-auto rounded-none border bg-white md:block">
           <table className="text-body-sm w-full min-w-[700px] text-left">
             <thead className="border-hairline bg-soft-cloud border-b">
               <tr>

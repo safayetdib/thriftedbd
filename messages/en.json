@@ -33,7 +33,8 @@
     "badgeQuality": "Quality checked",
     "badgeDelivery": "Steadfast delivery",
     "rights": "© {year} thriftedBD. All rights reserved.",
-    "tagline": "Imported preloved fashion · Bangladesh"
+    "tagline": "Imported preloved fashion · Bangladesh",
+    "developedBy": "Developed by"
   },
   "home": {
     "eyebrow": "Imported preloved fashion",
@@ -95,7 +96,7 @@
     "qty": "Qty {count}",
     "orderSummary": "Order summary",
     "subtotal": "Subtotal",
-    "deliveryNote": "Delivery: ৳{inside} inside Dhaka, ৳{outside} outside Dhaka — calculated at checkout.",
+    "deliveryNote": "Delivery: ৳{inside} inside Dhaka, ৳{outside} outside Dhaka - calculated at checkout.",
     "checkout": "Checkout",
     "specialOffers": "Special offers",
     "completeYourLook": "Complete your look",
@@ -150,7 +151,7 @@
   },
   "trackOrder": {
     "title": "Track order",
-    "blurb": "Enter your details to find your order",
+    "blurb": "Enter the phone number you ordered with and your order number to see live status - no account needed.",
     "phone": "Phone number",
     "orderNumber": "Order number",
     "searching": "Searching…",
@@ -176,7 +177,14 @@
     "trackingId": "Tracking ID",
     "viewOnCourier": "View on courier website",
     "trackAnother": "Track another order",
-    "continueShopping": "Continue shopping"
+    "continueShopping": "Continue shopping",
+    "tipOrderNumberTitle": "Where is my order number?",
+    "tipOrderNumberBody": "It looks like ORD-ABC123 and is in the confirmation you received after checkout, and in the SMS we send when your order ships.",
+    "tipDeliveryTitle": "How long does delivery take?",
+    "tipDeliveryBody": "Usually 2–5 business days inside Dhaka and 5–7 business days elsewhere in Bangladesh, delivered by Steadfast courier.",
+    "tipHelpTitle": "Can’t find your order?",
+    "tipHelpBody": "Double-check the phone number - it must be the one used at checkout. Still stuck? Message us and we’ll look it up for you.",
+    "contactLink": "Contact us for help with your order →"
   },
   "auth": {
     "signIn": "Sign in",
@@ -211,7 +219,8 @@
     "colTotal": "Total",
     "colStatus": "Status",
     "colAction": "Action",
-    "track": "Track"
+    "track": "Track",
+    "itemCount": "{count, plural, one {# item} other {# items}}"
   },
   "accountCoupons": {
     "title": "Available coupons",
@@ -244,28 +253,34 @@
     "browseProducts": "Browse products"
   },
   "contact": {
-    "title": "Contact Us",
+    "title": "Contact us",
     "getInTouch": "Get in touch",
-    "getInTouchBlurb": "We'd love to hear from you! Reach out to us through any of the following channels:",
-    "onSocialMedia": "On Social Media",
-    "responseTime": "Response Time",
-    "responseTimeBlurb": "We typically respond to inquiries within 24-48 hours during business days. Thank you for your patience!"
+    "getInTouchBlurb": "Questions about an item, your order, or a return - reach us through any channel below and we’ll get back to you quickly.",
+    "onSocialMedia": "On social media",
+    "responseTime": "Response time",
+    "responseTimeBlurb": "We usually reply within a few hours during the day, and within 24 hours at most. Order confirmation calls are made every day between 10am and 10pm.",
+    "phone": "Phone & WhatsApp",
+    "email": "Email",
+    "address": "Address",
+    "socialBlurb": "The fastest replies are on Facebook and Instagram - send us a message anytime."
   },
   "returns": {
     "title": "Returns & Refunds",
-    "intro": "We want you to be completely satisfied with your purchase. If you need to return an item, here's what you should know:",
-    "policyTitle": "30-Day Return Policy",
-    "policyBody": "All items can be returned within 30 days of delivery for a full refund of the purchase price (minus shipping fees in some cases).",
-    "conditionTitle": "Condition Requirements",
-    "condition1": "Item must be in the same condition as received",
-    "condition2": "All original tags and packaging should be intact",
-    "condition3": "Item should not show signs of wear or damage",
-    "howTitle": "How to Return",
-    "how1": "Contact us with your order number",
-    "how2": "Receive return instructions and shipping label",
-    "how3": "Ship the item back to us",
-    "how4": "Refund processed within 5-7 business days after we receive it",
-    "more": "For more information or to initiate a return, contact us at <link>our contact page</link>."
+    "intro": "Every thriftedBD piece is a one-of-a-kind preloved item, quality-checked and honestly graded before listing. If what arrives doesn’t match what we described, we’ll make it right.",
+    "policyTitle": "7-day return policy",
+    "policyBody": "You can return an item within 7 days of delivery if it doesn’t match the description, photos, or condition grade on the product page. Because every piece is unique, we can’t offer exchanges - you’ll receive a refund instead.",
+    "conditionTitle": "Condition requirements",
+    "condition1": "The item is in the same condition as it was delivered",
+    "condition2": "It is unworn and unwashed",
+    "condition3": "Any tags and original packaging are still attached",
+    "howTitle": "How to return",
+    "how1": "Contact us within 7 days of delivery with your order number",
+    "how2": "We review your request and arrange a courier pickup",
+    "how3": "The item is quality-checked when it reaches us",
+    "how4": "Your refund is processed once the return is verified",
+    "more": "For more information or to start a return, reach us via <link>our contact page</link>.",
+    "refundTitle": "Refunds",
+    "refundBody": "For cash-on-delivery orders, refunds are sent by bKash, Nagad, or bank transfer to the number or account you choose. Refunds are typically processed within 3–5 business days after the returned item passes verification. Delivery fees are non-refundable unless the return was our mistake."
   },
   "enums": {
     "condition": {

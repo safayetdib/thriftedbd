@@ -1,10 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { updateSettings } from "@/lib/services/settings.service";
 import type { UpdateSettingsInput } from "@/lib/validations/settings.schema";
+import { revalidatePath } from "next/cache";
 
 async function requireAdminSession() {
   const session = await auth();
@@ -21,10 +21,10 @@ export async function updateHomepageAction(_formData: FormData) {
   await requireAdminSession();
 
   // Parse the homepage object from form data
-  // This is simplified — in a real form you'd handle complex nested structures
+  // This is simplified - in a real form you'd handle complex nested structures
   const homepage: Record<string, unknown> = {};
 
-  // For now, we accept an empty homepage object — actual updates would parse form data
+  // For now, we accept an empty homepage object - actual updates would parse form data
   // In a more complex form, you'd parse nested arrays and objects from formData
 
   await connectDB();

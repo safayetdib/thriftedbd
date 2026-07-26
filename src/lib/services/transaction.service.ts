@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
-import Transaction from "@/models/Transaction";
-import Order from "@/models/Order";
 import { updateAdvancePayment } from "@/lib/services/order.service";
 import type {
   CreateTransactionInput,
   UpdateTransactionInput,
 } from "@/lib/validations/transaction.schema";
+import Order from "@/models/Order";
+import Transaction from "@/models/Transaction";
+import mongoose from "mongoose";
 
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 100;
@@ -47,7 +47,7 @@ export async function getTransactionById(id: string) {
   return Transaction.findById(id).lean();
 }
 
-/** Only PENDING entries are editable — once RECEIVED/RECONCILED the ledger
+/** Only PENDING entries are editable - once RECEIVED/RECONCILED the ledger
  * record (and whatever order updates it triggered) must stay immutable. */
 export async function updateTransaction(id: string, input: UpdateTransactionInput) {
   const transaction = await Transaction.findById(id);
@@ -59,7 +59,7 @@ export async function updateTransaction(id: string, input: UpdateTransactionInpu
   return transaction;
 }
 
-/** Void a mistaken entry — only while PENDING, since nothing's been applied
+/** Void a mistaken entry - only while PENDING, since nothing's been applied
  * to any order yet at that point. */
 export async function voidTransaction(id: string) {
   const transaction = await Transaction.findById(id);
@@ -71,7 +71,7 @@ export async function voidTransaction(id: string) {
 
 /**
  * Marks the ledger entry RECONCILED and updates `payment.status` on every
- * linked order — a single remittance often settles several orders at once,
+ * linked order - a single remittance often settles several orders at once,
  * so this is the multi-document write docs/api-conventions.md calls out.
  *
  * ADVANCE_PAYMENT entries are applied via `updateAdvancePayment` instead of

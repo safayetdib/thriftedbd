@@ -41,7 +41,9 @@ export default async function AccountCouponsPage() {
               className="border-hairline flex flex-col gap-3 rounded-none border bg-white p-5"
             >
               <div className="flex items-baseline justify-between gap-2">
-                <code className="text-ink-900 font-mono text-lg font-medium">{coupon.code}</code>
+                <code className="text-ink-900 font-mono text-lg font-medium break-all">
+                  {coupon.code}
+                </code>
                 <CouponCopyButton code={coupon.code} />
               </div>
 

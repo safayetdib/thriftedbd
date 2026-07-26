@@ -15,12 +15,12 @@
 
 [build]
   command = "corepack enable && pnpm install --frozen-lockfile && pnpm build"
-  # Must be Next's build output dir (.next), never the base/repo root — the
+  # Must be Next's build output dir (.next), never the base/repo root - the
   # plugin's onBuild step hard-fails if publish == base ("Your publish
   # directory cannot be the same as the base directory of your site"). It
   # reads .next itself and repackages it into Functions/Edge Functions/static
   # assets; this value is never served directly, it just can't be the repo
-  # root. NOTE: known plugin bug — the Netlify UI's "Publish directory" site
+  # root. NOTE: known plugin bug - the Netlify UI's "Publish directory" site
   # setting can win over this value. If deploys still fail with that error
   # after this change, go to Site settings > Build & deploy > Build settings
   # and set (or clear) Publish directory to ".next" there too.
@@ -31,7 +31,7 @@
   NEXT_TELEMETRY_DISABLED = "1"
   HUSKY = "0" # skip git-hook install during CI build
   # Auth.js v5 infers the request host automatically on Vercel/Cloudflare
-  # Pages, but Netlify isn't in that auto-detect list — requests pass through
+  # Pages, but Netlify isn't in that auto-detect list - requests pass through
   # Netlify's proxy layer, so this must be set explicitly or sign-in breaks.
   AUTH_TRUST_HOST = "true"
 

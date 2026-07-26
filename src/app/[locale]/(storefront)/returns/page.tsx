@@ -37,6 +37,11 @@ export default async function ReturnsPage() {
             </ol>
           </section>
 
+          <section>
+            <h2 className="text-heading-lg text-ink-900 mt-6 mb-2">{t("refundTitle")}</h2>
+            <p>{t("refundBody")}</p>
+          </section>
+
           <p className="mt-6">
             {t.rich("more", {
               link: (chunks) => (

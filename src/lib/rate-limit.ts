@@ -1,11 +1,11 @@
 /**
- * Minimal in-memory rate limiter — a first-line abuse guard for public
+ * Minimal in-memory rate limiter - a first-line abuse guard for public
  * endpoints (login, signup, order placement, order tracking) per
  * docs/security-guidelines.md §5.
  *
  * Scope & limitations: state lives in a per-process Map, so limits are
  * per-instance and reset on redeploy. This is a defence-in-depth layer, NOT a
- * substitute for an edge/WAF limiter — keep Cloudflare (or similar) in front in
+ * substitute for an edge/WAF limiter - keep Cloudflare (or similar) in front in
  * production. For a multi-instance deployment, back this with Redis instead.
  */
 

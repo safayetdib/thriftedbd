@@ -1,12 +1,12 @@
-import { randomUUID } from "crypto";
-import mongoose from "mongoose";
-import Product from "@/models/Product";
-import Category from "@/models/Category";
-import Color from "@/models/Color";
-import Owner from "@/models/Owner";
 import { withBanglaDraft } from "@/lib/services/translate.service";
 import { deleteR2Objects } from "@/lib/services/upload.service";
 import type { CreateProductInput, UpdateProductInput } from "@/lib/validations/product.schema";
+import Category from "@/models/Category";
+import Color from "@/models/Color";
+import Owner from "@/models/Owner";
+import Product from "@/models/Product";
+import { randomUUID } from "crypto";
+import mongoose from "mongoose";
 
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 100;
@@ -140,7 +140,7 @@ export async function getActiveProducts(params: {
 
   if (params.sizes && params.sizes.length > 0) {
     // A selected size may be a standard size (M) or a custom label (e.g. Free
-    // size) — match either field.
+    // size) - match either field.
     filter.$or = [
       { "size.standard": { $in: params.sizes } },
       { "size.custom": { $in: params.sizes } },
@@ -182,7 +182,7 @@ export async function getActiveProducts(params: {
 const STANDARD_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL"];
 
 /**
- * Distinct size labels present across ACTIVE products — standard sizes first (in
+ * Distinct size labels present across ACTIVE products - standard sizes first (in
  * canonical order) then custom labels. Powers the sidebar size filter so custom
  * sizes (e.g. `H 19" W 10"`) are selectable, not just a hardcoded S/M/L list.
  */

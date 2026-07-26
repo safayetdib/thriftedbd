@@ -27,7 +27,7 @@ const categorySchema = new Schema<ICategory>({
   createdAt: { type: Date, default: Date.now },
 });
 
-// One slug per sibling level, not globally unique — see docs/database-schema.md §1.
+// One slug per sibling level, not globally unique - see docs/database-schema.md §1.
 categorySchema.index({ parentId: 1, slug: 1 }, { unique: true });
 
 // Dev-only: recompile the model when its schema changes. Mongoose caches models

@@ -1,22 +1,22 @@
-import Link from "next/link";
-import { PlusIcon, CheckCircleIcon, XCircleIcon } from "@phosphor-icons/react/dist/ssr";
-import { connectDB } from "@/lib/db";
-import { getTransactions } from "@/lib/services/transaction.service";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
+import { AdminPagination } from "@/components/admin/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
-import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyTableRow } from "@/components/ui/empty-state";
+import { connectDB } from "@/lib/db";
+import { getTransactions } from "@/lib/services/transaction.service";
+import { CheckCircleIcon, PlusIcon, XCircleIcon } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 import {
   createTransactionAction,
   reconcileTransactionAction,
   voidTransactionAction,
 } from "./actions";
-import { EmptyTableRow } from "@/components/ui/empty-state";
 
 const STATUS_FILTERS = ["All", "PENDING", "RECEIVED", "RECONCILED"] as const;
 
-/** See the note on STATUS_CHIP in the orders list — same semantic ramp. */
+/** See the note on STATUS_CHIP in the orders list - same semantic ramp. */
 const STATUS_CHIP: Record<string, string> = {
   PENDING: "bg-amber-50 text-ink-900",
   RECEIVED: "bg-soft-cloud text-ink-900",

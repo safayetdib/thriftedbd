@@ -1,18 +1,18 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
-import { createProductSchema, updateProductSchema } from "@/lib/validations/product.schema";
 import {
-  createProduct,
-  updateProduct,
   archiveProduct,
+  createProduct,
   deleteProductPermanently,
   getProductById,
+  updateProduct,
 } from "@/lib/services/product.service";
 import { deleteR2Object } from "@/lib/services/upload.service";
+import { createProductSchema, updateProductSchema } from "@/lib/validations/product.schema";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 async function requireAdminSession() {
   const session = await auth();
@@ -97,6 +97,6 @@ export async function deleteProductAction(productId: string) {
     await deleteProductPermanently(productId);
     revalidatePath("/admin/products");
   } catch {
-    // NOT_ARCHIVED / PRODUCT_NOT_FOUND — no-op (button only shows for archived).
+    // NOT_ARCHIVED / PRODUCT_NOT_FOUND - no-op (button only shows for archived).
   }
 }

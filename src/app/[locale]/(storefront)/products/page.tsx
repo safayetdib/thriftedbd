@@ -1,25 +1,29 @@
-import type { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { localize } from "@/lib/localize";
-import { connectDB } from "@/lib/db";
-import { getActiveProducts, getAvailableSizes } from "@/lib/services/product.service";
-import { getActiveCategories } from "@/lib/services/category.service";
-import Color from "@/models/Color";
-import type { IProduct } from "@/models/Product";
-import type { ICategory } from "@/models/Category";
-import type { IColor } from "@/models/Color";
-import dynamic from "next/dynamic";
+import { Pagination } from "@/components/storefront/pagination";
 import { ProductCard } from "@/components/storefront/product-card";
-import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/storefront/search-bar";
 import { SortDropdown } from "@/components/storefront/sort-dropdown";
-import { Pagination } from "@/components/storefront/pagination";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Link } from "@/i18n/navigation";
+import { connectDB } from "@/lib/db";
+import { localize } from "@/lib/localize";
+import { getActiveCategories } from "@/lib/services/category.service";
+import { serialize } from "@/lib/serialize";
+import { getActiveProducts, getAvailableSizes } from "@/lib/services/product.service";
+import { cn } from "@/lib/utils";
+import type { ICategory } from "@/models/Category";
+import type { IColor } from "@/models/Color";
+import Color from "@/models/Color";
+import type { IProduct } from "@/models/Product";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
+import dynamic from "next/dynamic";
 
 const FilterSidebar = dynamic(() =>
   import("@/components/storefront/filter-sidebar").then((mod) => mod.FilterSidebar),
+);
+const MobileFilters = dynamic(() =>
+  import("@/components/storefront/filter-sidebar").then((mod) => mod.MobileFilters),
 );
 
 const BASE = "https://thriftedbd.com";
@@ -34,7 +38,7 @@ export async function generateMetadata({
   if (params.q) {
     return {
       title: `Search: ${params.q} | thriftedBD`,
-      description: `Search results for "${params.q}" — quality-checked preloved fashion.`,
+      description: `Search results for "${params.q}" - quality-checked preloved fashion.`,
       robots: { index: false },
     };
   }
@@ -46,7 +50,7 @@ export async function generateMetadata({
     const catName = cat?.name.en ?? params.category;
     return {
       title: `${catName} | thriftedBD`,
-      description: `Browse ${catName} — quality-checked preloved fashion imported from Korea, Japan, Taiwan & China. Cash on delivery across Bangladesh.`,
+      description: `Browse ${catName} - quality-checked preloved fashion imported from Korea, Japan, Taiwan & China. Cash on delivery across Bangladesh.`,
       alternates: { canonical: `${BASE}/products?category=${params.category}` },
     };
   }
@@ -81,8 +85,8 @@ export default async function ProductsPage({
   await connectDB();
   const locale = await getLocale();
   const t = await getTranslations("products");
-  const categories: ICategory[] = JSON.parse(JSON.stringify(await getActiveCategories()));
-  const colors: IColor[] = JSON.parse(JSON.stringify(await Color.find({ isActive: true }).lean()));
+  const categories = serialize<ICategory[]>(await getActiveCategories());
+  const colors = serialize<IColor[]>(await Color.find({ isActive: true }).lean());
   const availableSizes = await getAvailableSizes();
   const activeCategory = params.category
     ? categories.find((c) => c.slug === params.category)
@@ -114,7 +118,7 @@ export default async function ProductsPage({
     // Keep sold items visible (shown as "Sold") so the catalogue reflects real sales.
     includeSold: true,
   });
-  const items: IProduct[] = JSON.parse(JSON.stringify(rawItems));
+  const items = serialize<IProduct[]>(rawItems);
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const departments = categories.filter((c) => c.level === 0);
 
@@ -196,7 +200,7 @@ export default async function ProductsPage({
         ))}
       </div>
 
-      {/* Subcategory pills — shown when the active department has children. */}
+      {/* Subcategory pills - shown when the active department has children. */}
       {subcategories.length > 0 && activeDept && (
         <div className="mb-4 flex flex-wrap gap-2 md:mb-6">
           <Link
@@ -238,16 +242,25 @@ export default async function ProductsPage({
         />
 
         <div className="min-w-0 flex-1">
-          {/* Sort dropdown (desktop) */}
-          <div className="mb-4 flex items-center justify-end">
-            <SortDropdown currentSort={params.sort} currentParams={params} />
+          {/* Toolbar: mobile filter trigger (left, hidden at md+) + sort (right) */}
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <MobileFilters
+              categories={categories}
+              colors={colors}
+              sizes={availableSizes}
+              activeCategory={activeCategory}
+              currentParams={params}
+            />
+            <div className="ml-auto">
+              <SortDropdown currentSort={params.sort} currentParams={params} />
+            </div>
           </div>
 
           {items.length === 0 ? (
             <EmptyState icon={<MagnifyingGlassIcon size={32} />} title={t("noResults")} />
           ) : (
             <>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
                 {items.map((product) => (
                   <ProductCard key={String(product._id)} product={product} />
                 ))}

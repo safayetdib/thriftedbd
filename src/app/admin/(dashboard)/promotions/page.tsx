@@ -1,11 +1,11 @@
-import { PlusIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
+import { Button } from "@/components/ui/button";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 import { connectDB } from "@/lib/db";
 import { getAllPromotions } from "@/lib/services/promotion.service";
-import { Button } from "@/components/ui/button";
-import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
-import { createPromotionAction, updatePromotionAction, deletePromotionAction } from "./actions";
-import { EmptyTableRow } from "@/components/ui/empty-state";
+import { PencilSimpleIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import { createPromotionAction, deletePromotionAction, updatePromotionAction } from "./actions";
 
 const FIELDS: EntityField[] = [
   {
@@ -91,10 +91,10 @@ export default async function AdminPromotionsPage() {
                   </span>
                 </td>
                 <td className="text-charcoal text-caption-sm px-5 py-3.5">
-                  {promotion.activeFrom ? new Date(promotion.activeFrom).toLocaleDateString() : "—"}
+                  {promotion.activeFrom ? new Date(promotion.activeFrom).toLocaleDateString() : "-"}
                 </td>
                 <td className="text-charcoal text-caption-sm px-5 py-3.5">
-                  {promotion.activeTo ? new Date(promotion.activeTo).toLocaleDateString() : "—"}
+                  {promotion.activeTo ? new Date(promotion.activeTo).toLocaleDateString() : "-"}
                 </td>
                 <td className="px-5 py-3.5">
                   <div className="flex gap-2">

@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type CoverImage = { url: string; key: string };
 
@@ -43,7 +43,7 @@ export function CategoryFormDialog({
   parentOptions?: { id: string; name: string }[];
 }) {
   const router = useRouter();
-  // Parent can only be chosen at creation — reparenting is unsupported, so the
+  // Parent can only be chosen at creation - reparenting is unsupported, so the
   // selector is hidden when editing (initialValues present).
   const isCreate = !initialValues;
   const [open, setOpen] = useState(false);
@@ -69,7 +69,7 @@ export function CategoryFormDialog({
       return;
     }
     if (file.size > 500 * 1024) {
-      setError(`Image is ${Math.round(file.size / 1024)}KB — max is 500KB.`);
+      setError(`Image is ${Math.round(file.size / 1024)}KB - max is 500KB.`);
       return;
     }
 
@@ -160,7 +160,7 @@ export function CategoryFormDialog({
                 <div className="flex justify-between gap-3">
                   <dt className="text-mute">Parent</dt>
                   <dd className="text-ink-900 text-body-sm-strong text-right">
-                    {parentOptions?.find((o) => o.id === parentId)?.name ?? "—"}
+                    {parentOptions?.find((o) => o.id === parentId)?.name ?? "-"}
                   </dd>
                 </div>
               )}

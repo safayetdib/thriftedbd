@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,12 +8,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export type EntityField = {
-  /** Dot path, e.g. "name.en" — nested objects are built from these on submit. */
+  /** Dot path, e.g. "name.en" - nested objects are built from these on submit. */
   name: string;
   label: string;
   type?: "text" | "number" | "password" | "email" | "select" | "csv";
@@ -126,8 +126,8 @@ export function EntityFormDialog({
                   <dt className="text-mute">{field.label}</dt>
                   <dd className="text-ink-900 text-body-sm-strong text-right">
                     {field.type === "password"
-                      ? "•".repeat(values[field.name].length) || "—"
-                      : values[field.name] || "—"}
+                      ? "•".repeat(values[field.name].length) || "-"
+                      : values[field.name] || "-"}
                   </dd>
                 </div>
               ))}
@@ -173,7 +173,7 @@ export function EntityFormDialog({
                       }
                       className="text-ink-900 bg-soft-cloud focus-visible:border-ink-900 h-11 w-full rounded-md border border-transparent px-6 text-sm transition-colors outline-none focus-visible:bg-white"
                     >
-                      <option value="">— Select —</option>
+                      <option value="">- Select -</option>
                       {field.options?.map((option) => (
                         <option key={option} value={option}>
                           {option}

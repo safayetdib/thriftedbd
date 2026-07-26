@@ -23,6 +23,16 @@ const eslintConfig = defineConfig([
           argsIgnorePattern: "^_",
         },
       ],
+      // RSC serialization: lean() docs must be flattened before crossing into
+      // client components. Use the shared helper instead of ad-hoc round-trips.
+      "no-restricted-syntax": [
+        "warn",
+        {
+          selector:
+            "CallExpression[callee.object.name='JSON'][callee.property.name='parse'] > CallExpression.arguments[callee.object.name='JSON'][callee.property.name='stringify']",
+          message: "Use serialize() from @/lib/serialize instead of JSON.parse(JSON.stringify()).",
+        },
+      ],
     },
   },
   eslintConfigPrettier,

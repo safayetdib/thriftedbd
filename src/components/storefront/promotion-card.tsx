@@ -1,9 +1,9 @@
-import { useLocale } from "next-intl";
+import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/localize";
 import { readableTextOn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import type { IPromotion } from "@/models/Promotion";
+import { useLocale } from "next-intl";
 
 /**
  * Promotion card component.
@@ -16,7 +16,7 @@ export function PromotionCard({ promotion }: { promotion: IPromotion }) {
 
   return (
     <div
-      // Editorial tile — zero radius, like every campaign surface in the system.
+      // Editorial tile - zero radius, like every campaign surface in the system.
       className="flex flex-col justify-between rounded-none p-6"
       style={{ backgroundColor: background }}
     >

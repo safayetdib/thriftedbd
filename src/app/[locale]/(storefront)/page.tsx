@@ -1,19 +1,45 @@
-import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { localize } from "@/lib/localize";
-import { connectDB } from "@/lib/db";
-import { getActiveProducts } from "@/lib/services/product.service";
-import { getActiveCategories } from "@/lib/services/category.service";
-import { getSettings } from "@/lib/services/settings.service";
-import { getActivePromotions } from "@/lib/services/promotion.service";
-import Product from "@/models/Product";
-import Category from "@/models/Category";
-import type { IProduct } from "@/models/Product";
-import type { ICategory } from "@/models/Category";
-import type { IWhyBuyBlock, IHeroSlide } from "@/models/Settings";
-import dynamic from "next/dynamic";
 import { ProductCard } from "@/components/storefront/product-card";
 import { PromotionCard } from "@/components/storefront/promotion-card";
+import { Link } from "@/i18n/navigation";
+import { connectDB } from "@/lib/db";
+import { localize } from "@/lib/localize";
+import { getActiveCategories } from "@/lib/services/category.service";
+import { getActiveProducts } from "@/lib/services/product.service";
+import { getActivePromotions } from "@/lib/services/promotion.service";
+import { serialize } from "@/lib/serialize";
+import { getSettings } from "@/lib/services/settings.service";
+import type { ICategory } from "@/models/Category";
+import Category from "@/models/Category";
+import type { IProduct } from "@/models/Product";
+import Product from "@/models/Product";
+import type { IPromotion } from "@/models/Promotion";
+import type { IHeroSlide, IWhyBuyBlock } from "@/models/Settings";
+import type { Icon } from "@phosphor-icons/react";
+import {
+  ArrowsClockwiseIcon,
+  RepeatIcon,
+  SealCheckIcon,
+  ShieldCheckIcon,
+  TruckIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import { getLocale, getTranslations } from "next-intl/server";
+import dynamic from "next/dynamic";
+
+// Admin-entered icon names (Settings → whyBuyBlocks) resolved to real glyphs.
+// Lookup is case-insensitive; unknown names fall back to a seal-check.
+const WHY_BUY_ICONS: Record<string, Icon> = {
+  shieldcheck: ShieldCheckIcon,
+  shield: ShieldCheckIcon,
+  truck: TruckIcon,
+  delivery: TruckIcon,
+  repeat: RepeatIcon,
+  return: ArrowsClockwiseIcon,
+  sealcheck: SealCheckIcon,
+};
+
+function whyBuyIcon(name: string): Icon {
+  return WHY_BUY_ICONS[name.replace(/[^a-z]/gi, "").toLowerCase()] ?? SealCheckIcon;
+}
 
 const HeroCarousel = dynamic(() =>
   import("@/components/storefront/hero-carousel").then((mod) => mod.HeroCarousel),
@@ -23,7 +49,7 @@ const FaqAccordion = dynamic(() =>
 );
 
 /**
- * Default hero slides — the in-repo banner photos (public/banners) paired with
+ * Default hero slides - the in-repo banner photos (public/banners) paired with
  * category-relevant copy. Used when the admin hasn't configured hero slides in
  * Settings; if any CMS slides exist, those take over entirely. `imageKey` is
  * only meaningful for R2-managed uploads, so it's blank for these static files.
@@ -34,7 +60,7 @@ const FALLBACK_HERO_SLIDES: IHeroSlide[] = [
     imageKey: "",
     headline: "Preloved, not less loved",
     subheadline:
-      "Quality-checked imported thrift from Korea, Japan, Taiwan & China — delivered cash-on-delivery across Bangladesh.",
+      "Quality-checked imported thrift from Korea, Japan, Taiwan & China - delivered cash-on-delivery across Bangladesh.",
     ctaText: "Shop new in",
     ctaLink: "/products",
     order: 0,
@@ -44,7 +70,7 @@ const FALLBACK_HERO_SLIDES: IHeroSlide[] = [
     imageUrl: "/banners/banner_bags.jpeg",
     imageKey: "",
     headline: "Bags with a past",
-    subheadline: "Totes, crossbodies and backpacks — one-of-a-kind thrifted finds, ready to carry.",
+    subheadline: "Totes, crossbodies and backpacks - one-of-a-kind thrifted finds, ready to carry.",
     ctaText: "Shop bags",
     ctaLink: "/products",
     order: 1,
@@ -55,7 +81,7 @@ const FALLBACK_HERO_SLIDES: IHeroSlide[] = [
     imageKey: "",
     headline: "Tops that tell a story",
     subheadline:
-      "Blouses, tees and knits for her — unique preloved pieces, freshly dropped every week.",
+      "Blouses, tees and knits for her - unique preloved pieces, freshly dropped every week.",
     ctaText: "Shop women's tops",
     ctaLink: "/products",
     order: 2,
@@ -65,7 +91,7 @@ const FALLBACK_HERO_SLIDES: IHeroSlide[] = [
     imageUrl: "/banners/banner_gents_tops.jpeg",
     imageKey: "",
     headline: "Sharp. Secondhand. Sorted.",
-    subheadline: "Shirts and tees for him — imported thrift, quality-checked and priced to move.",
+    subheadline: "Shirts and tees for him - imported thrift, quality-checked and priced to move.",
     ctaText: "Shop men's tops",
     ctaLink: "/products",
     order: 3,
@@ -75,7 +101,7 @@ const FALLBACK_HERO_SLIDES: IHeroSlide[] = [
     imageUrl: "/banners/banner_palazzo.jpeg",
     imageKey: "",
     headline: "Flow into palazzo season",
-    subheadline: "Breezy wide-leg palazzos — thrifted, one-of-a-kind and made for Dhaka days.",
+    subheadline: "Breezy wide-leg palazzos - thrifted, one-of-a-kind and made for Dhaka days.",
     ctaText: "Shop palazzos",
     ctaLink: "/products",
     order: 4,
@@ -96,21 +122,19 @@ export default async function Home() {
     getActiveCategories(),
   ]);
 
-  const newArrivals: IProduct[] = JSON.parse(JSON.stringify(productsResult.items));
-  const serializedPromotions = JSON.parse(JSON.stringify(promotions));
+  const newArrivals = serialize<IProduct[]>(productsResult.items);
+  const serializedPromotions = serialize<IPromotion[]>(promotions);
 
   const homepage = settings.homepage ?? {};
 
   // Fetch featured products
   let featuredProducts: IProduct[] = [];
   if (homepage.featuredProductIds && homepage.featuredProductIds.length > 0) {
-    const items = JSON.parse(
-      JSON.stringify(
-        await Product.find({
-          _id: { $in: homepage.featuredProductIds },
-          status: "ACTIVE",
-        }).lean(),
-      ),
+    const items = serialize<IProduct[]>(
+      await Product.find({
+        _id: { $in: homepage.featuredProductIds },
+        status: "ACTIVE",
+      }).lean(),
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     featuredProducts = (homepage.featuredProductIds as any[])
@@ -137,7 +161,7 @@ export default async function Home() {
 
   return (
     <main className="flex flex-1 flex-col">
-      {/* Hero carousel — admin-configured slides if any, otherwise the default
+      {/* Hero carousel - admin-configured slides if any, otherwise the default
           banner set (public/banners) with category-relevant copy. */}
       <HeroCarousel
         slides={
@@ -211,25 +235,42 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Why buy from us */}
+      {/* Why buy from us - soft-cloud tiles with a big ink icon disc. Depth
+          comes from the tile fill alone; no borders, no shadows, no radius on
+          the card itself (DESIGN.md: cards take rounded-none). */}
       {homepage.whyBuyBlocks && homepage.whyBuyBlocks.length > 0 ? (
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-24">
-          <h2 className="text-heading-lg text-ink-900 mb-12">{t("whyShop")}</h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            {homepage.whyBuyBlocks.map((block: IWhyBuyBlock, idx: number) => (
-              <div key={idx} className="flex flex-col items-start gap-4">
-                <span className="text-ink-900 text-3xl">{block.icon}</span>
-                <h4 className="text-heading-md text-ink-900">{localize(block.title, locale)}</h4>
-                <p className="text-body-sm text-mute">{localize(block.description, locale)}</p>
-              </div>
-            ))}
+          <h2 className="text-heading-lg text-ink-900 mb-8 md:mb-12">{t("whyShop")}</h2>
+          <div className="grid gap-3 md:grid-cols-3 md:gap-4">
+            {homepage.whyBuyBlocks.map((block: IWhyBuyBlock, idx: number) => {
+              const BlockIcon = whyBuyIcon(block.icon);
+              return (
+                <div
+                  key={idx}
+                  className="bg-soft-cloud flex flex-col items-start gap-5 rounded-none p-8 md:p-10"
+                >
+                  <span className="bg-ink-900 flex size-14 shrink-0 items-center justify-center rounded-full text-white">
+                    <BlockIcon size={28} aria-hidden />
+                  </span>
+                  <div className="space-y-2">
+                    <h4 className="text-heading-md text-ink-900">
+                      {localize(block.title, locale)}
+                    </h4>
+                    <p className="text-body-sm text-mute">{localize(block.description, locale)}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
       ) : null}
 
-      {/* FAQ */}
+      {/* FAQ - id anchors the footer's /#faq link; scroll-mt clears the sticky header. */}
       {homepage.faqs && homepage.faqs.length > 0 && (
-        <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
+        <section
+          id="faq"
+          className="max-w-container mx-auto w-full scroll-mt-20 px-4 py-12 md:px-8 md:py-16"
+        >
           <h2 className="text-heading-lg text-ink-900 mb-8">{t("faq")}</h2>
           <div className="max-w-2xl">
             <FaqAccordion faqs={homepage.faqs} />

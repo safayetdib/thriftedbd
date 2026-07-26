@@ -1,6 +1,6 @@
-import Category from "@/models/Category";
 import { deleteR2Objects } from "@/lib/services/upload.service";
 import type { CreateCategoryInput, UpdateCategoryInput } from "@/lib/validations/category.schema";
+import Category from "@/models/Category";
 
 export async function getActiveCategories() {
   return Category.find({ isActive: true }).sort({ level: 1, order: 1 }).lean();
@@ -8,7 +8,7 @@ export async function getActiveCategories() {
 
 /**
  * Categories ordered as a tree (each department followed by its children) with
- * a "Parent / Child" label — used by the admin product form's category picker so
+ * a "Parent / Child" label - used by the admin product form's category picker so
  * a subcategory like "Pants" is unambiguous across departments (Men / Pants vs
  * Women / Pants).
  */
@@ -66,7 +66,7 @@ export async function createCategory(input: CreateCategoryInput) {
 }
 
 export async function updateCategory(id: string, input: UpdateCategoryInput) {
-  // parentId is intentionally not re-derivable here — changing a category's
+  // parentId is intentionally not re-derivable here - changing a category's
   // parent would require recomputing level for the whole subtree, which is
   // out of scope until that need actually shows up.
   const { parentId: _parentId, ...rest } = input;
@@ -74,7 +74,7 @@ export async function updateCategory(id: string, input: UpdateCategoryInput) {
   if (rest.slug) await assertSlugUnique(rest.slug, id);
 
   // The admin form always submits the current coverImage state, so a changed
-  // or cleared key means the old R2 object is now orphaned — delete it.
+  // or cleared key means the old R2 object is now orphaned - delete it.
   const current = await Category.findById(id).select("coverImage").lean();
   const updated = await Category.findByIdAndUpdate(id, rest, { new: true });
 

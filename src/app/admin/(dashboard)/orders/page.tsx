@@ -1,9 +1,9 @@
-import Link from "next/link";
+import { AdminPagination } from "@/components/admin/pagination";
+import { Badge } from "@/components/ui/badge";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 import { connectDB } from "@/lib/db";
 import { getAdminOrders } from "@/lib/services/order.service";
-import { Badge } from "@/components/ui/badge";
-import { AdminPagination } from "@/components/admin/pagination";
-import { EmptyTableRow } from "@/components/ui/empty-state";
+import Link from "next/link";
 
 const STATUS_FILTERS = [
   "All",
@@ -18,7 +18,7 @@ const STATUS_FILTERS = [
 
 /**
  * Admin status chips are semantic, not decorative: soft-cloud is the default
- * ground and only the label colour carries meaning — green for a settled
+ * ground and only the label colour carries meaning - green for a settled
  * success state, pale amber for "needs a human", pale red for a terminal
  * failure, grey for dormant. Nothing here is a solid fill; solid ink is
  * reserved for actionable surfaces (active filter chip, primary button).
@@ -117,7 +117,7 @@ export default async function AdminOrdersPage({
                       {order.riskFlags.length} flag(s)
                     </Badge>
                   ) : (
-                    <span className="text-stone">—</span>
+                    <span className="text-stone">-</span>
                   )}
                 </td>
                 <td className="text-mute px-5 py-3.5">

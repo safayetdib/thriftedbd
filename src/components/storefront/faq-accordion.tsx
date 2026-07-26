@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { CaretDownIcon } from "@phosphor-icons/react";
-import { useLocale } from "next-intl";
 import { localize } from "@/lib/localize";
 import type { IFaqItem } from "@/models/Settings";
+import { CaretDownIcon } from "@phosphor-icons/react";
+import { useLocale } from "next-intl";
+import { useState } from "react";
 
 /**
  * FAQ accordion component.
@@ -17,7 +17,7 @@ export function FaqAccordion({ faqs }: { faqs: IFaqItem[] }) {
   const sortedFaqs = [...faqs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
-    // Nike faq-row: not a boxed card — a stack of rows on canvas, separated by a
+    // Nike faq-row: not a boxed card - a stack of rows on canvas, separated by a
     // single hairline, 24px vertical padding. DESIGN.md → Components → faq-row.
     <div className="border-hairline border-t">
       {sortedFaqs.map((faq, idx) => (

@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter } from "@/i18n/navigation";
 import { localize } from "@/lib/localize";
 import { cn } from "@/lib/utils";
 import type { IColor } from "@/models/Color";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Checkbox } from "@/components/ui/checkbox";
 import { FunnelSimpleIcon } from "@phosphor-icons/react";
+import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 
 interface FilterSidebarProps {
   categories: unknown[];
@@ -86,7 +86,7 @@ function FilterContent({
             onKeyDown={(e) => e.key === "Enter" && handlePriceBlur()}
             className="bg-soft-cloud text-caption-md placeholder:text-mute focus:border-ink-900 w-full rounded-md border border-transparent px-4 py-2 outline-none focus:bg-white"
           />
-          <span className="text-mute text-caption-md">—</span>
+          <span className="text-mute text-caption-md">-</span>
           <input
             type="number"
             min={0}
@@ -112,7 +112,7 @@ function FilterContent({
         )}
       </div>
 
-      {/* Sizes — Nike filter chips: white pill, ink fill when active. Only shown
+      {/* Sizes - Nike filter chips: white pill, ink fill when active. Only shown
           when the catalog has sizes; the list is built from real products so
           custom sizes (e.g. `H 19" W 10"`) appear alongside S/M/L. */}
       {sizes.length > 0 && (
@@ -199,7 +199,9 @@ function FilterContent({
   );
 }
 
-export function FilterSidebar({ colors, sizes, currentParams }: FilterSidebarProps) {
+/** URL-param filter state + handlers, shared by the desktop rail and mobile sheet.
+ * Both instances stay in sync because the source of truth is the query string. */
+function useFilterState(currentParams: Record<string, string | undefined>) {
   const router = useRouter();
 
   const [minPrice, setMinPrice] = useState(currentParams.minPrice ?? "");
@@ -233,66 +235,85 @@ export function FilterSidebar({ colors, sizes, currentParams }: FilterSidebarPro
     router.push("/products");
   };
 
+  return {
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    handleFilterChange,
+    handlePriceBlur,
+    handleClearAll,
+  };
+}
+
+export function FilterSidebar({ colors, sizes, currentParams }: FilterSidebarProps) {
+  const state = useFilterState(currentParams);
+
+  return (
+    // Desktop sidebar
+    // Nike's PLP rail is a plain ~220px column - no container border, no card.
+    <aside className="hidden w-[220px] shrink-0 md:block">
+      <div className="sticky top-24 flex flex-col gap-6 bg-white">
+        <FilterContent
+          colors={colors}
+          sizes={sizes}
+          currentParams={currentParams}
+          onFilterChange={state.handleFilterChange}
+          onClearAll={state.handleClearAll}
+          minPrice={state.minPrice}
+          maxPrice={state.maxPrice}
+          setMinPrice={state.setMinPrice}
+          setMaxPrice={state.setMaxPrice}
+          handlePriceBlur={state.handlePriceBlur}
+        />
+      </div>
+    </aside>
+  );
+}
+
+/** Mobile filter trigger + sheet. Rendered in the PLP toolbar row - NOT inside
+ * the sidebar+grid flex row, where it would reserve a column and squeeze the
+ * product grid on small screens. */
+export function MobileFilters({ colors, sizes, currentParams }: FilterSidebarProps) {
+  const state = useFilterState(currentParams);
   const activeCount = countActiveFilters(currentParams);
 
   return (
-    <>
-      {/* Desktop sidebar */}
-      {/* Nike's PLP rail is a plain ~220px column — no container border, no card. */}
-      <aside className="hidden w-[220px] shrink-0 md:block">
-        <div className="sticky top-24 flex flex-col gap-6 bg-white">
-          <FilterContent
-            colors={colors}
-            sizes={sizes}
-            currentParams={currentParams}
-            onFilterChange={handleFilterChange}
-            onClearAll={handleClearAll}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            setMinPrice={setMinPrice}
-            setMaxPrice={setMaxPrice}
-            handlePriceBlur={handlePriceBlur}
-          />
-        </div>
-      </aside>
-
-      {/* Mobile filter button */}
-      <div className="md:hidden">
-        <Sheet>
-          <SheetTrigger
-            render={
-              <button className="border-hairline hover:border-ink-900 text-caption-md rounded-pill text-ink-900 flex items-center gap-2 border bg-white px-4 py-2 transition-colors">
-                <FunnelSimpleIcon size={16} />
-                Filters
-                {activeCount > 0 && (
-                  <span className="bg-ink-900 text-caption-sm flex size-5 items-center justify-center rounded-full text-white">
-                    {activeCount}
-                  </span>
-                )}
-              </button>
-            }
-          />
-          <SheetContent side="left" className="w-72">
-            <SheetHeader className="mb-2">
-              <SheetTitle>Filters</SheetTitle>
-            </SheetHeader>
-            <div className="flex flex-col gap-5 overflow-y-auto pr-2">
-              <FilterContent
-                colors={colors}
-                sizes={sizes}
-                currentParams={currentParams}
-                onFilterChange={handleFilterChange}
-                onClearAll={handleClearAll}
-                minPrice={minPrice}
-                maxPrice={maxPrice}
-                setMinPrice={setMinPrice}
-                setMaxPrice={setMaxPrice}
-                handlePriceBlur={handlePriceBlur}
-              />
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-    </>
+    <div className="md:hidden">
+      <Sheet>
+        <SheetTrigger
+          render={
+            <button className="border-hairline hover:border-ink-900 text-caption-md rounded-pill text-ink-900 flex items-center gap-2 border bg-white px-4 py-2 transition-colors">
+              <FunnelSimpleIcon size={16} />
+              Filters
+              {activeCount > 0 && (
+                <span className="bg-ink-900 text-caption-sm flex size-5 items-center justify-center rounded-full text-white">
+                  {activeCount}
+                </span>
+              )}
+            </button>
+          }
+        />
+        <SheetContent side="left" className="w-72 max-w-[85vw]">
+          <SheetHeader className="mb-2">
+            <SheetTitle>Filters</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-5 overflow-y-auto pr-2">
+            <FilterContent
+              colors={colors}
+              sizes={sizes}
+              currentParams={currentParams}
+              onFilterChange={state.handleFilterChange}
+              onClearAll={state.handleClearAll}
+              minPrice={state.minPrice}
+              maxPrice={state.maxPrice}
+              setMinPrice={state.setMinPrice}
+              setMaxPrice={state.setMaxPrice}
+              handlePriceBlur={state.handlePriceBlur}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }

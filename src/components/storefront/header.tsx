@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import {
+  CaretDownIcon,
+  HeartIcon,
   ListIcon,
   MagnifyingGlassIcon,
-  UserIcon,
-  HeartIcon,
   ShoppingBagIcon,
+  UserIcon,
   XIcon,
-  CaretDownIcon,
 } from "@phosphor-icons/react";
-import { Link } from "@/i18n/navigation";
-import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { useState } from "react";
 
 type SubCategory = { slug: string; name: string; coverImage?: { url: string; key: string } };
 type Department = {
@@ -35,8 +35,8 @@ export function SiteHeader({
   return (
     // Nike's primary nav: white, hairline bottom edge, no shadow.
     <header className="border-hairline-soft sticky top-0 z-40 border-b bg-white">
-      <div className="max-w-container mx-auto flex h-16 w-full items-center justify-between px-6 md:px-8">
-        {/* Brand lockup — the "t" icon paired with the ink wordmark. The icon
+      <div className="flex h-16 w-full items-center justify-between px-6 md:px-8">
+        {/* Brand lockup - the "t" icon paired with the ink wordmark. The icon
             carries the only brand colour; the wordmark stays ink. Live text is
             kept (not the logo image) so it stays crisp and indexable. */}
         <Link href="/" className="flex shrink-0 items-center gap-2">
@@ -53,7 +53,7 @@ export function SiteHeader({
           </span>
         </Link>
 
-        {/* Desktop nav — hidden on mobile */}
+        {/* Desktop nav - hidden on mobile */}
         <nav className="hidden items-center gap-0 lg:flex">
           {departments.slice(0, 7).map((dept) => (
             <div key={dept.slug} className="group relative">
@@ -67,9 +67,9 @@ export function SiteHeader({
                 <span className="bg-ink-900 absolute right-4 bottom-0 left-4 h-0.5 scale-x-0 transition-transform group-hover:scale-x-100" />
               </Link>
 
-              {/* Mega menu dropdown — only if subcategories exist */}
+              {/* Mega menu dropdown - only if subcategories exist */}
               {dept.children.length > 0 && (
-                <div className="border-hairline-soft pointer-events-none absolute top-full left-1/2 min-w-[480px] -translate-x-1/2 rounded-none border bg-white opacity-0 shadow-md transition-all duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+                <div className="border-hairline-soft pointer-events-none absolute top-full left-1/2 max-w-[calc(100vw-3rem)] min-w-[480px] -translate-x-1/2 rounded-none border bg-white opacity-0 shadow-md transition-all duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
                   <div className="p-6">
                     <p className="text-eyebrow text-mute text-caption-sm mb-3">{dept.name}</p>
                     <div className="grid grid-cols-3 gap-3">
@@ -79,7 +79,7 @@ export function SiteHeader({
                           href={`/products?category=${sub.slug}`}
                           className="group/sub flex flex-col gap-2 rounded-none"
                         >
-                          {/* Cover image — soft cloud stage, zero radius. */}
+                          {/* Cover image - soft cloud stage, zero radius. */}
                           <div className="bg-soft-cloud relative aspect-square w-full overflow-hidden rounded-none">
                             {sub.coverImage ? (
                               <Image
@@ -120,8 +120,8 @@ export function SiteHeader({
           {/* Mobile menu trigger */}
           <MobileMenu departments={departments} />
 
-          {/* Desktop-only icons */}
-          <div className="hidden items-center gap-1 lg:flex">
+          {/* Utility icons - search & account on every size; wishlist joins at lg. */}
+          <div className="flex items-center gap-1">
             <Link href="/products" aria-label={t("search")}>
               <Button variant="ghost" size="icon-sm">
                 <MagnifyingGlassIcon size={20} />
@@ -132,14 +132,14 @@ export function SiteHeader({
                 <UserIcon size={20} />
               </Button>
             </Link>
-            <Link href="/favorites" aria-label={t("wishlist")}>
+            <Link href="/favorites" aria-label={t("wishlist")} className="hidden lg:block">
               <Button variant="ghost" size="icon-sm">
                 <HeartIcon size={20} />
               </Button>
             </Link>
           </div>
 
-          {/* Cart — always visible */}
+          {/* Cart - always visible */}
           <Link href="/cart" className="relative">
             <Button variant="ghost" size="icon-sm" aria-label={t("cart")}>
               <ShoppingBagIcon size={20} />

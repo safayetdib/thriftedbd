@@ -1,22 +1,22 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
-import { connectDB } from "@/lib/db";
-import { getOrderById } from "@/lib/services/order.service";
-import type { IOrderItem, IStatusHistoryEntry } from "@/models/Order";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { connectDB } from "@/lib/db";
+import { getOrderById } from "@/lib/services/order.service";
+import type { IOrderItem, IStatusHistoryEntry } from "@/models/Order";
+import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import {
-  recordConfirmationCallAction,
-  updateAdvancePaymentAction,
   advanceOrderStatusAction,
   cancelOrderAction,
+  recordConfirmationCallAction,
+  updateAdvancePaymentAction,
 } from "./actions";
 
-/** Mirrors STATUS_CHIP in the orders list — see the note there. */
+/** Mirrors STATUS_CHIP in the orders list - see the note there. */
 const STATUS_CHIP: Record<string, string> = {
   PENDING: "bg-amber-50 text-ink-900",
   CONFIRMED: "bg-soft-cloud text-success",
@@ -62,7 +62,7 @@ export default async function AdminOrderDetailPage({
   const advancePaymentSatisfied =
     !order.advancePayment.required || ["PAID", "WAIVED"].includes(order.advancePayment.status);
   const advancePaymentSatisfiedNote = advancePaymentSatisfied
-    ? "This confirms the order and immediately decrements stock on every item — the product(s) will be marked SOLD."
+    ? "This confirms the order and immediately decrements stock on every item - the product(s) will be marked SOLD."
     : "This marks the call as confirmed, but the order won't move to CONFIRMED yet since advance payment is still required.";
 
   return (
@@ -144,7 +144,7 @@ export default async function AdminOrderDetailPage({
             </div>
             <div className="flex justify-between">
               <dt className="text-mute">City</dt>
-              <dd className="text-ink-900 text-body-sm-strong">{order.customer.city ?? "—"}</dd>
+              <dd className="text-ink-900 text-body-sm-strong">{order.customer.city ?? "-"}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-mute">Payment method</dt>
@@ -240,7 +240,7 @@ export default async function AdminOrderDetailPage({
             <p className="text-mute text-body-sm mb-3">
               {advancePaymentSatisfied
                 ? `Move this order to the next stage: ${nextStage}.`
-                : "Confirmation call and/or advance payment still pending — order is not yet CONFIRMED."}
+                : "Confirmation call and/or advance payment still pending - order is not yet CONFIRMED."}
             </p>
             {order.courier.provider && (
               <p className="text-charcoal text-body-sm mb-3">
@@ -268,7 +268,7 @@ export default async function AdminOrderDetailPage({
                 title={`Mark this order as ${nextStage}?`}
                 description={
                   nextStage === "DELIVERED"
-                    ? "This is the final fulfillment stage — make sure delivery is actually confirmed."
+                    ? "This is the final fulfillment stage - make sure delivery is actually confirmed."
                     : `This moves the order one stage forward. It can't be reversed from here.`
                 }
               >
@@ -282,7 +282,7 @@ export default async function AdminOrderDetailPage({
                         name="provider"
                         className="text-ink-900 bg-soft-cloud focus-visible:border-ink-900 h-11 w-full rounded-md border border-transparent px-6 text-sm transition-colors outline-none focus-visible:bg-white"
                       >
-                        <option value="">— Select —</option>
+                        <option value="">- Select -</option>
                         <option value="Steadfast">Steadfast</option>
                         <option value="Pathao">Pathao</option>
                       </select>

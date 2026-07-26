@@ -1,13 +1,15 @@
-import { getTranslations } from "next-intl/server";
+import { ProductCard } from "@/components/storefront/product-card";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Link } from "@/i18n/navigation";
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
+import { serialize } from "@/lib/serialize";
 import Customer from "@/models/Customer";
+import type { IProduct } from "@/models/Product";
 import Product from "@/models/Product";
-import { Button } from "@/components/ui/button";
-import { ProductCard } from "@/components/storefront/product-card";
-import { EmptyState } from "@/components/ui/empty-state";
 import { HeartIcon } from "@phosphor-icons/react/dist/ssr";
+import { getTranslations } from "next-intl/server";
 
 /**
  * Favorites page: customer's saved products.
@@ -22,17 +24,20 @@ export default async function FavoritesPage() {
   const customer = await Customer.findById(session.user.id).lean();
   if (!customer) return null;
 
-  // Fetch favorite products
+  // Fetch favorite products — serialized so lean() docs can cross the RSC
+  // boundary into the client-side ProductCard.
   const favoriteProducts =
     customer.favoriteProductIds && customer.favoriteProductIds.length > 0
-      ? await Product.find({
-          _id: { $in: customer.favoriteProductIds },
-          status: "ACTIVE",
-        }).lean()
+      ? serialize<IProduct[]>(
+          await Product.find({
+            _id: { $in: customer.favoriteProductIds },
+            status: "ACTIVE",
+          }).lean(),
+        )
       : [];
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="max-w-container mx-auto flex flex-col gap-8 px-4 py-12 md:px-8 md:py-16">
       <div>
         <h1 className="text-heading-xl text-ink-900">{t("title")}</h1>
         <p className="text-body-sm text-mute mt-1">

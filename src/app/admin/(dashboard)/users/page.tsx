@@ -1,12 +1,12 @@
-import { PlusIcon, KeyIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { getUsers } from "@/lib/services/user.service";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
-import { createUserAction, updateUserPasswordAction, deleteUserAction } from "./actions";
+import { KeyIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import { createUserAction, deleteUserAction, updateUserPasswordAction } from "./actions";
 
 const CREATE_FIELDS: EntityField[] = [
   { name: "email", label: "Email", type: "email", required: true },
@@ -93,7 +93,7 @@ export default async function AdminUsersPage() {
                             <KeyIcon size={14} />
                           </Button>
                         }
-                        title={`Reset password — ${user.email}`}
+                        title={`Reset password - ${user.email}`}
                         fields={PASSWORD_FIELDS}
                         onSubmit={updateUserPasswordAction.bind(null, id)}
                       />

@@ -1,25 +1,25 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import {
-  SquaresFourIcon,
-  PackageIcon,
-  TagIcon,
+  BookmarkIcon,
+  CurrencyDollarIcon,
   FolderSimpleIcon,
+  GearIcon,
+  ImagesIcon,
+  PackageIcon,
   PaletteIcon,
+  ProhibitIcon,
+  ShieldCheckIcon,
+  SpeakerSimpleXIcon,
+  SquaresFourIcon,
+  TagIcon,
+  TicketIcon,
   UserCircleIcon,
   UsersIcon,
-  ProhibitIcon,
-  CurrencyDollarIcon,
-  GearIcon,
-  ShieldCheckIcon,
-  BookmarkIcon,
-  SpeakerSimpleXIcon,
-  TicketIcon,
-  ImagesIcon,
 } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: SquaresFourIcon, exact: true },
@@ -48,7 +48,7 @@ export function AdminSidebar() {
         <p className="text-eyebrow text-caption-sm text-mute">thriftedBD</p>
         <p className="text-ink-900 text-heading-md">Admin</p>
       </div>
-      {/* Active nav is a solid ink block — black is the only "brand colour". */}
+      {/* Active nav is a solid ink block - black is the only "brand colour". */}
       <ul className="flex flex-1 flex-col overflow-y-auto py-2">
         {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact ? pathname === href : pathname.startsWith(href);

@@ -1,7 +1,7 @@
-import { randomUUID } from "crypto";
-import { cookies } from "next/headers";
 import { auth } from "@/lib/auth";
 import type { CartIdentity } from "@/lib/services/cart.service";
+import { randomUUID } from "crypto";
+import { cookies } from "next/headers";
 
 const CART_TOKEN_COOKIE = "cartToken";
 
@@ -30,7 +30,7 @@ export async function resolveCartIdentity(): Promise<CartIdentity> {
 }
 
 /**
- * Read-only counterpart for Server Components (layouts/pages) — Next.js
+ * Read-only counterpart for Server Components (layouts/pages) - Next.js
  * only allows cookies().set() in a Server Action or Route Handler, never
  * during render. Returns undefined if no identity exists yet (guest with
  * no cartToken cookie); the cookie itself only gets created lazily by the

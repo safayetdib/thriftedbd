@@ -1,14 +1,14 @@
-import Product from "@/models/Product";
+import { deleteR2Object, listR2Objects, type R2Object } from "@/lib/services/upload.service";
 import Category from "@/models/Category";
+import Product from "@/models/Product";
 import Promotion from "@/models/Promotion";
 import Settings from "@/models/Settings";
-import { listR2Objects, deleteR2Object, type R2Object } from "@/lib/services/upload.service";
 
 export type MediaItem = R2Object & { inUse: boolean };
 
 /**
- * Collects every R2 key currently referenced anywhere — product images, category
- * covers, promotion images, and hero slides — so the gallery can flag "in use"
+ * Collects every R2 key currently referenced anywhere - product images, category
+ * covers, promotion images, and hero slides - so the gallery can flag "in use"
  * assets and block their deletion (which would break a live page).
  */
 async function collectUsedKeys(): Promise<Set<string>> {

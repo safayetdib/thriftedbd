@@ -1,6 +1,6 @@
 /**
  * Google Cloud Translation auto-fill for bilingual fields, per
- * docs/i18n-guidelines.md §4. Server-side only — the API key must never
+ * docs/i18n-guidelines.md §4. Server-side only - the API key must never
  * reach the client. Every failure path returns null instead of throwing:
  * a translation outage must never block an admin from publishing a product
  * (the en-fallback rule already covers display).

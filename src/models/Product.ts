@@ -1,7 +1,7 @@
 import mongoose, { Schema, type Document, type Types } from "mongoose";
 import {
-  i18nTextSchema,
   i18nTextOptionalSchema,
+  i18nTextSchema,
   type I18nText,
   type I18nTextOptional,
 } from "./shared";
@@ -46,7 +46,7 @@ export interface IProduct extends Document {
   owner: string;
   grade: ProductGrade;
   condition: ProductCondition;
-  /** Customer-facing description — the full write-up, good and bad points. */
+  /** Customer-facing description - the full write-up, good and bad points. */
   description?: I18nTextOptional;
   /** Internal-only notes; never rendered on the storefront. */
   notes?: I18nTextOptional;

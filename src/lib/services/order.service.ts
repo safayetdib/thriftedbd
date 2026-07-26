@@ -1,26 +1,26 @@
-import { randomUUID } from "crypto";
-import mongoose, { type Types } from "mongoose";
-import Order, { type IAdvancePayment, type IOrder } from "@/models/Order";
-import Cart, { type ICartItem } from "@/models/Cart";
-import Product from "@/models/Product";
-import Blacklist from "@/models/Blacklist";
-import { getSettings } from "@/lib/services/settings.service";
-import { validateCoupon, redeemCoupon } from "@/lib/services/coupon.service";
 import { identityFilter, type CartIdentity } from "@/lib/services/cart.service";
+import { redeemCoupon, validateCoupon } from "@/lib/services/coupon.service";
+import { getSettings } from "@/lib/services/settings.service";
 import type {
-  CreateOrderInput,
-  ConfirmationCallInput,
+  AdvanceOrderStatusInput,
   AdvancePaymentInput,
   CancelOrderInput,
-  AdvanceOrderStatusInput,
+  ConfirmationCallInput,
+  CreateOrderInput,
 } from "@/lib/validations/order.schema";
+import Blacklist from "@/models/Blacklist";
+import Cart, { type ICartItem } from "@/models/Cart";
+import Order, { type IAdvancePayment, type IOrder } from "@/models/Order";
+import Product from "@/models/Product";
+import { randomUUID } from "crypto";
+import mongoose, { type Types } from "mongoose";
 
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 100;
 // Stock was decremented at the PENDING -> CONFIRMED transition, so only
 // these statuses need it restored on cancel/return.
 const STOCK_DECREMENTED_STATUSES = new Set(["CONFIRMED", "PACKED", "SHIPPED", "DELIVERED"]);
-// Forward-only fulfillment stages after CONFIRMED — index is the only thing
+// Forward-only fulfillment stages after CONFIRMED - index is the only thing
 // that matters, used to enforce one-step-at-a-time progression.
 const FULFILLMENT_STAGES = ["CONFIRMED", "PACKED", "SHIPPED", "DELIVERED"];
 
@@ -89,7 +89,7 @@ export async function createOrderFromCart(
   });
   const productMap = new Map(products.map((product) => [product._id.toString(), product]));
 
-  // Snapshot from the current product record, never the cart's stale copy —
+  // Snapshot from the current product record, never the cart's stale copy -
   // price/availability may have changed since the item was added to cart.
   const orderItems = cart.items.map((item: ICartItem) => {
     const product = productMap.get(item.productId.toString());

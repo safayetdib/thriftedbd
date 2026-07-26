@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 
 import { cn } from "@/lib/utils";
@@ -14,7 +13,7 @@ function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
 }
 
 function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
-  // data-slot omitted — see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
+  // data-slot omitted - see DialogTrigger (avoids a base-ui SSR/client hydration mismatch).
   return <TooltipPrimitive.Trigger {...props} />;
 }
 
@@ -57,4 +56,4 @@ function TooltipArrow({ className, ...props }: TooltipPrimitive.Arrow.Props) {
   );
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipArrow, TooltipPortal, TooltipProvider };
+export { Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger };

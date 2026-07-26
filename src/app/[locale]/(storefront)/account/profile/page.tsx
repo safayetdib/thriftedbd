@@ -16,5 +16,10 @@ export default async function AccountProfilePage() {
   const customer = await Customer.findById(session.user.id).lean();
   if (!customer) return null;
 
-  return <ProfileForm customer={customer} />;
+  // Pass only the plain fields the form needs - a lean() doc still carries
+  // ObjectId/Date instances (not serializable across the RSC boundary) and
+  // the passwordHash, which must never reach the client payload.
+  return (
+    <ProfileForm customer={{ email: customer.email, name: customer.name, phone: customer.phone }} />
+  );
 }

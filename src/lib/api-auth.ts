@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
 
 /**
  * Returns a 401/403 response if the caller isn't an authenticated admin (either
@@ -36,7 +36,7 @@ export async function requireSuperAdmin() {
   }
   if (session.user.role !== "superadmin") {
     return NextResponse.json(
-      { error: { message: "Forbidden — superadmin only", code: "FORBIDDEN" } },
+      { error: { message: "Forbidden - superadmin only", code: "FORBIDDEN" } },
       { status: 403 },
     );
   }

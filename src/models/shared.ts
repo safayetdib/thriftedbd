@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 
 /**
- * Bilingual text per docs/i18n-guidelines.md — `bn` is optional and falls
+ * Bilingual text per docs/i18n-guidelines.md - `bn` is optional and falls
  * back to `en` on render. Never required to save/publish a record.
  */
 export interface I18nText {

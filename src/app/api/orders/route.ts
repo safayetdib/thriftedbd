@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { connectDB } from "@/lib/db";
 import { resolveCartIdentity } from "@/lib/cart-identity";
-import { createOrderSchema } from "@/lib/validations/order.schema";
+import { connectDB } from "@/lib/db";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { createOrderFromCart } from "@/lib/services/order.service";
-import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { createOrderSchema } from "@/lib/validations/order.schema";
 import Order from "@/models/Order";
+import { NextResponse } from "next/server";
 
 function rateLimited(retryAfterSeconds: number) {
   return NextResponse.json(
@@ -16,7 +16,7 @@ function rateLimited(retryAfterSeconds: number) {
 
 /**
  * Public order tracking: GET by phone + orderNumber.
- * No login required — phone + orderNumber together are sufficient.
+ * No login required - phone + orderNumber together are sufficient.
  */
 export async function GET(request: Request) {
   // Throttle order-number guessing: 20 lookups per IP per 5 minutes.

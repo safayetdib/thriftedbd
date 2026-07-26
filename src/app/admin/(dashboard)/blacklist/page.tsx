@@ -1,11 +1,11 @@
-import { PlusIcon, PencilSimpleIcon, ProhibitIcon } from "@phosphor-icons/react/dist/ssr";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
+import { Button } from "@/components/ui/button";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 import { connectDB } from "@/lib/db";
 import { getBlacklist } from "@/lib/services/blacklist.service";
-import { Button } from "@/components/ui/button";
-import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
-import { createBlacklistAction, updateBlacklistAction, deactivateBlacklistAction } from "./actions";
-import { EmptyTableRow } from "@/components/ui/empty-state";
+import { PencilSimpleIcon, PlusIcon, ProhibitIcon } from "@phosphor-icons/react/dist/ssr";
+import { createBlacklistAction, deactivateBlacklistAction, updateBlacklistAction } from "./actions";
 
 const CREATE_FIELDS: EntityField[] = [
   { name: "phone", label: "Phone", required: true },
@@ -55,7 +55,7 @@ export default async function AdminBlacklistPage() {
                 className="border-hairline-soft hover:bg-soft-cloud border-b transition-colors last:border-0"
               >
                 <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">{entry.phone}</td>
-                <td className="text-charcoal px-5 py-3.5">{entry.name ?? "—"}</td>
+                <td className="text-charcoal px-5 py-3.5">{entry.name ?? "-"}</td>
                 <td className="text-charcoal px-5 py-3.5">{entry.reason}</td>
                 <td className="px-5 py-3.5">
                   <div className="flex gap-2">

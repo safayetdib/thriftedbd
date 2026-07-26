@@ -35,7 +35,7 @@ function luminance([r, g, b]: [number, number, number]) {
 /**
  * Picks the foreground colour with the better WCAG contrast against `background`.
  * Admins choose promotion background colours freely, so text can't be hardcoded
- * to white — a pale background would render it invisible.
+ * to white - a pale background would render it invisible.
  */
 export function readableTextOn(
   background: string | undefined,

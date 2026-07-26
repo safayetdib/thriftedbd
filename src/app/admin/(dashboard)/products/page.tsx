@@ -1,17 +1,17 @@
-import Link from "next/link";
-import { PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
-import { connectDB } from "@/lib/db";
-import { getAdminProducts } from "@/lib/services/product.service";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { AdminPagination } from "@/components/admin/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AdminPagination } from "@/components/admin/pagination";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
 import { EmptyTableRow } from "@/components/ui/empty-state";
+import { connectDB } from "@/lib/db";
+import { getAdminProducts } from "@/lib/services/product.service";
+import { PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 import { deleteProductAction } from "./actions";
 
 const STATUS_FILTERS = ["All", "DRAFT", "ACTIVE", "SOLD", "ARCHIVED"] as const;
 
-/** See the note on STATUS_CHIP in the orders list — same semantic ramp. */
+/** See the note on STATUS_CHIP in the orders list - same semantic ramp. */
 const STATUS_CHIP: Record<string, string> = {
   DRAFT: "bg-soft-cloud text-mute",
   ACTIVE: "bg-soft-cloud text-success",

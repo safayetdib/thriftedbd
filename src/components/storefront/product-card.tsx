@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/localize";
-import { Badge } from "@/components/ui/badge";
+import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 
 export type ProductCardData = {
   slug: string;
@@ -61,7 +61,7 @@ export function ProductCard({
           </span>
         )}
       </div>
-      {/* Metadata sits flush under the image on an 8px rhythm — no card padding. */}
+      {/* Metadata sits flush under the image on an 8px rhythm - no card padding. */}
       <div className="flex flex-col gap-2 pt-3">
         <p className="text-body-strong text-ink-900 truncate group-hover:underline">{title}</p>
         {(product.brand || size) && (

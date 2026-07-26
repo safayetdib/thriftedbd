@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { routing } from "@/i18n/routing";
+import { authConfig } from "@/lib/auth.config";
 import NextAuth from "next-auth";
 import createIntlMiddleware from "next-intl/middleware";
-import { authConfig } from "@/lib/auth.config";
-import { routing } from "@/i18n/routing";
+import { NextResponse } from "next/server";
 
 // A separate NextAuth instance built from the edge-safe config, not
-// @/lib/auth — that file's Credentials providers statically import
+// @/lib/auth - that file's Credentials providers statically import
 // mongoose/models, which can't be bundled for the Edge runtime that
 // middleware always runs on. This instance only decodes/verifies the JWT.
 const { auth } = NextAuth(authConfig);
@@ -16,7 +16,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const role = req.auth?.user?.role;
 
-  // Admin is never localized — auth-gate it and skip the intl handling.
+  // Admin is never localized - auth-gate it and skip the intl handling.
   // Both "admin" and "superadmin" may enter the panel; superadmin-only areas
   // (admin-user management) are gated further down at the route/action level.
   if (pathname.startsWith("/admin")) {
@@ -46,7 +46,7 @@ export default auth((req) => {
 
 export const config = {
   // Run on all pages, but never on API routes, Next internals, files, or the
-  // extensionless metadata image routes (opengraph-image/twitter-image) —
+  // extensionless metadata image routes (opengraph-image/twitter-image) -
   // those are served by Next's own handler and must not be localized.
   matcher: ["/((?!api|_next|_vercel|opengraph-image|twitter-image|.*\\..*).*)"],
 };

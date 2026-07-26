@@ -1,5 +1,5 @@
 /**
- * thriftedBD — Dummy Data for All Collections
+ * thriftedBD - Dummy Data for All Collections
  *
  * Replace `https://placehold.co/...` image URLs with real R2 URLs when you
  * have the images. The placeholder size is 600×800 (portrait for clothing).
@@ -55,7 +55,7 @@ export const colors = [
   { _id: "color-denim", name: i18n("Denim", "ডেনিম"), hex: "#1565C0" },
 ];
 
-// ─── 3. Categories — Department / Category tree ────────────────────────────
+// ─── 3. Categories - Department / Category tree ────────────────────────────
 
 export const categories = [
   // ── Departments (level 0) ──
@@ -367,7 +367,7 @@ export const categories = [
 ];
 
 // ─── 4. Products ───────────────────────────────────────────────────────────
-// Image URLs are placeholders — replace with real R2 URLs.
+// Image URLs are placeholders - replace with real R2 URLs.
 
 export const products = [
   // ── Men > T-Shirts ──
@@ -748,7 +748,7 @@ export const products = [
     _id: "prod-014",
     sku: "TBD-MET-001",
     slug: "punjabi-kurta-white-cotton",
-    title: i18n("Punjabi Kurta — White Cotton", "পাঞ্জাবি — সাদা কটন"),
+    title: i18n("Punjabi Kurta - White Cotton", "পাঞ্জাবি - সাদা কটন"),
     brand: "Gentle Park",
     categoryId: "cat-men-ethnic",
     categoryPath: i18n("Men / Ethnic Wear", "পুরুষ / এথনিক পোশাক"),
@@ -1148,7 +1148,7 @@ export const products = [
     _id: "prod-028",
     sku: "TBD-WSH-001",
     slug: "taant-sharee-cotton-red-border",
-    title: i18n("Taant Cotton Sharee — Red Border", "তাঁত কটন শাড়ী — লাল পাড়"),
+    title: i18n("Taant Cotton Sharee - Red Border", "তাঁত কটন শাড়ী - লাল পাড়"),
     brand: "Tangail Taant",
     categoryId: "cat-women-sharee",
     categoryPath: i18n("Women / Sharee", "মহিলা / শাড়ী"),
@@ -1353,7 +1353,7 @@ export const products = [
     _id: "prod-035",
     sku: "TBD-BTO-001",
     slug: "canvas-market-tote-cream-printed",
-    title: i18n("Canvas Market Tote — Cream", "ক্যানভাস মার্কেট টোট — ক্রিম"),
+    title: i18n("Canvas Market Tote - Cream", "ক্যানভাস মার্কেট টোট - ক্রিম"),
     brand: "Generic",
     categoryId: "cat-bag-tote",
     categoryPath: i18n("Bags / Tote Bags", "ব্যাগ / টোট ব্যাগ"),
@@ -1441,7 +1441,7 @@ export const products = [
     _id: "prod-038",
     sku: "TBD-HBE-001",
     slug: "cotton-fitted-sheet-set-beige-double",
-    title: i18n("Cotton Fitted Sheet Set — Double", "কটন ফিটেড শীট সেট — ডাবল"),
+    title: i18n("Cotton Fitted Sheet Set - Double", "কটন ফিটেড শীট সেট - ডাবল"),
     brand: "Home Pro",
     categoryId: "cat-house-bedding",
     categoryPath: i18n("Household / Bedding & Linens", "গৃহস্থালী / বেডিং ও লিনেন"),
@@ -1529,7 +1529,7 @@ export const products = [
     _id: "prod-041",
     sku: "TBD-HST-001",
     slug: "fabric-storage-baskets-gray-set-of-2",
-    title: i18n("Fabric Storage Baskets — Set of 2", "ফেব্রিক স্টোরেজ বাস্কেট — ২ পিস সেট"),
+    title: i18n("Fabric Storage Baskets - Set of 2", "ফেব্রিক স্টোরেজ বাস্কেট - ২ পিস সেট"),
     brand: "Muji",
     categoryId: "cat-house-storage",
     categoryPath: i18n("Household / Storage & Organization", "গৃহস্থালী / স্টোরেজ ও সংগঠন"),
@@ -1890,7 +1890,7 @@ export const orders = [
       { status: "DELIVERED" as const, changedAt: new Date("2026-06-22T12:00:00Z") },
       { status: "CANCELLED" as const, changedAt: new Date("2026-06-25T10:00:00Z") },
     ],
-    cancelReason: "Customer returned — wrong size.",
+    cancelReason: "Customer returned - wrong size.",
     courier: {
       provider: "Steadfast" as const,
       consignmentId: "STD-234567",
@@ -1919,10 +1919,10 @@ export const settings = {
     address: "Dhaka, Bangladesh",
   },
   socialLinks: {
-    facebook: "https://facebook.com/thriftedbd",
-    instagram: "https://instagram.com/thriftedbd",
-    tiktok: "https://tiktok.com/@thriftedbd",
-    youtube: "https://youtube.com/@thriftedbd",
+    facebook: "https://www.facebook.com/share/1DjN9w7UEj/?mibextid=wwXIfr",
+    instagram: "https://www.instagram.com/thriftedbdstore",
+    tiktok: "https://www.tiktok.com/@thriftedbd?_r=1&_t=ZS-97VJK01eQgT",
+    youtube: "https://www.youtube.com/@ThriftedBD",
   },
   announcement: i18n(
     "📦 Free shipping on orders over 3000৳!",
@@ -1936,7 +1936,7 @@ export const settings = {
         imageKey: "",
         headline: "Preloved, not less loved",
         subheadline:
-          "Quality-checked imported thrift from Korea, Japan, Taiwan & China — delivered cash-on-delivery across Bangladesh.",
+          "Quality-checked imported thrift from Korea, Japan, Taiwan & China - delivered cash-on-delivery across Bangladesh.",
         ctaText: "Shop new in",
         ctaLink: "/products",
         order: 0,
@@ -1947,7 +1947,7 @@ export const settings = {
         imageKey: "",
         headline: "Bags with a past",
         subheadline:
-          "Totes, crossbodies and backpacks — one-of-a-kind thrifted finds, ready to carry.",
+          "Totes, crossbodies and backpacks - one-of-a-kind thrifted finds, ready to carry.",
         ctaText: "Shop bags",
         ctaLink: "/products",
         order: 1,
@@ -1958,7 +1958,7 @@ export const settings = {
         imageKey: "",
         headline: "Tops that tell a story",
         subheadline:
-          "Blouses, tees and knits for her — unique preloved pieces, freshly dropped every week.",
+          "Blouses, tees and knits for her - unique preloved pieces, freshly dropped every week.",
         ctaText: "Shop women's tops",
         ctaLink: "/products",
         order: 2,
@@ -1969,7 +1969,7 @@ export const settings = {
         imageKey: "",
         headline: "Sharp. Secondhand. Sorted.",
         subheadline:
-          "Shirts and tees for him — imported thrift, quality-checked and priced to move.",
+          "Shirts and tees for him - imported thrift, quality-checked and priced to move.",
         ctaText: "Shop men's tops",
         ctaLink: "/products",
         order: 3,
@@ -1979,7 +1979,7 @@ export const settings = {
         imageUrl: "/banners/banner_palazzo.jpeg",
         imageKey: "",
         headline: "Flow into palazzo season",
-        subheadline: "Breezy wide-leg palazzos — thrifted, one-of-a-kind and made for Dhaka days.",
+        subheadline: "Breezy wide-leg palazzos - thrifted, one-of-a-kind and made for Dhaka days.",
         ctaText: "Shop palazzos",
         ctaLink: "/products",
         order: 4,
@@ -2101,7 +2101,7 @@ export const transactions = [
     orderIds: [],
     status: "PENDING" as const,
     recordedBy: "user-admin",
-    notes: "Pending — customer sent to wrong number. Sorting out.",
+    notes: "Pending - customer sent to wrong number. Sorting out.",
   },
 ];
 
@@ -2120,7 +2120,7 @@ export const blacklist = [
   {
     _id: "bl-002",
     phone: "01799998888",
-    reason: "Failed delivery address — no such location. Order returned.",
+    reason: "Failed delivery address - no such location. Order returned.",
     relatedOrderIds: [],
     isActive: true,
     addedBy: "user-admin",
@@ -2199,7 +2199,7 @@ export const promotions = [
     type: "section" as const,
     pages: ["homepage" as const],
     title: "Summer Sale Banner",
-    headline: i18n("Summer Sale — Up to 40% Off", "সামার সেল — ৪০% পর্যন্ত ছাড়"),
+    headline: i18n("Summer Sale - Up to 40% Off", "সামার সেল - ৪০% পর্যন্ত ছাড়"),
     body: i18n(
       "Grab the best pre-loved summer styles before they're gone.",
       "সবচেয়ে ভালো প্রি-লাভড সামার স্টাইলগুলি শেষ হওয়ার আগে নিয়ে নিন।",

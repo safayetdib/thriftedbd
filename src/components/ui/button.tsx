@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * thriftedBD button variants — Nike design system.
+ * thriftedBD button variants - Nike design system.
  * Every actionable surface is a full pill. Primary is solid black
  * on light surfaces; secondary is soft-cloud grey. There are no
  * shadows and no sharp corners anywhere in the system, and only one
@@ -18,7 +18,7 @@ const buttonVariants = cva(
         primary: "bg-ink-900 text-white hover:bg-ink-800",
         secondary: "bg-ink-50 text-ink-900 hover:bg-ink-100",
         outline: "border border-ink-900 bg-white text-ink-900 hover:bg-ink-50",
-        // On-image CTAs — for campaign photography and ink-900 sections, where
+        // On-image CTAs - for campaign photography and ink-900 sections, where
         // `primary` would render black-on-black. DESIGN.md → button-outline-on-image.
         "on-image": "bg-white text-ink-900 hover:bg-ink-50",
         "on-image-ghost": "border border-white bg-transparent text-white hover:bg-white/10",

@@ -1,18 +1,18 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
-import { connectTestDB, disconnectTestDB, clearTestDB } from "@/lib/test/mongo";
-import { makeProduct, makeCart, makeOrderDoc, orderInput, oid } from "@/lib/test/fixtures";
-import Product from "@/models/Product";
-import Order from "@/models/Order";
-import Cart from "@/models/Cart";
-import Settings from "@/models/Settings";
-import Blacklist from "@/models/Blacklist";
 import {
+  advanceOrderStatus,
+  cancelOrder,
   createOrderFromCart,
   recordConfirmationCall,
   updateAdvancePayment,
-  cancelOrder,
-  advanceOrderStatus,
 } from "@/lib/services/order.service";
+import { makeCart, makeOrderDoc, makeProduct, oid, orderInput } from "@/lib/test/fixtures";
+import { clearTestDB, connectTestDB, disconnectTestDB } from "@/lib/test/mongo";
+import Blacklist from "@/models/Blacklist";
+import Cart from "@/models/Cart";
+import Order from "@/models/Order";
+import Product from "@/models/Product";
+import Settings from "@/models/Settings";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 const FEES = { insideDhaka: 60, outsideDhaka: 120 };
 const LARGE_ORDER = 5000;
@@ -44,7 +44,7 @@ describe("createOrderFromCart", () => {
     expect(order.shippingFee).toBe(FEES.insideDhaka);
     expect(order.orderStatus).toBe("PENDING");
 
-    // Placement must not decrement stock — that only happens on confirmation.
+    // Placement must not decrement stock - that only happens on confirmation.
     const fresh = await Product.findById(product._id);
     expect(fresh!.status).toBe("ACTIVE");
     expect(fresh!.stock).toBe(1);
@@ -174,14 +174,14 @@ describe("stock transition on confirmation", () => {
     const identity = await makeCart([p1, p2]);
     const order = await createOrderFromCart(identity, orderInput());
 
-    // p2 sells elsewhere after placement — confirmation must now fail whole.
+    // p2 sells elsewhere after placement - confirmation must now fail whole.
     await Product.updateOne({ _id: p2._id }, { $set: { status: "SOLD", stock: 0 } });
 
     await expect(
       recordConfirmationCall(order._id.toString(), { status: "CONFIRMED" }),
     ).rejects.toThrow("PRODUCT_NO_LONGER_ACTIVE");
 
-    // The transaction must roll p1 back — no half-confirmed state.
+    // The transaction must roll p1 back - no half-confirmed state.
     const freshP1 = await Product.findById(p1._id);
     expect(freshP1!.status).toBe("ACTIVE");
     expect(freshP1!.stock).toBe(1);

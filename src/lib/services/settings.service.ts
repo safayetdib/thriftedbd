@@ -1,5 +1,5 @@
-import Settings from "@/models/Settings";
 import type { UpdateSettingsInput } from "@/lib/validations/settings.schema";
+import Settings from "@/models/Settings";
 
 export async function getSettings() {
   const settings = await Settings.findOne().lean();
@@ -9,7 +9,7 @@ export async function getSettings() {
   return settings;
 }
 
-/** Storefront-safe subset — never exposes `riskThresholds`, an internal anti-fraud lever. */
+/** Storefront-safe subset - never exposes `riskThresholds`, an internal anti-fraud lever. */
 export async function getPublicSettings() {
   const settings = await getSettings();
   return {

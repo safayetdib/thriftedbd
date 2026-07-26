@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * thriftedBD badge variants — Nike design system.
+ * thriftedBD badge variants - Nike design system.
  * Nike's promo badge is a borderless white pill in caption-sm, floated over
  * photography. Sale is signalled with red *text*, never a red fill, so the only
  * chromatic moment on a product tile stays the price. See DESIGN.md →

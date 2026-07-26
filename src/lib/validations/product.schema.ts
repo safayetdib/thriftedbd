@@ -32,7 +32,7 @@ const productSizeInput = z.object({
 });
 
 export const createProductSchema = z.object({
-  // Optional — the slug is auto-generated from the title + a unique code in the
+  // Optional - the slug is auto-generated from the title + a unique code in the
   // service layer. Accepted here only to allow an explicit override if ever set.
   slug: z
     .string()
@@ -44,7 +44,7 @@ export const createProductSchema = z.object({
   categoryId: z.string().min(1),
   price: z.number().int().positive(),
   compareAtPrice: z.number().int().positive().optional(),
-  // No `.default([])` here deliberately — `.partial()` (used by
+  // No `.default([])` here deliberately - `.partial()` (used by
   // updateProductSchema) keeps Zod defaults active even when the field is
   // omitted, which would silently wipe `images` on every unrelated PATCH
   // (e.g. a price-only update). Default to [] in the service layer instead,

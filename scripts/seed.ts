@@ -2,10 +2,10 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
 
-import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import User from "../src/models/User";
+import mongoose from "mongoose";
 import Settings from "../src/models/Settings";
+import User from "../src/models/User";
 
 async function seed() {
   const { MONGODB_URI, SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD } = process.env;
@@ -26,7 +26,7 @@ async function seed() {
     console.log(`Admin user ${SEED_ADMIN_EMAIL} already exists, skipping.`);
   } else {
     const passwordHash = await bcrypt.hash(SEED_ADMIN_PASSWORD, 12);
-    // The seeded owner account is the superadmin — it can manage other admins.
+    // The seeded owner account is the superadmin - it can manage other admins.
     await User.create({ email: SEED_ADMIN_EMAIL.toLowerCase(), passwordHash, role: "superadmin" });
     console.log(`Created superadmin user ${SEED_ADMIN_EMAIL}.`);
   }

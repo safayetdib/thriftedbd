@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ChatCircleTextIcon, ReceiptIcon, TruckIcon } from "@phosphor-icons/react";
 import { trackOrderAction } from "./actions";
 
 /**
@@ -22,14 +23,25 @@ export default function TrackOrderPage() {
 
   const [error, formAction, isPending] = useActionState(trackOrderAction, undefined);
 
-  return (
-    <main className="bg-soft-cloud flex min-h-screen flex-col items-center justify-center px-4 py-8">
-      <div className="border-hairline w-full max-w-md rounded-none border bg-white p-8">
-        <p className="text-eyebrow text-caption-sm text-ink-900">thriftedBD</p>
-        <h1 className="text-heading-xl text-ink-900 mt-1">{t("title")}</h1>
-        <p className="text-body-sm text-mute mt-1">{t("blurb")}</p>
+  const tips = [
+    { Icon: ReceiptIcon, title: t("tipOrderNumberTitle"), body: t("tipOrderNumberBody") },
+    { Icon: TruckIcon, title: t("tipDeliveryTitle"), body: t("tipDeliveryBody") },
+    { Icon: ChatCircleTextIcon, title: t("tipHelpTitle"), body: t("tipHelpBody") },
+  ];
 
-        <form action={formAction} className="mt-6 flex flex-col gap-4">
+  return (
+    <main className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
+      <div className="mb-8 max-w-2xl md:mb-12">
+        <h1 className="text-heading-xl text-ink-900 mb-2">{t("title")}</h1>
+        <p className="text-body-md text-mute">{t("blurb")}</p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-16">
+        {/* Lookup form */}
+        <form
+          action={formAction}
+          className="border-hairline flex h-fit flex-col gap-4 rounded-none border bg-white p-6 md:p-8"
+        >
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="phone">{t("phone")}</Label>
             <Input
@@ -70,10 +82,24 @@ export default function TrackOrderPage() {
           </Button>
         </form>
 
-        <div className="text-body-sm text-mute mt-6 text-center">
-          <Link href="/" className="text-caption-md text-ink-900 underline hover:no-underline">
-            {t("backToHome")}
-          </Link>
+        {/* Help notes */}
+        <div className="flex max-w-md flex-col gap-6">
+          {tips.map(({ Icon, title, body }) => (
+            <div key={title} className="flex items-start gap-4">
+              <span className="bg-soft-cloud text-ink-900 flex size-11 shrink-0 items-center justify-center rounded-full">
+                <Icon size={22} aria-hidden />
+              </span>
+              <div>
+                <h2 className="text-body-sm-strong text-ink-900 mb-1">{title}</h2>
+                <p className="text-body-sm text-mute">{body}</p>
+              </div>
+            </div>
+          ))}
+          <p className="text-body-sm text-mute">
+            <Link href="/contact" className="text-ink-900 underline underline-offset-2">
+              {t("contactLink")}
+            </Link>
+          </p>
         </div>
       </div>
     </main>

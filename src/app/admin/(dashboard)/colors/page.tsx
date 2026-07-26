@@ -1,11 +1,11 @@
-import { PlusIcon, PencilSimpleIcon, ProhibitIcon } from "@phosphor-icons/react/dist/ssr";
+import { ConfirmableForm } from "@/components/admin/confirmable-form";
+import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
+import { Button } from "@/components/ui/button";
+import { EmptyTableRow } from "@/components/ui/empty-state";
 import { connectDB } from "@/lib/db";
 import { getActiveColors } from "@/lib/services/color.service";
-import { Button } from "@/components/ui/button";
-import { EntityFormDialog, type EntityField } from "@/components/admin/entity-form-dialog";
-import { ConfirmableForm } from "@/components/admin/confirmable-form";
-import { createColorAction, updateColorAction, deactivateColorAction } from "./actions";
-import { EmptyTableRow } from "@/components/ui/empty-state";
+import { PencilSimpleIcon, PlusIcon, ProhibitIcon } from "@phosphor-icons/react/dist/ssr";
+import { createColorAction, deactivateColorAction, updateColorAction } from "./actions";
 
 const FIELDS: EntityField[] = [
   { name: "name.en", label: "Name (English)", required: true },
@@ -56,7 +56,7 @@ export default async function AdminColorsPage() {
                   />
                 </td>
                 <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">{color.name.en}</td>
-                <td className="text-mute px-5 py-3.5">{color.hex ?? "—"}</td>
+                <td className="text-mute px-5 py-3.5">{color.hex ?? "-"}</td>
                 <td className="px-5 py-3.5">
                   <div className="flex gap-2">
                     <EntityFormDialog

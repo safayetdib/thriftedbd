@@ -3,30 +3,20 @@
 import { signOut } from "next-auth/react";
 
 /**
- * Logout form wrapper.
- * Calls signOut and redirects to home.
- * Wraps children (usually a button) in a form with hidden submit.
+ * Logout form wrapper - the client boundary around a server-rendered
+ * sign-out button. The child must be the submit button itself (pass
+ * `type="submit"`); wrapping it in another <button> here would nest
+ * buttons, which is invalid HTML and breaks hydration.
  */
 export function LogoutForm({ children }: { children: React.ReactNode }) {
-  const handleLogout = () => {
-    signOut({ redirectTo: "/" });
-  };
-
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        handleLogout();
+        signOut({ redirectTo: "/" });
       }}
     >
-      <button
-        type="submit"
-        onClick={handleLogout}
-        className="w-full"
-        style={{ all: "unset", display: "block", cursor: "pointer" }}
-      >
-        {children}
-      </button>
+      {children}
     </form>
   );
 }

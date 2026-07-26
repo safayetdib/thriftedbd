@@ -1,17 +1,24 @@
-import type { Metadata } from "next";
-import dynamic from "next/dynamic";
-import { notFound } from "next/navigation";
-import {
-  ShieldCheckIcon,
-  TruckIcon,
-  ArrowCounterClockwiseIcon,
-} from "@phosphor-icons/react/dist/ssr";
-import { connectDB } from "@/lib/db";
-import { getProductBySlug, getSimilarProducts } from "@/lib/services/product.service";
-import { getActivePromotions } from "@/lib/services/promotion.service";
+import { ProductCard } from "@/components/storefront/product-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ProductCard } from "@/components/storefront/product-card";
+import { Link } from "@/i18n/navigation";
+import { auth } from "@/lib/auth";
+import { connectDB } from "@/lib/db";
+import { localize } from "@/lib/localize";
+import { serialize } from "@/lib/serialize";
+import { getProductBySlug, getSimilarProducts } from "@/lib/services/product.service";
+import { getActivePromotions } from "@/lib/services/promotion.service";
+import Customer from "@/models/Customer";
+import type { IProduct, IProductSize } from "@/models/Product";
+import {
+  ArrowCounterClockwiseIcon,
+  ShieldCheckIcon,
+  TruckIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
+import dynamic from "next/dynamic";
+import { notFound } from "next/navigation";
 
 const ProductGallery = dynamic(() =>
   import("@/components/storefront/product-gallery").then((mod) => mod.ProductGallery),
@@ -22,12 +29,6 @@ const AddToCartButton = dynamic(() =>
 const FavoriteButton = dynamic(() =>
   import("@/components/storefront/favorite-button").then((mod) => mod.FavoriteButton),
 );
-import { auth } from "@/lib/auth";
-import Customer from "@/models/Customer";
-import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { localize } from "@/lib/localize";
-import type { IProductSize } from "@/models/Product";
 
 const BASE = "https://thriftedbd.com";
 
@@ -89,7 +90,7 @@ export async function generateMetadata({
     product.title.en,
     size ? `· Size ${size}` : null,
     `· ৳${product.price}`,
-    "— preloved fashion at thriftedBD, delivered COD across Bangladesh.",
+    "- preloved fashion at thriftedBD, delivered COD across Bangladesh.",
   ]
     .filter(Boolean)
     .join(" ");
@@ -139,7 +140,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     getSimilarProducts(String(product._id), String(product.categoryId), product.price),
     getActivePromotions(["pdp", "global"]),
   ]);
-  const serializedSimilar = JSON.parse(JSON.stringify(similarProducts));
+  const serializedSimilar = serialize<IProduct[]>(similarProducts);
 
   const size = sizeLabel(product.size);
   const measurements = sizeMeasurements(product.size);
@@ -264,7 +265,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {/* Description — customer-facing write-up (internal notes are never shown). */}
+          {/* Description - customer-facing write-up (internal notes are never shown). */}
           {localize(product.description, locale) && (
             <p className="text-body-sm text-charcoal leading-relaxed whitespace-pre-line">
               {localize(product.description, locale)}
@@ -273,7 +274,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           <div className="bg-hairline-soft h-px" />
 
-          {/* CTA — a sold item stays on the page but can't be added to bag. */}
+          {/* CTA - a sold item stays on the page but can't be added to bag. */}
           <div className="flex items-center gap-3">
             <div className="flex-1">
               {isSold ? (

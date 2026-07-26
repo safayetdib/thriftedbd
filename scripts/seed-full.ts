@@ -1,5 +1,5 @@
 /**
- * Full database seeder — fetches product images from SceneSku APIs, maps them
+ * Full database seeder - fetches product images from SceneSku APIs, maps them
  * to products, and inserts all collections into MongoDB.
  *
  * Usage:
@@ -13,41 +13,41 @@
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
-import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 // ─── Dummy data ────────────────────────────────────────────────────────────
 import {
-  owners as rawOwners,
-  colors as rawColors,
-  categories as rawCategories,
-  products as rawProducts,
-  users as rawUsers,
-  customers as rawCustomers,
-  carts as rawCarts,
-  orders as rawOrders,
-  settings as rawSettings,
-  transactions as rawTransactions,
   blacklist as rawBlacklist,
+  carts as rawCarts,
+  categories as rawCategories,
+  colors as rawColors,
   coupons as rawCoupons,
+  customers as rawCustomers,
+  orders as rawOrders,
+  owners as rawOwners,
+  products as rawProducts,
   promotions as rawPromotions,
+  settings as rawSettings,
   subscribers as rawSubscribers,
+  transactions as rawTransactions,
+  users as rawUsers,
 } from "./dummy-data";
 
-import Owner from "../src/models/Owner";
-import Color from "../src/models/Color";
-import Category from "../src/models/Category";
-import Product from "../src/models/Product";
-import User from "../src/models/User";
-import Customer from "../src/models/Customer";
-import Cart from "../src/models/Cart";
-import Order from "../src/models/Order";
-import Settings from "../src/models/Settings";
-import Transaction from "../src/models/Transaction";
 import Blacklist from "../src/models/Blacklist";
+import Cart from "../src/models/Cart";
+import Category from "../src/models/Category";
+import Color from "../src/models/Color";
 import Coupon from "../src/models/Coupon";
+import Customer from "../src/models/Customer";
+import Order from "../src/models/Order";
+import Owner from "../src/models/Owner";
+import Product from "../src/models/Product";
 import Promotion from "../src/models/Promotion";
+import Settings from "../src/models/Settings";
 import Subscriber from "../src/models/Subscriber";
+import Transaction from "../src/models/Transaction";
+import User from "../src/models/User";
 
 // ─── ID mapping ────────────────────────────────────────────────────────────
 // The dummy data uses readable string IDs. Convert them to real ObjectIds.
@@ -143,13 +143,13 @@ function assignImagesToProducts(prods: typeof rawProducts, imageMap: Map<string,
         {
           url: firstUrl,
           key: `scenesku/${firstUrl.split("/").pop() ?? "img"}`,
-          alt: { en: `${p.title.en} — front view` },
+          alt: { en: `${p.title.en} - front view` },
           order: 0,
         },
         {
           url: secondUrl,
           key: `scenesku/${secondUrl.split("/").pop() ?? "img"}`,
-          alt: { en: `${p.title.en} — alternate view` },
+          alt: { en: `${p.title.en} - alternate view` },
           order: 1,
         },
       ],
@@ -186,12 +186,12 @@ async function seed() {
   // ─── 1. Owners ───
   const ownerDocs = rawOwners.map(replaceId);
   await Owner.insertMany(ownerDocs);
-  console.log(`1/14 Owners — ${ownerDocs.length}`);
+  console.log(`1/14 Owners - ${ownerDocs.length}`);
 
   // ─── 2. Colors ───
   const colorDocs = rawColors.map(replaceId);
   await Color.insertMany(colorDocs);
-  console.log(`2/14 Colors — ${colorDocs.length}`);
+  console.log(`2/14 Colors - ${colorDocs.length}`);
 
   // ─── 3. Categories (build parentId refs) ───
   const categoryDocs = rawCategories.map((c) => ({
@@ -199,7 +199,7 @@ async function seed() {
     parentId: c.parentId ? id(c.parentId) : null,
   }));
   await Category.insertMany(categoryDocs);
-  console.log(`3/14 Categories — ${categoryDocs.length}`);
+  console.log(`3/14 Categories - ${categoryDocs.length}`);
 
   // ─── 4. Products (build refs to categories, colors, owners) ───
   const productDocs = productsWithImages.map((p) => ({
@@ -210,12 +210,12 @@ async function seed() {
     ownerId: id(p.ownerId),
   }));
   await Product.insertMany(productDocs);
-  console.log(`4/14 Products — ${productDocs.length}`);
+  console.log(`4/14 Products - ${productDocs.length}`);
 
   // ─── 5. Admin user ───
   const passwordHash = await bcrypt.hash("password123", 12);
   await User.create({ ...replaceId(rawUsers[0]), passwordHash });
-  console.log("5/14 Admin user — 1");
+  console.log("5/14 Admin user - 1");
 
   // ─── 6. Customers ───
   const customerDocs = await Promise.all(
@@ -226,7 +226,7 @@ async function seed() {
     })),
   );
   await Customer.insertMany(customerDocs);
-  console.log(`6/14 Customers — ${customerDocs.length}`);
+  console.log(`6/14 Customers - ${customerDocs.length}`);
 
   // ─── 7. Carts ───
   const cartDocs = rawCarts.map((c) => ({
@@ -238,7 +238,7 @@ async function seed() {
     })),
   }));
   await Cart.insertMany(cartDocs);
-  console.log(`7/14 Carts — ${cartDocs.length}`);
+  console.log(`7/14 Carts - ${cartDocs.length}`);
 
   // ─── 8. Orders ───
   const orderDocs = rawOrders.map((o) => ({
@@ -266,7 +266,7 @@ async function seed() {
     },
   }));
   await Order.insertMany(orderDocs);
-  console.log(`8/14 Orders — ${orderDocs.length}`);
+  console.log(`8/14 Orders - ${orderDocs.length}`);
 
   // ─── 9. Settings ───
   const settingsDoc = {
@@ -285,7 +285,7 @@ async function seed() {
       : undefined,
   };
   await Settings.create(settingsDoc);
-  console.log("9/14 Settings — singleton");
+  console.log("9/14 Settings - singleton");
 
   // ─── 10. Transactions ───
   const txnDocs = rawTransactions.map((t) => ({
@@ -295,7 +295,7 @@ async function seed() {
     orderIds: (t.orderIds as string[]).map((oid) => id(oid)),
   }));
   await Transaction.insertMany(txnDocs);
-  console.log(`10/14 Transactions — ${txnDocs.length}`);
+  console.log(`10/14 Transactions - ${txnDocs.length}`);
 
   // ─── 11. Blacklist ───
   const blDocs = rawBlacklist.map((b) => ({
@@ -305,21 +305,21 @@ async function seed() {
     relatedOrderIds: (b.relatedOrderIds as string[]).map((oid) => id(oid)),
   }));
   await Blacklist.insertMany(blDocs);
-  console.log(`11/14 Blacklist — ${blDocs.length}`);
+  console.log(`11/14 Blacklist - ${blDocs.length}`);
 
   // ─── 12. Coupons ───
   const couponDocs = rawCoupons.map(replaceId);
   await Coupon.insertMany(couponDocs);
-  console.log(`12/14 Coupons — ${couponDocs.length}`);
+  console.log(`12/14 Coupons - ${couponDocs.length}`);
 
   // ─── 13. Promotions ───
   const promoDocs = rawPromotions.map(replaceId);
   await Promotion.insertMany(promoDocs);
-  console.log(`13/14 Promotions — ${promoDocs.length}`);
+  console.log(`13/14 Promotions - ${promoDocs.length}`);
 
   // ─── 14. Subscribers ───
   await Subscriber.insertMany(rawSubscribers);
-  console.log(`14/14 Subscribers — ${rawSubscribers.length}`);
+  console.log(`14/14 Subscribers - ${rawSubscribers.length}`);
 
   await mongoose.connection.close();
   console.log("\n✅ Seed complete. All 14 collections populated.");

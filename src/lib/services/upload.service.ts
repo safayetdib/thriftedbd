@@ -1,8 +1,8 @@
-import { randomUUID } from "crypto";
-import { PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getR2Client } from "@/lib/r2";
 import type { PresignUploadInput } from "@/lib/validations/upload.schema";
+import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { randomUUID } from "crypto";
 
 export type R2Object = { key: string; url: string; size: number; lastModified: number };
 
@@ -83,7 +83,7 @@ export async function deleteR2Object(key: string) {
 }
 
 /**
- * Best-effort batch delete. Never throws — image cleanup must not block or fail
+ * Best-effort batch delete. Never throws - image cleanup must not block or fail
  * the surrounding data mutation (e.g. saving a product). Failures are logged.
  * De-duplicates and ignores empty keys.
  */

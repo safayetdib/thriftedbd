@@ -1,25 +1,25 @@
 "use client";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import { createProductAction, updateProductAction } from "@/app/admin/(dashboard)/products/actions";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { MAX_UPLOAD_BYTES } from "@/lib/validations/upload.schema";
-import { createProductAction, updateProductAction } from "@/app/admin/(dashboard)/products/actions";
+import { TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-/** Slug body preview — mirrors the server's slugify (the unique code is added on save). */
+/** Slug body preview - mirrors the server's slugify (the unique code is added on save). */
 function toSlugBody(text: string) {
   return text
     .toLowerCase()
@@ -144,7 +144,7 @@ export function ProductForm({
     );
   }
 
-  // Picking files does NOT upload — it just adds local previews. The actual R2
+  // Picking files does NOT upload - it just adds local previews. The actual R2
   // upload happens (in the chosen order) when the product is created/saved.
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
@@ -186,7 +186,7 @@ export function ProductForm({
     });
   }
 
-  // Reorder via drag-and-drop. The array order IS the display order — index 0 is
+  // Reorder via drag-and-drop. The array order IS the display order - index 0 is
   // the cover shown in listings; the rest follow on the product page gallery.
   // `order` is kept synced to the index so it's authoritative on the server too.
   function moveImage(from: number, to: number) {
@@ -203,7 +203,7 @@ export function ProductForm({
     setSubmitting(true);
     setError(null);
 
-    // Size is optional — only include it when the selected type has a value.
+    // Size is optional - only include it when the selected type has a value.
     let size:
       | { type: "standard"; standard: string }
       | { type: "custom"; custom: string }
@@ -254,7 +254,7 @@ export function ProductForm({
     }
 
     const payload = {
-      // slug is omitted — the server auto-generates it on create and preserves
+      // slug is omitted - the server auto-generates it on create and preserves
       // it on update.
       title: { en: titleEn },
       brand: brand.trim() || undefined,
@@ -278,7 +278,7 @@ export function ProductForm({
 
     if (result.error) {
       // The product wasn't saved, so the images uploaded this attempt are
-      // orphaned — delete them from R2 rather than leave them behind.
+      // orphaned - delete them from R2 rather than leave them behind.
       await cleanupR2Keys(uploadedThisAttempt);
       setSubmitting(false);
       setConfirmOpen(false);
@@ -358,7 +358,7 @@ export function ProductForm({
           </label>
         </div>
         <p className="text-mute text-caption-sm mt-3">
-          WebP only, max 500KB each. Pick multiple at once and drag to reorder — the first image is
+          WebP only, max 500KB each. Pick multiple at once and drag to reorder - the first image is
           the cover shown in listings. Images are uploaded when you save the product.
         </p>
       </div>
@@ -458,7 +458,7 @@ export function ProductForm({
               onChange={(e) => setColorId(e.target.value)}
               className="text-ink-900 bg-soft-cloud focus-visible:border-ink-900 h-11 w-full rounded-md border border-transparent px-6 text-sm transition-colors outline-none focus-visible:bg-white"
             >
-              <option value="">— None —</option>
+              <option value="">- None -</option>
               {colors.map((c) => (
                 <option key={c._id} value={c._id}>
                   {c.name.en}
@@ -612,7 +612,7 @@ export function ProductForm({
             rows={6}
             value={descriptionEn}
             onChange={(e) => setDescriptionEn(e.target.value)}
-            placeholder="Everything about the piece — fabric, fit, styling, and any flaws (stains, fading, loose threads). Honest good & bad points build trust."
+            placeholder="Everything about the piece - fabric, fit, styling, and any flaws (stains, fading, loose threads). Honest good & bad points build trust."
           />
           <span className="text-mute text-caption-sm">Appears on the product page.</span>
         </div>
@@ -638,7 +638,7 @@ export function ProductForm({
                 ? "This updates the live product record."
                 : status === "ACTIVE"
                   ? "This creates the product and makes it immediately visible on the storefront."
-                  : "This creates the product as a draft — it won't be visible on the storefront until set to Active."}
+                  : "This creates the product as a draft - it won't be visible on the storefront until set to Active."}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

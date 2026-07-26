@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Link } from "@/i18n/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
+import { Link } from "@/i18n/navigation";
 import type { IHeroSlide } from "@/models/Settings";
+import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Hero carousel: displays hero slides from Settings with prev/next arrows and dot indicators.
@@ -45,10 +45,29 @@ export function HeroCarousel({ slides }: { slides: IHeroSlide[] }) {
     setIsAutoPlay(false);
   };
 
+  // Touch swipe - the arrows are hidden on mobile (they sat on top of the
+  // copy), so a horizontal drag past the threshold is the manual nav there.
+  const touchStartX = useRef<number | null>(null);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || enabledSlides.length <= 1) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) handleNext();
+    else handlePrev();
+  };
+
   if (!currentSlide || enabledSlides.length === 0) return null;
 
   return (
-    <section className="bg-ink-900 relative flex min-h-[420px] overflow-hidden md:min-h-[560px]">
+    <section
+      className="bg-ink-900 relative flex h-[420px] overflow-hidden md:h-[560px]"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* `flex` on the section + `flex-1` here makes the slide stretch to the
           section's min-height. `h-full` cannot resolve against a min-height
           parent, which previously left dead space below the content. */}
@@ -101,14 +120,14 @@ export function HeroCarousel({ slides }: { slides: IHeroSlide[] }) {
         <>
           <button
             onClick={handlePrev}
-            className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-white/80 p-2 transition-colors hover:bg-white md:left-8"
+            className="absolute top-1/2 left-4 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 transition-colors hover:bg-white md:left-8 md:block"
             aria-label="Previous slide"
           >
             <CaretLeftIcon size={24} className="text-ink-900" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-white/80 p-2 transition-colors hover:bg-white md:right-8"
+            className="absolute top-1/2 right-4 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 transition-colors hover:bg-white md:right-8 md:block"
             aria-label="Next slide"
           >
             <CaretRightIcon size={24} className="text-ink-900" />

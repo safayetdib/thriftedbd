@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import Coupon from "@/models/Coupon";
 import type { CreateCouponInput, UpdateCouponInput } from "@/lib/validations/coupon.schema";
+import Coupon from "@/models/Coupon";
+import mongoose from "mongoose";
 
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
@@ -20,7 +20,7 @@ export interface ValidateCouponResult {
 /**
  * Validate coupon code against an order subtotal.
  * Returns discount amount if valid, error message if not.
- * Does NOT increment usedCount — call redeemCoupon() after order creation.
+ * Does NOT increment usedCount - call redeemCoupon() after order creation.
  */
 export async function validateCoupon(
   code: string,
