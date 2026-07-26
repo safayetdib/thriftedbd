@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
     // hostname here. The old placehold.co / cdn.scenesku.com hosts were only
     // used by dummy seed data and are intentionally not allowed in production.
     remotePatterns: [{ protocol: "https", hostname: "*.r2.dev" }],
+    // R2 object keys are `products/<uuid>.<ext>` (upload.service.ts) — a new
+    // upload always gets a new key, an old key is never overwritten, only
+    // deleted. So a given image URL's bytes never change, and the Netlify/
+    // Next Image CDN cache for it can be kept for a full year instead of the
+    // 4-hour default.
+    minimumCacheTTL: 31536000,
   },
 };
 

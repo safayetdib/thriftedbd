@@ -1,0 +1,21 @@
+# Netlify deploy config for thriftedBD (Next.js 16, full-stack: SSR + Server
+# Actions + Route Handlers + middleware). Docs: https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/
+#
+# The Next.js runtime (opennextjs-netlify, npm: @netlify/plugin-nextjs) is
+# auto-installed at build time — no [[plugins]] block needed. It wires up
+# SSR/ISR as Netlify Functions, middleware as an Edge Function, and
+# next/image through the Netlify Image CDN, all with zero extra config.
+[build]
+  command = "corepack enable && pnpm install --frozen-lockfile && pnpm build"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
+  HUSKY = "0" # skip git-hook install during CI build
+  # Auth.js v5 infers the request host automatically on Vercel/Cloudflare
+  # Pages, but Netlify isn't in that auto-detect list — requests pass through
+  # Netlify's proxy layer, so this must be set explicitly or sign-in breaks.
+  AUTH_TRUST_HOST = "true"
+
+# Secrets (MONGODB_URI, AUTH_SECRET, R2_*, GOOGLE_TRANSLATE_API_KEY) are set in
+# the Netlify UI: Site settings -> Environment variables. Do not commit them.
