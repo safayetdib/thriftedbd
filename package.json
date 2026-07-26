@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@auth/core": "0.41.2",
+    "@netlify/plugin-nextjs": "^5.15.12",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

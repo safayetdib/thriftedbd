@@ -1,10 +1,18 @@
 # Netlify deploy config for thriftedBD (Next.js 16, full-stack: SSR + Server
 # Actions + Route Handlers + middleware). Docs: https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/
 #
-# The Next.js runtime (opennextjs-netlify, npm: @netlify/plugin-nextjs) is
-# auto-installed at build time — no [[plugins]] block needed. It wires up
-# SSR/ISR as Netlify Functions, middleware as an Edge Function, and
-# next/image through the Netlify Image CDN, all with zero extra config.
+# The Next.js runtime (opennextjs-netlify, npm: @netlify/plugin-nextjs) turns
+# the `next build` output into Netlify Functions (SSR/ISR), an Edge Function
+# (middleware), and Image CDN wiring. Netlify's docs say this is auto-installed
+# whenever a Next.js package.json is detected, but that auto-install does NOT
+# fire when a custom [build].command is set (confirmed: without this
+# [[plugins]] block, the build log only loads @netlify/plugin-lighthouse, 0
+# functions get generated, and every route 404s because the raw .next folder
+# gets uploaded as if it were a static site). Declaring the plugin explicitly
+# here + as a devDependency in package.json makes it run reliably.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [build]
   command = "corepack enable && pnpm install --frozen-lockfile && pnpm build"
 
