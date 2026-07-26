@@ -1,0 +1,45 @@
+# Render Blueprint for thriftedBD (Next.js 16, persistent Node web service).
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Deploy: push this repo to GitHub, then in Render → New → Blueprint, pick the
+# repo. Render reads this file and creates the service. Fill the `sync: false`
+# secrets in the dashboard (they are intentionally NOT committed).
+services:
+  - type: web
+    name: thriftedbd
+    runtime: node
+    plan: free
+    region: singapore # closest free region to Bangladesh
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      # --- Non-secret build/runtime config (safe to commit) ---
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: HUSKY # skip git-hook install during CI build
+        value: "0"
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: AUTH_TRUST_HOST # NextAuth v5 needs this off Vercel
+        value: "true"
+      # --- Secrets & instance config: set these in the Render dashboard ---
+      - key: MONGODB_URI # MongoDB Atlas connection string
+        sync: false
+      - key: AUTH_SECRET # generate: npx auth secret  (or: openssl rand -base64 32)
+        sync: false
+      - key: AUTH_URL # https://thriftedbd.com
+        sync: false
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_PUBLIC_URL # e.g. https://pub-xxxx.r2.dev
+        sync: false
