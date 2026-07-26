@@ -3,13 +3,14 @@ import Credentials from "next-auth/providers/credentials";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import Customer from "@/models/Customer";
+import { authConfig } from "@/lib/auth.config";
 
 function readCredential(value: unknown): string | null {
   return typeof value === "string" && value.length > 0 ? value : null;
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  session: { strategy: "jwt" },
+  ...authConfig,
   providers: [
     Credentials({
       id: "admin",
@@ -63,18 +64,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id as string;
-        token.role = user.role;
-      }
-      return token;
-    },
-    session({ session, token }) {
-      session.user.id = token.id;
-      session.user.role = token.role;
-      return session;
-    },
-  },
 });

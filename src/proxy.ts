@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
+import NextAuth from "next-auth";
 import createIntlMiddleware from "next-intl/middleware";
-import { auth } from "@/lib/auth";
+import { authConfig } from "@/lib/auth.config";
 import { routing } from "@/i18n/routing";
+
+// A separate NextAuth instance built from the edge-safe config, not
+// @/lib/auth — that file's Credentials providers statically import
+// mongoose/models, which can't be bundled for the Edge runtime that
+// middleware always runs on. This instance only decodes/verifies the JWT.
+const { auth } = NextAuth(authConfig);
 
 const intl = createIntlMiddleware(routing);
 
