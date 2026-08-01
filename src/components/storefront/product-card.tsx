@@ -38,7 +38,11 @@ export function ProductCard({
   const title = localize(product.title, locale);
 
   return (
-    <Link href={`/products/${product.slug}`} className="group block rounded-none bg-white">
+    <Link
+      href={`/products/${product.slug}`}
+      className="group block rounded-none bg-white"
+      prefetch={false}
+    >
       {/*
         The photograph *is* the card: zero radius, zero padding, no shadow, no
         border. Soft cloud stages the image so inconsistent self-shot thrift

@@ -72,6 +72,7 @@ export function AdminPagination({
                 : "border-hairline text-charcoal hover:bg-soft-cloud hover:text-ink-900 bg-white"
             }`}
             aria-current={page === currentPage ? "page" : undefined}
+            prefetch={false}
           >
             {page}
           </Link>

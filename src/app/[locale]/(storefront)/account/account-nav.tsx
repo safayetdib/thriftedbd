@@ -33,6 +33,7 @@ export function AccountNav({ items }: { items: AccountNavItem[] }) {
           <Link
             key={href}
             href={href}
+            prefetch={false}
             className={cn(
               "rounded-pill text-caption-md flex shrink-0 items-center gap-1.5 px-4 py-2 whitespace-nowrap transition-colors",
               active ? "bg-ink-900 text-white" : "bg-soft-cloud text-charcoal hover:text-ink-900",

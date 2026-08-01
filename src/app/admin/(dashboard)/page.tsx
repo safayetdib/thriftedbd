@@ -66,6 +66,7 @@ export default async function AdminDashboardPage() {
             key={href}
             href={href}
             className="border-hairline hover:border-ink-900 flex flex-col gap-3 rounded-none border bg-white p-5 transition-colors"
+            prefetch={false}
           >
             <div className="bg-soft-cloud text-ink-900 flex size-10 items-center justify-center rounded-none">
               <Icon size={20} />

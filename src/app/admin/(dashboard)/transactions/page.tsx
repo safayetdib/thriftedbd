@@ -92,6 +92,7 @@ export default async function AdminTransactionsPage({
                   ? "border-ink-900 bg-ink-900 text-white"
                   : "border-hairline text-charcoal hover:bg-soft-cloud hover:text-ink-900 bg-white"
               }`}
+              prefetch={false}
             >
               {filter}
             </Link>

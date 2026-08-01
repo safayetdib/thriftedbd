@@ -36,7 +36,7 @@ export default async function AdminProductsPage({
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h1 className="text-ink-900 text-heading-lg">Products</h1>
-        <Link href="/admin/products/new">
+        <Link href="/admin/products/new" prefetch={false}>
           <Button variant="primary" size="sm">
             <PlusIcon size={16} /> New product
           </Button>
@@ -55,6 +55,7 @@ export default async function AdminProductsPage({
                   ? "border-ink-900 bg-ink-900 text-white"
                   : "border-hairline text-charcoal hover:bg-soft-cloud hover:text-ink-900 bg-white"
               }`}
+              prefetch={false}
             >
               {filter}
             </Link>
@@ -86,6 +87,7 @@ export default async function AdminProductsPage({
                   <Link
                     href={`/admin/products/${product._id}`}
                     className="text-ink-900 text-body-sm-strong hover:underline"
+                    prefetch={false}
                   >
                     {product.title.en}
                   </Link>

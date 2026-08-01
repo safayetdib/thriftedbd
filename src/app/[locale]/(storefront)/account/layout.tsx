@@ -68,6 +68,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
             <li key={href}>
               <Link
                 href={href}
+                prefetch={false}
                 className="text-charcoal hover:bg-soft-cloud text-caption-md rounded-pill flex items-center gap-2.5 px-3 py-2 transition-colors"
               >
                 <Icon size={18} />

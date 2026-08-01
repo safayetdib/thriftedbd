@@ -3,10 +3,10 @@ import { PromotionCard } from "@/components/storefront/promotion-card";
 import { Link } from "@/i18n/navigation";
 import { connectDB } from "@/lib/db";
 import { localize } from "@/lib/localize";
+import { serialize } from "@/lib/serialize";
 import { getActiveCategories } from "@/lib/services/category.service";
 import { getActiveProducts } from "@/lib/services/product.service";
 import { getActivePromotions } from "@/lib/services/promotion.service";
-import { serialize } from "@/lib/serialize";
 import { getSettings } from "@/lib/services/settings.service";
 import type { ICategory } from "@/models/Category";
 import Category from "@/models/Category";
@@ -177,7 +177,11 @@ export default async function Home() {
           <h2 className="text-heading-lg text-ink-900 mb-6">{t("featuredCategories")}</h2>
           <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
             {featuredCategories.map((category) => (
-              <Link key={category._id.toString()} href={`/products?category=${category.slug}`}>
+              <Link
+                key={category._id.toString()}
+                href={`/products?category=${category.slug}`}
+                prefetch={false}
+              >
                 <div className="border-hairline hover:bg-soft-cloud flex flex-col items-center justify-center rounded-none border bg-white p-8 text-center transition-colors">
                   <h3 className="text-body-strong text-ink-900">
                     {localize(category.name, locale)}
@@ -195,7 +199,11 @@ export default async function Home() {
         <section className="max-w-container mx-auto w-full px-4 py-12 md:px-8 md:py-16">
           <div className="mb-6 flex items-end justify-between">
             <h2 className="text-heading-lg text-ink-900">{t("newArrivals")}</h2>
-            <Link href="/products" className="text-caption-md text-ink-900 hover:underline">
+            <Link
+              href="/products"
+              className="text-caption-md text-ink-900 hover:underline"
+              prefetch={false}
+            >
               {t("viewAll")}
             </Link>
           </div>

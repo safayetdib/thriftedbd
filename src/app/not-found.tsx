@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -10,10 +10,10 @@ export default function NotFound() {
         The page you&apos;re looking for doesn&apos;t exist or has been moved.
       </p>
       <div className="mt-8 flex gap-3">
-        <Link href="/products">
+        <Link href="/products" prefetch={false}>
           <Button variant="primary">Browse products</Button>
         </Link>
-        <Link href="/">
+        <Link href="/" prefetch={false}>
           <Button variant="secondary">Back to home</Button>
         </Link>
       </div>

@@ -39,7 +39,7 @@ export function SiteHeader({
         {/* Brand lockup - the "t" icon paired with the ink wordmark. The icon
             carries the only brand colour; the wordmark stays ink. Live text is
             kept (not the logo image) so it stays crisp and indexable. */}
-        <Link href="/" className="flex shrink-0 items-center gap-2">
+        <Link href="/" className="flex shrink-0 items-center gap-2" prefetch={false}>
           <Image
             src="/icons/icon.png"
             alt=""
@@ -61,6 +61,7 @@ export function SiteHeader({
               <Link
                 href={`/products?category=${dept.slug}`}
                 className="text-ink-700 hover:text-ink-900 group-hover:text-ink-900 text-body-sm-strong relative flex h-16 items-center px-4 transition-colors"
+                prefetch={false}
               >
                 {dept.name}
                 {/* Active underline on hover */}
@@ -78,6 +79,7 @@ export function SiteHeader({
                           key={sub.slug}
                           href={`/products?category=${sub.slug}`}
                           className="group/sub flex flex-col gap-2 rounded-none"
+                          prefetch={false}
                         >
                           {/* Cover image - soft cloud stage, zero radius. */}
                           <div className="bg-soft-cloud relative aspect-square w-full overflow-hidden rounded-none">
@@ -105,6 +107,7 @@ export function SiteHeader({
                     <Link
                       href={`/products?category=${dept.slug}`}
                       className="text-link-md text-ink-900 mt-4 block text-center"
+                      prefetch={false}
                     >
                       {t("viewAll", { name: dept.name })} →
                     </Link>
@@ -122,17 +125,22 @@ export function SiteHeader({
 
           {/* Utility icons - search & account on every size; wishlist joins at lg. */}
           <div className="flex items-center gap-1">
-            <Link href="/products" aria-label={t("search")}>
+            <Link href="/products" aria-label={t("search")} prefetch={false}>
               <Button variant="ghost" size="icon-sm">
                 <MagnifyingGlassIcon size={20} />
               </Button>
             </Link>
-            <Link href="/account" aria-label={t("account")}>
+            <Link href="/account" aria-label={t("account")} prefetch={false}>
               <Button variant="ghost" size="icon-sm">
                 <UserIcon size={20} />
               </Button>
             </Link>
-            <Link href="/favorites" aria-label={t("wishlist")} className="hidden lg:block">
+            <Link
+              href="/favorites"
+              aria-label={t("wishlist")}
+              className="hidden lg:block"
+              prefetch={false}
+            >
               <Button variant="ghost" size="icon-sm">
                 <HeartIcon size={20} />
               </Button>
@@ -140,7 +148,7 @@ export function SiteHeader({
           </div>
 
           {/* Cart - always visible */}
-          <Link href="/cart" className="relative">
+          <Link href="/cart" className="relative" prefetch={false}>
             <Button variant="ghost" size="icon-sm" aria-label={t("cart")}>
               <ShoppingBagIcon size={20} />
             </Button>
@@ -211,6 +219,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
                 <Link
                   href={`/products?category=${dept.slug}`}
                   onClick={() => setOpen(false)}
+                  prefetch={false}
                   className="text-ink-900 text-body-sm-strong flex-1 py-3"
                 >
                   {dept.name}
@@ -239,6 +248,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
                       key={sub.slug}
                       href={`/products?category=${sub.slug}`}
                       onClick={() => setOpen(false)}
+                      prefetch={false}
                       className="text-ink-700 hover:text-ink-900 text-body-sm flex items-center gap-2 py-2"
                     >
                       {sub.coverImage && (
@@ -265,6 +275,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
             <Link
               href="/account"
               onClick={() => setOpen(false)}
+              prefetch={false}
               className="text-ink-700 text-body-sm-strong py-2"
             >
               {t("myAccount")}
@@ -272,6 +283,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
             <Link
               href="/favorites"
               onClick={() => setOpen(false)}
+              prefetch={false}
               className="text-ink-700 text-body-sm-strong py-2"
             >
               {t("favorites")}
@@ -279,6 +291,7 @@ function MobileMenu({ departments }: { departments: Department[] }) {
             <Link
               href="/track-order"
               onClick={() => setOpen(false)}
+              prefetch={false}
               className="text-ink-700 text-body-sm-strong py-2"
             >
               {t("trackOrder")}

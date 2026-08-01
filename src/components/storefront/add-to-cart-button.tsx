@@ -36,7 +36,7 @@ export function AddToCartButton({ productId }: { productId: string }) {
         <Button variant="secondary" size="lg" disabled className="flex-1">
           {t("addedToBag")}
         </Button>
-        <Link href="/cart">
+        <Link href="/cart" prefetch={false}>
           <Button variant="outline" size="lg">
             {t("viewBag")}
           </Button>

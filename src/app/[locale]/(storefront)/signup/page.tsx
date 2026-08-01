@@ -85,7 +85,11 @@ export default function CustomerSignupPage() {
 
         <div className="text-body-sm text-mute mt-6 text-center">
           {t("haveAccount")}{" "}
-          <Link href="/login" className="text-caption-md text-ink-900 underline hover:no-underline">
+          <Link
+            href="/login"
+            className="text-caption-md text-ink-900 underline hover:no-underline"
+            prefetch={false}
+          >
             {t("signIn")}
           </Link>
         </div>

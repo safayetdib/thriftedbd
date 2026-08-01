@@ -35,7 +35,7 @@ export function PromotionCard({ promotion }: { promotion: IPromotion }) {
       </div>
 
       {promotion.ctaLink && localize(promotion.ctaText, locale) && (
-        <Link href={promotion.ctaLink}>
+        <Link href={promotion.ctaLink} prefetch={false}>
           <Button variant="primary" size="sm" className="w-fit">
             {localize(promotion.ctaText, locale)}
           </Button>

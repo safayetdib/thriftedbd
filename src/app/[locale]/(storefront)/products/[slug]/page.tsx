@@ -182,7 +182,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       />
 
       <div className="text-caption-md text-mute mb-6 flex items-center gap-2">
-        <Link href="/products">All Products</Link>
+        <Link href="/products" prefetch={false}>
+          All Products
+        </Link>
         {product.categoryPath?.en && (
           <>
             <span>/</span>

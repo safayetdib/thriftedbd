@@ -1,19 +1,19 @@
-import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { localize } from "@/lib/localize";
-import Image from "next/image";
-import { connectDB } from "@/lib/db";
-import { getCart } from "@/lib/services/cart.service";
-import { peekCartIdentity } from "@/lib/cart-identity";
-import { getSettings } from "@/lib/services/settings.service";
-import { getActivePromotions } from "@/lib/services/promotion.service";
-import { getProductById } from "@/lib/services/product.service";
-import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/storefront/product-card";
 import { RemoveFromCartButton } from "@/components/storefront/remove-from-cart-button";
-import { ShoppingBagIcon, CaretRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
+import { peekCartIdentity } from "@/lib/cart-identity";
+import { connectDB } from "@/lib/db";
+import { localize } from "@/lib/localize";
+import { getCart } from "@/lib/services/cart.service";
+import { getProductById } from "@/lib/services/product.service";
+import { getActivePromotions } from "@/lib/services/promotion.service";
+import { getSettings } from "@/lib/services/settings.service";
 import type { ICartItem } from "@/models/Cart";
 import type { IProduct } from "@/models/Product";
+import { CaretRightIcon, ShoppingBagIcon } from "@phosphor-icons/react/dist/ssr";
+import { getLocale, getTranslations } from "next-intl/server";
+import Image from "next/image";
 
 export default async function CartPage() {
   await connectDB();
@@ -43,7 +43,7 @@ export default async function CartPage() {
         <ShoppingBagIcon size={40} className="text-stone" />
         <h1 className="text-heading-xl text-ink-900">{t("emptyTitle")}</h1>
         <p className="text-body-md text-mute max-w-sm">{t("emptyBlurb")}</p>
-        <Link href="/products">
+        <Link href="/products" prefetch={false}>
           <Button variant="primary" size="lg">
             {t("browseProducts")}
           </Button>
@@ -129,7 +129,7 @@ export default async function CartPage() {
               <span className="text-price text-ink-900 text-xl font-medium">৳{subtotal}</span>
             </div>
 
-            <Link href="/checkout" className="mt-1 block">
+            <Link href="/checkout" prefetch={false} className="mt-1 block">
               <Button variant="primary" size="lg" className="w-full gap-2">
                 {t("checkout")}
                 <CaretRightIcon size={16} weight="bold" />

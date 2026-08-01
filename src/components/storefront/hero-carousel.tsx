@@ -104,7 +104,7 @@ export function HeroCarousel({ slides }: { slides: IHeroSlide[] }) {
 
             {currentSlide.ctaText && currentSlide.ctaLink && (
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href={currentSlide.ctaLink}>
+                <Link href={currentSlide.ctaLink} prefetch={false}>
                   <Button variant="on-image" size="lg">
                     {currentSlide.ctaText}
                   </Button>

@@ -45,7 +45,7 @@ export default async function ReturnsPage() {
           <p className="mt-6">
             {t.rich("more", {
               link: (chunks) => (
-                <Link href="/contact" className="text-link-md text-ink-900">
+                <Link href="/contact" className="text-link-md text-ink-900" prefetch={false}>
                   {chunks}
                 </Link>
               ),

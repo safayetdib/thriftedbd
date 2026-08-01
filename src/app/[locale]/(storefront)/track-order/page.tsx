@@ -96,7 +96,11 @@ export default function TrackOrderPage() {
             </div>
           ))}
           <p className="text-body-sm text-mute">
-            <Link href="/contact" className="text-ink-900 underline underline-offset-2">
+            <Link
+              href="/contact"
+              className="text-ink-900 underline underline-offset-2"
+              prefetch={false}
+            >
               {t("contactLink")}
             </Link>
           </p>

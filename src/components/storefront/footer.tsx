@@ -39,6 +39,7 @@ export function SiteFooter({
                   <Link
                     href={`/products?category=${dept.slug}`}
                     className="text-mute hover:text-ink-900 text-caption-md transition-colors"
+                    prefetch={false}
                   >
                     {dept.name}
                   </Link>
@@ -48,6 +49,7 @@ export function SiteFooter({
                 <Link
                   href="/products"
                   className="text-mute hover:text-ink-900 text-caption-md transition-colors"
+                  prefetch={false}
                 >
                   {t("allProducts")}
                 </Link>
@@ -69,6 +71,7 @@ export function SiteFooter({
                   <Link
                     href={link.href}
                     className="text-mute hover:text-ink-900 text-caption-md transition-colors"
+                    prefetch={false}
                   >
                     {link.label}
                   </Link>
@@ -132,7 +135,7 @@ export function SiteFooter({
       <div className="border-hairline-soft border-t px-4 py-5 md:px-8">
         <div className="max-w-container mx-auto flex flex-col items-center justify-between gap-3 sm:flex-row">
           {/* Brand lockup - mirrors the header: "t" icon + live-text wordmark. */}
-          <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Link href="/" className="flex shrink-0 items-center gap-2" prefetch={false}>
             <Image src="/icons/icon.png" alt="" width={32} height={32} className="rounded-[6px]" />
             <span className="text-ink-900 text-heading-lg tracking-tight">
               thrifted<span className="font-normal">BD</span>

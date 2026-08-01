@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { useActionState } from "react";
 import { customerLoginAction } from "./actions";
 
 export default function CustomerLoginPage() {
@@ -66,6 +66,7 @@ export default function CustomerLoginPage() {
           {t("noAccount")}{" "}
           <Link
             href="/signup"
+            prefetch={false}
             className="text-caption-md text-ink-900 underline hover:no-underline"
           >
             {t("createOne")}

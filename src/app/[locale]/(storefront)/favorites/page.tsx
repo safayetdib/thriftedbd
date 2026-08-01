@@ -52,7 +52,7 @@ export default async function FavoritesPage() {
           icon={<HeartIcon size={32} />}
           title={t("empty")}
           action={
-            <Link href="/products">
+            <Link href="/products" prefetch={false}>
               <Button variant="primary" size="sm">
                 {t("browseProducts")}
               </Button>

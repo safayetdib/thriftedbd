@@ -6,8 +6,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Link } from "@/i18n/navigation";
 import { connectDB } from "@/lib/db";
 import { localize } from "@/lib/localize";
-import { getActiveCategories } from "@/lib/services/category.service";
 import { serialize } from "@/lib/serialize";
+import { getActiveCategories } from "@/lib/services/category.service";
 import { getActiveProducts, getAvailableSizes } from "@/lib/services/product.service";
 import { cn } from "@/lib/utils";
 import type { ICategory } from "@/models/Category";
@@ -175,6 +175,7 @@ export default async function ProductsPage({
       <div className="mb-4 flex flex-wrap gap-2 md:mb-6">
         <Link
           href="/products"
+          prefetch={false}
           className={cn(
             "text-caption-md rounded-pill border px-4 py-1.5 transition-colors",
             !activeCategory
@@ -188,6 +189,7 @@ export default async function ProductsPage({
           <Link
             key={c.slug}
             href={`/products?category=${c.slug}`}
+            prefetch={false}
             className={cn(
               "text-caption-md rounded-pill border px-4 py-1.5 transition-colors",
               activeDept?.slug === c.slug
@@ -205,6 +207,7 @@ export default async function ProductsPage({
         <div className="mb-4 flex flex-wrap gap-2 md:mb-6">
           <Link
             href={`/products?category=${activeDept.slug}`}
+            prefetch={false}
             className={cn(
               "text-caption-sm rounded-pill border px-3 py-1 transition-colors",
               activeCategory?.slug === activeDept.slug
@@ -218,6 +221,7 @@ export default async function ProductsPage({
             <Link
               key={s.slug}
               href={`/products?category=${s.slug}`}
+              prefetch={false}
               className={cn(
                 "text-caption-sm rounded-pill border px-3 py-1 transition-colors",
                 activeCategory?.slug === s.slug

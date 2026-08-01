@@ -62,6 +62,7 @@ export function AdminSidebar() {
                     ? "bg-ink-900 text-white hover:text-white"
                     : "text-charcoal hover:bg-soft-cloud hover:text-ink-900",
                 )}
+                prefetch={false}
               >
                 <Icon size={18} weight={isActive ? "fill" : "regular"} />
                 {label}

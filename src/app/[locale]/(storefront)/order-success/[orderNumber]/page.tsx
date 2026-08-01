@@ -1,17 +1,17 @@
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
+import { connectDB } from "@/lib/db";
+import { localize } from "@/lib/localize";
+import { getProductById } from "@/lib/services/product.service";
+import { getActivePromotions } from "@/lib/services/promotion.service";
+import { getSettings } from "@/lib/services/settings.service";
+import Order from "@/models/Order";
+import type { IProduct } from "@/models/Product";
+import { CheckCircleIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { localize } from "@/lib/localize";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { CheckCircleIcon } from "@phosphor-icons/react/dist/ssr";
-import { connectDB } from "@/lib/db";
-import { getSettings } from "@/lib/services/settings.service";
-import { getActivePromotions } from "@/lib/services/promotion.service";
-import { getProductById } from "@/lib/services/product.service";
-import Order from "@/models/Order";
-import { Button } from "@/components/ui/button";
-import type { IProduct } from "@/models/Product";
 
 export async function generateMetadata({
   params,
@@ -188,7 +188,7 @@ export default async function OrderSuccessPage({
           </div>
 
           <div className="flex flex-col gap-3">
-            <Link href="/products" className="block">
+            <Link href="/products" prefetch={false} className="block">
               <Button variant="primary" size="lg" className="w-full">
                 {t("continueShopping")}
               </Button>
@@ -196,6 +196,7 @@ export default async function OrderSuccessPage({
 
             <Link
               href={`/track-order?orderNumber=${order.orderNumber}&phone=${encodeURIComponent(order.customer.phone)}`}
+              prefetch={false}
               className="block"
             >
               <Button variant="secondary" size="lg" className="w-full">
@@ -241,7 +242,7 @@ export default async function OrderSuccessPage({
           <h2 className="text-heading-lg text-ink-900 mb-6">{t("youMightAlsoLike")}</h2>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {featuredProducts.map((product) => (
-              <Link key={String(product._id)} href={`/products/${product.slug}`}>
+              <Link key={String(product._id)} href={`/products/${product.slug}`} prefetch={false}>
                 <div className="hover:bg-soft-cloud flex flex-col gap-2 rounded-none p-3 transition-colors">
                   <div className="bg-soft-cloud relative aspect-square overflow-hidden rounded-none">
                     {product.images[0] && (

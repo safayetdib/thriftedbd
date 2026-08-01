@@ -68,6 +68,7 @@ export function Pagination({
         )}
         aria-disabled={currentPage <= 1}
         tabIndex={currentPage <= 1 ? -1 : undefined}
+        prefetch={false}
       >
         <CaretLeftIcon size={14} weight="bold" />
         <span className="hidden sm:inline">Prev</span>
@@ -93,6 +94,7 @@ export function Pagination({
                   : "border-hairline text-ink-900 hover:border-ink-900 bg-white",
               )}
               aria-current={page === currentPage ? "page" : undefined}
+              prefetch={false}
             >
               {page}
             </Link>
@@ -111,6 +113,7 @@ export function Pagination({
         )}
         aria-disabled={currentPage >= totalPages}
         tabIndex={currentPage >= totalPages ? -1 : undefined}
+        prefetch={false}
       >
         <span className="hidden sm:inline">Next</span>
         <CaretRightIcon size={14} weight="bold" />

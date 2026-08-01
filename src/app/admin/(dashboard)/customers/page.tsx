@@ -44,6 +44,7 @@ export default async function AdminCustomersPage({
                   <Link
                     href={`/admin/customers/${customer._id}`}
                     className="text-ink-900 text-body-sm-strong hover:underline"
+                    prefetch={false}
                   >
                     {customer.name}
                   </Link>

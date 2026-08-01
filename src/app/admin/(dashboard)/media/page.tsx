@@ -81,6 +81,7 @@ export default async function AdminMediaPage({
                   ? "border-ink-900 bg-ink-900 text-white"
                   : "border-hairline text-charcoal hover:bg-soft-cloud bg-white"
               }`}
+              prefetch={false}
             >
               {value === "newest" ? "Newest" : "Oldest"}
             </Link>

@@ -70,6 +70,7 @@ export default async function AdminOrderDetailPage({
       <Link
         href="/admin/orders"
         className="text-charcoal hover:text-ink-900 text-body-sm-strong flex items-center gap-1.5"
+        prefetch={false}
       >
         <ArrowLeftIcon size={14} /> Back to orders
       </Link>

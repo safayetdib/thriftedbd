@@ -47,7 +47,7 @@ export default async function AccountOrdersPage() {
           icon={<ShoppingBagIcon size={32} />}
           title={t("empty")}
           action={
-            <Link href="/products">
+            <Link href="/products" prefetch={false}>
               <Button variant="primary" size="sm">
                 {t("browseProducts")}
               </Button>
@@ -82,6 +82,7 @@ export default async function AccountOrdersPage() {
               </div>
               <Link
                 href={`/track-order?phone=${encodeURIComponent(order.customer.phone)}&orderNumber=${order.orderNumber}`}
+                prefetch={false}
               >
                 <Button variant="secondary" size="sm" className="w-full">
                   {t("track")} <ArrowRightIcon size={14} />
@@ -126,6 +127,7 @@ export default async function AccountOrdersPage() {
                   <td className="px-4 py-3">
                     <Link
                       href={`/track-order?phone=${encodeURIComponent(order.customer.phone)}&orderNumber=${order.orderNumber}`}
+                      prefetch={false}
                     >
                       <Button variant="secondary" size="sm">
                         {t("track")} <ArrowRightIcon size={14} />

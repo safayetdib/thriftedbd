@@ -65,6 +65,7 @@ export default async function AdminOrdersPage({
                   ? "border-ink-900 bg-ink-900 text-white"
                   : "border-hairline text-charcoal hover:bg-soft-cloud hover:text-ink-900 bg-white"
               }`}
+              prefetch={false}
             >
               {filter}
             </Link>
@@ -96,6 +97,7 @@ export default async function AdminOrdersPage({
                   <Link
                     href={`/admin/orders/${order._id}`}
                     className="text-ink-900 text-body-sm-strong hover:underline"
+                    prefetch={false}
                   >
                     {order.orderNumber}
                   </Link>

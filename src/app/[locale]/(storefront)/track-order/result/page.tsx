@@ -32,7 +32,7 @@ export default async function TrackOrderResultPage({
         <div className="border-hairline w-full max-w-md rounded-none border bg-white p-8 text-center">
           <p className="text-body-strong text-sale-700">{t("invalidRequest")}</p>
           <p className="text-body-sm text-mute mt-2">{t("missingFields")}</p>
-          <Link href="/track-order" className="mt-4 inline-block">
+          <Link href="/track-order" className="mt-4 inline-block" prefetch={false}>
             <Button variant="primary" size="sm">
               {t("tryAgain")}
             </Button>
@@ -54,7 +54,7 @@ export default async function TrackOrderResultPage({
         <div className="border-hairline w-full max-w-md rounded-none border bg-white p-8 text-center">
           <p className="text-body-strong text-sale-700">{t("notFound")}</p>
           <p className="text-body-sm text-mute mt-2">{t("checkDetails")}</p>
-          <Link href="/track-order" className="mt-4 inline-block">
+          <Link href="/track-order" className="mt-4 inline-block" prefetch={false}>
             <Button variant="primary" size="sm">
               {t("tryAgain")}
             </Button>
@@ -213,12 +213,12 @@ export default async function TrackOrderResultPage({
 
         {/* Action */}
         <div className="flex justify-center gap-2">
-          <Link href="/track-order">
+          <Link href="/track-order" prefetch={false}>
             <Button variant="secondary" size="sm">
               {t("trackAnother")}
             </Button>
           </Link>
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <Button variant="primary" size="sm">
               {t("continueShopping")}
             </Button>
