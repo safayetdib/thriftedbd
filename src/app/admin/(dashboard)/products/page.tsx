@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { EmptyTableRow } from "@/components/ui/empty-state";
 import { connectDB } from "@/lib/db";
 import { getAdminProducts } from "@/lib/services/product.service";
-import { PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import { ImageIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
 import Link from "next/link";
 import { deleteProductAction } from "./actions";
 
@@ -86,10 +87,25 @@ export default async function AdminProductsPage({
                 <td className="px-5 py-3.5">
                   <Link
                     href={`/admin/products/${product._id}`}
-                    className="text-ink-900 text-body-sm-strong hover:underline"
+                    className="text-ink-900 text-body-sm-strong group flex items-center gap-3"
                     prefetch={false}
                   >
-                    {product.title.en}
+                    <span className="border-hairline bg-soft-cloud relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-none border">
+                      {product.images[0]?.url ? (
+                        // Optimized (not `unoptimized` like the media grid) so a page of 24
+                        // rows loads 48px thumbnails instead of full-size originals.
+                        <Image
+                          src={product.images[0].url}
+                          alt=""
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <ImageIcon size={18} className="text-mute" aria-hidden />
+                      )}
+                    </span>
+                    <span className="group-hover:underline">{product.title.en}</span>
                   </Link>
                 </td>
                 <td className="text-ink-900 text-body-sm-strong px-5 py-3.5">৳{product.price}</td>
