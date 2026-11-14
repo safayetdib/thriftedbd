@@ -36,5 +36,5 @@
   # so an AUTH_TRUST_HOST set here silently does nothing and every sign-in
   # throws UntrustedHost. Do not re-add it here.
 
-# Secrets (MONGODB_URI, AUTH_SECRET, R2_*, GOOGLE_TRANSLATE_API_KEY) are set in
+# Secrets (MONGODB_URI, AUTH_SECRET, R2_*, GOOGLE_TRANSLATE_API_KEY, TELEGRAM_*) are set in
 # the Netlify UI: Site settings -> Environment variables. Do not commit them.

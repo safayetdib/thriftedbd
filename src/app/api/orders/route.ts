@@ -1,11 +1,12 @@
 import { auth } from "@/lib/auth";
 import { resolveCartIdentity } from "@/lib/cart-identity";
 import { connectDB } from "@/lib/db";
+import { notifyNewOrder } from "@/lib/notifications/telegram";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { createOrderFromCart } from "@/lib/services/order.service";
 import { createOrderSchema } from "@/lib/validations/order.schema";
 import Order from "@/models/Order";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 function rateLimited(retryAfterSeconds: number) {
   return NextResponse.json(
@@ -73,6 +74,8 @@ export async function POST(request: Request) {
 
   try {
     const order = await createOrderFromCart(identity, parsed.data, customerId);
+    // Alert the team on Telegram after the response is sent, so checkout never waits on it.
+    after(() => notifyNewOrder(order));
     return NextResponse.json({ data: order }, { status: 201 });
   } catch (err) {
     if (err instanceof Error && err.message === "CART_EMPTY") {
