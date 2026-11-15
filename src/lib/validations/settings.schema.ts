@@ -39,8 +39,7 @@ const homepageInput = z.object({
 export const updateSettingsSchema = z.object({
   deliveryFee: z
     .object({
-      insideDhaka: z.number().nonnegative(),
-      outsideDhaka: z.number().nonnegative(),
+      nationwide: z.number().nonnegative(),
     })
     .partial()
     .optional(),

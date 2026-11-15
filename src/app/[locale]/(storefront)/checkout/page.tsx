@@ -7,6 +7,7 @@ import { connectDB } from "@/lib/db";
 import { getCart } from "@/lib/services/cart.service";
 import { peekCartIdentity } from "@/lib/cart-identity";
 import { getActivePromotions } from "@/lib/services/promotion.service";
+import { getPublicSettings } from "@/lib/services/settings.service";
 import type { ICartItem } from "@/models/Cart";
 
 const CheckoutForm = dynamic(() =>
@@ -18,9 +19,10 @@ export default async function CheckoutPage() {
   const locale = await getLocale();
   const t = await getTranslations("checkout");
   const identity = await peekCartIdentity();
-  const [cart, promotions] = await Promise.all([
+  const [cart, promotions, settings] = await Promise.all([
     identity ? getCart(identity) : null,
     getActivePromotions(["checkout", "global"]),
+    getPublicSettings(),
   ]);
   const items: ICartItem[] = cart?.items ?? [];
 
@@ -29,6 +31,7 @@ export default async function CheckoutPage() {
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const deliveryFee = settings.deliveryFee.nationwide;
 
   return (
     <main className="max-w-container mx-auto w-full px-4 py-6 md:px-8 md:py-8">
@@ -55,7 +58,7 @@ export default async function CheckoutPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
         <div className="lg:col-span-2">
-          <CheckoutForm subtotal={subtotal} />
+          <CheckoutForm subtotal={subtotal} deliveryFee={deliveryFee} />
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
@@ -96,14 +99,19 @@ export default async function CheckoutPage() {
               <span className="text-price text-body-strong text-ink-900">৳{subtotal}</span>
             </div>
 
+            <div className="flex items-center justify-between">
+              <span className="text-body-sm text-mute">{t("delivery")}</span>
+              <span className="text-price text-body-strong text-ink-900">৳{deliveryFee}</span>
+            </div>
+
             <div className="bg-hairline-soft h-px" />
 
             <div className="flex items-center justify-between">
-              <span className="text-caption-md text-ink-900">Total</span>
-              <span className="text-price text-ink-900 text-xl font-medium">৳{subtotal}</span>
+              <span className="text-caption-md text-ink-900">{t("total")}</span>
+              <span className="text-price text-ink-900 text-xl font-medium">
+                ৳{subtotal + deliveryFee}
+              </span>
             </div>
-
-            <p className="text-caption-sm text-mute leading-relaxed">{t("deliveryFeeNote")}</p>
           </div>
         </div>
       </div>

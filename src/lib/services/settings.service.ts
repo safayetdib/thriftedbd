@@ -21,7 +21,7 @@ export async function getPublicSettings() {
 }
 
 /** Flattens nested partial input into dot-notation `$set` so e.g. updating
- * `deliveryFee.insideDhaka` alone doesn't wipe `outsideDhaka`. */
+ * `storeContact.email` alone doesn't wipe `storeContact.phone`. */
 export async function updateSettings(input: UpdateSettingsInput) {
   const set: Record<string, unknown> = { updatedAt: new Date() };
   for (const [group, fields] of Object.entries(input)) {

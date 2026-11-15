@@ -36,7 +36,7 @@ async function seed() {
     console.log("Settings singleton already exists, skipping.");
   } else {
     await Settings.create({
-      deliveryFee: { insideDhaka: 70, outsideDhaka: 130 },
+      deliveryFee: { nationwide: 150 },
       storeContact: { phone: "", email: "", address: "" },
       socialLinks: {},
       riskThresholds: { largeOrderAmount: 5000 },

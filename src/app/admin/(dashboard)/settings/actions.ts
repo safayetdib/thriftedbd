@@ -15,10 +15,7 @@ export async function updateSettingsAction(formData: FormData) {
 
   const raw = Object.fromEntries(formData.entries());
   const input = {
-    deliveryFee: {
-      insideDhaka: Number(raw.insideDhaka),
-      outsideDhaka: Number(raw.outsideDhaka),
-    },
+    deliveryFee: { nationwide: Number(raw.deliveryFeeNationwide) },
     storeContact: {
       phone: String(raw.storeContactPhone ?? ""),
       email: String(raw.storeContactEmail ?? ""),

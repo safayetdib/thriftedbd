@@ -14,7 +14,7 @@ import Product from "@/models/Product";
 import Settings from "@/models/Settings";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-const FEES = { insideDhaka: 60, outsideDhaka: 120 };
+const FEES = { nationwide: 150 };
 const LARGE_ORDER = 5000;
 
 beforeAll(async () => {
@@ -40,8 +40,8 @@ describe("createOrderFromCart", () => {
 
     const order = await createOrderFromCart(identity, orderInput());
 
-    expect(order.total).toBe(1200 + FEES.insideDhaka);
-    expect(order.shippingFee).toBe(FEES.insideDhaka);
+    expect(order.total).toBe(1200 + FEES.nationwide);
+    expect(order.shippingFee).toBe(FEES.nationwide);
     expect(order.orderStatus).toBe("PENDING");
 
     // Placement must not decrement stock - that only happens on confirmation.
@@ -55,7 +55,7 @@ describe("createOrderFromCart", () => {
     expect(cart!.convertedOrderId?.toString()).toBe(order._id.toString());
   });
 
-  it("charges the outside-Dhaka shipping fee for non-Dhaka cities", async () => {
+  it("charges the same nationwide delivery fee for any city", async () => {
     const product = await makeProduct({ price: 1000 });
     const identity = await makeCart([product]);
 
@@ -66,8 +66,8 @@ describe("createOrderFromCart", () => {
       }),
     );
 
-    expect(order.shippingFee).toBe(FEES.outsideDhaka);
-    expect(order.total).toBe(1000 + FEES.outsideDhaka);
+    expect(order.shippingFee).toBe(FEES.nationwide);
+    expect(order.total).toBe(1000 + FEES.nationwide);
   });
 
   it("rejects when a cart item is no longer ACTIVE (sold from under the cart)", async () => {

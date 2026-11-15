@@ -33,9 +33,9 @@ export interface IHomepage {
 }
 
 export interface ISettings extends Document {
+  // One flat fee for all of Bangladesh (the old inside/outside-Dhaka split was dropped).
   deliveryFee: {
-    insideDhaka: number;
-    outsideDhaka: number;
+    nationwide: number;
   };
   storeContact: {
     phone: string;
@@ -101,8 +101,7 @@ const homepageSchema = new Schema<IHomepage>(
 
 const settingsSchema = new Schema<ISettings>({
   deliveryFee: {
-    insideDhaka: { type: Number, required: true, default: 0 },
-    outsideDhaka: { type: Number, required: true, default: 0 },
+    nationwide: { type: Number, required: true, default: 150 },
   },
   storeContact: {
     phone: { type: String, default: "" },

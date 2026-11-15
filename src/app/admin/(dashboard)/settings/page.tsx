@@ -36,29 +36,16 @@ export default async function AdminSettingsPage({
 
       <form action={updateSettingsAction} className="flex flex-col gap-6">
         <Section title="Delivery fee (৳)">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="insideDhaka">Inside Dhaka</Label>
-              <Input
-                id="insideDhaka"
-                name="insideDhaka"
-                type="number"
-                min="0"
-                defaultValue={settings.deliveryFee.insideDhaka}
-                required
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="outsideDhaka">Outside Dhaka</Label>
-              <Input
-                id="outsideDhaka"
-                name="outsideDhaka"
-                type="number"
-                min="0"
-                defaultValue={settings.deliveryFee.outsideDhaka}
-                required
-              />
-            </div>
+          <div className="flex flex-col gap-1.5 sm:w-1/3">
+            <Label htmlFor="deliveryFeeNationwide">All of Bangladesh</Label>
+            <Input
+              id="deliveryFeeNationwide"
+              name="deliveryFeeNationwide"
+              type="number"
+              min="0"
+              defaultValue={settings.deliveryFee.nationwide}
+              required
+            />
           </div>
         </Section>
 

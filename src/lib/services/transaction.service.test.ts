@@ -19,7 +19,7 @@ afterAll(async () => {
 beforeEach(async () => {
   await clearTestDB();
   await Settings.create({
-    deliveryFee: { insideDhaka: 60, outsideDhaka: 120 },
+    deliveryFee: { nationwide: 150 },
     riskThresholds: { largeOrderAmount: 5000 },
   });
 });

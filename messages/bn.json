@@ -96,17 +96,17 @@
     "qty": "পরিমাণ {count}",
     "orderSummary": "অর্ডার সারসংক্ষেপ",
     "subtotal": "সাবটোটাল",
-    "deliveryNote": "ডেলিভারি: ঢাকার ভিতরে ৳{inside}, ঢাকার বাইরে ৳{outside} - চেকআউটে হিসাব হবে।",
     "checkout": "চেকআউট",
     "specialOffers": "বিশেষ অফার",
     "completeYourLook": "আপনার লুক সম্পূর্ণ করুন",
-    "remove": "ব্যাগ থেকে সরান"
+    "remove": "ব্যাগ থেকে সরান",
+    "delivery": "ডেলিভারি চার্জ (সারা বাংলাদেশ)",
+    "total": "মোট"
   },
   "checkout": {
     "title": "চেকআউট",
     "orderSummary": "অর্ডার সারসংক্ষেপ",
     "subtotal": "সাবটোটাল",
-    "deliveryFeeNote": "অর্ডার করার পর ডেলিভারি ফি যোগ হবে।",
     "fullName": "পুরো নাম",
     "phone": "ফোন নম্বর",
     "address": "ঠিকানা",
@@ -131,7 +131,9 @@
     "confirmPlaceOrder": "নিশ্চিত করে অর্ডার করুন",
     "confirmationCallTitle": "আমরা কল করে নিশ্চিত করব",
     "confirmationCallBlurb": "এখন কোনো পেমেন্ট লাগবে না। অর্ডার করার পর আমাদের টিম উপরের নম্বরে কল করে শিপিংয়ের আগে অর্ডারটি নিশ্চিত করবে।",
-    "supportLine": "কোনো প্রশ্ন? কল বা হোয়াটসঅ্যাপ করুন <phone>{number}</phone>"
+    "supportLine": "কোনো প্রশ্ন? কল বা হোয়াটসঅ্যাপ করুন <phone>{number}</phone>",
+    "delivery": "ডেলিভারি চার্জ (সারা বাংলাদেশ)",
+    "total": "মোট"
   },
   "orderSuccess": {
     "title": "অর্ডার গ্রহণ করা হয়েছে!",

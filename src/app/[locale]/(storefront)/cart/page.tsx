@@ -111,22 +111,20 @@ export default async function CartPage() {
               <span className="text-price text-body-strong text-ink-900">৳{subtotal}</span>
             </div>
 
-            <div className="bg-hairline-soft h-px" />
-
-            <div>
-              <p className="text-caption-sm text-mute leading-relaxed">
-                {t("deliveryNote", {
-                  inside: settings.deliveryFee.insideDhaka,
-                  outside: settings.deliveryFee.outsideDhaka,
-                })}
-              </p>
+            <div className="flex items-center justify-between">
+              <span className="text-body-sm text-mute">{t("delivery")}</span>
+              <span className="text-price text-body-strong text-ink-900">
+                ৳{settings.deliveryFee.nationwide}
+              </span>
             </div>
 
             <div className="bg-hairline-soft h-px" />
 
             <div className="flex items-center justify-between">
-              <span className="text-caption-md text-ink-900">Total</span>
-              <span className="text-price text-ink-900 text-xl font-medium">৳{subtotal}</span>
+              <span className="text-caption-md text-ink-900">{t("total")}</span>
+              <span className="text-price text-ink-900 text-xl font-medium">
+                ৳{subtotal + settings.deliveryFee.nationwide}
+              </span>
             </div>
 
             <Link href="/checkout" prefetch={false} className="mt-1 block">

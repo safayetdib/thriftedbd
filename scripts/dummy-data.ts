@@ -1912,7 +1912,7 @@ export const orders = [
 
 export const settings = {
   _id: "settings-singleton",
-  deliveryFee: { insideDhaka: 70, outsideDhaka: 130 },
+  deliveryFee: { nationwide: 150 },
   storeContact: {
     phone: "01700000000",
     email: "hello@thriftedbd.com",

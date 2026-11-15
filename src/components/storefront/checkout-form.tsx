@@ -33,7 +33,7 @@ const BD_CITIES = [
   "Other",
 ];
 
-export function CheckoutForm({ subtotal }: { subtotal: number }) {
+export function CheckoutForm({ subtotal, deliveryFee }: { subtotal: number; deliveryFee: number }) {
   const t = useTranslations("checkout");
   const router = useRouter();
   const [name, setName] = useState("");
@@ -304,7 +304,16 @@ export function CheckoutForm({ subtotal }: { subtotal: number }) {
                   <span className="text-price text-ink-900">-৳{coupon.discountAmount}</span>
                 </div>
               )}
-              <p className="text-caption-sm text-mute mt-1">{t("deliveryFeeNote")}</p>
+              <div className="flex justify-between">
+                <span className="text-mute">{t("delivery")}</span>
+                <span className="text-price text-ink-900">৳{deliveryFee}</span>
+              </div>
+              <div className="border-hairline-soft mt-1 flex justify-between border-t pt-2">
+                <span className="text-ink-900 text-body-sm-strong">{t("total")}</span>
+                <span className="text-price text-ink-900 text-body-sm-strong">
+                  ৳{subtotal + deliveryFee - (coupon && !coupon.error ? coupon.discountAmount : 0)}
+                </span>
+              </div>
             </div>
             <p className="bg-soft-cloud text-caption-md text-charcoal rounded-none p-3">
               {t("confirmationCallBlurb")}

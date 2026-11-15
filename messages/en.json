@@ -96,17 +96,17 @@
     "qty": "Qty {count}",
     "orderSummary": "Order summary",
     "subtotal": "Subtotal",
-    "deliveryNote": "Delivery: ৳{inside} inside Dhaka, ৳{outside} outside Dhaka - calculated at checkout.",
     "checkout": "Checkout",
     "specialOffers": "Special offers",
     "completeYourLook": "Complete your look",
-    "remove": "Remove from cart"
+    "remove": "Remove from cart",
+    "delivery": "Delivery (all Bangladesh)",
+    "total": "Total"
   },
   "checkout": {
     "title": "Checkout",
     "orderSummary": "Order summary",
     "subtotal": "Subtotal",
-    "deliveryFeeNote": "Delivery fee is added once you place the order.",
     "fullName": "Full name",
     "phone": "Phone number",
     "address": "Address",
@@ -131,7 +131,9 @@
     "confirmPlaceOrder": "Confirm & place order",
     "confirmationCallTitle": "We'll call you to confirm",
     "confirmationCallBlurb": "No payment needed now. After you place your order, our team will call you on the number above to confirm it before shipping.",
-    "supportLine": "Questions? Call or WhatsApp <phone>{number}</phone>"
+    "supportLine": "Questions? Call or WhatsApp <phone>{number}</phone>",
+    "delivery": "Delivery (all Bangladesh)",
+    "total": "Total"
   },
   "orderSuccess": {
     "title": "Order placed!",

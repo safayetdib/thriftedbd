@@ -108,10 +108,7 @@ export async function createOrderFromCart(
   });
 
   const settings = await getSettings();
-  const isOutsideDhaka = (input.customer.city ?? "").trim().toLowerCase() !== "dhaka";
-  const shippingFee = isOutsideDhaka
-    ? settings.deliveryFee.outsideDhaka
-    : settings.deliveryFee.insideDhaka;
+  const shippingFee = settings.deliveryFee.nationwide;
   const itemsTotal = orderItems.reduce(
     (sum: number, item: (typeof orderItems)[number]) => sum + item.price * item.quantity,
     0,
