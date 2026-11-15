@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SUPPORT_PHONE } from "@/lib/support-contact";
 import {
   Dialog,
   DialogContent,
@@ -39,8 +40,6 @@ export function CheckoutForm({ subtotal }: { subtotal: number }) {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("Dhaka");
-  const [method, setMethod] = useState<"COD" | "bKash" | "Nagad">("COD");
-  const [transactionRef, setTransactionRef] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -109,7 +108,9 @@ export function CheckoutForm({ subtotal }: { subtotal: number }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customer: { name, phone, address, city },
-          payment: { method, transactionRef: transactionRef || undefined },
+          // Payment choice is hidden for now - every order starts as COD and
+          // any advance (bKash/Nagad) is arranged on the confirmation call.
+          payment: { method: "COD" },
           couponCode: coupon?.code || undefined,
         }),
       });
@@ -184,37 +185,6 @@ export function CheckoutForm({ subtotal }: { subtotal: number }) {
 
         <div className="bg-hairline-soft h-px" />
 
-        {/* Payment section */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-eyebrow text-caption-sm text-mute">Payment</h2>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="method">{t("paymentMethod")}</Label>
-            <select
-              id="method"
-              value={method}
-              onChange={(e) => setMethod(e.target.value as typeof method)}
-              className="bg-soft-cloud focus-visible:border-ink-900 text-body-sm h-12 w-full rounded-md border border-transparent px-4 outline-none focus-visible:bg-white"
-            >
-              <option value="COD">{t("cod")}</option>
-              <option value="bKash">bKash</option>
-              <option value="Nagad">Nagad</option>
-            </select>
-          </div>
-          {method !== "COD" && (
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="transactionRef">{t("transactionId", { method })}</Label>
-              <Input
-                id="transactionRef"
-                value={transactionRef}
-                onChange={(e) => setTransactionRef(e.target.value)}
-                placeholder={t("transactionIdPlaceholder")}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="bg-hairline-soft h-px" />
-
         {/* Coupon section */}
         <div className="flex flex-col gap-3">
           <h2 className="text-eyebrow text-caption-sm text-mute">{t("couponLabel")}</h2>
@@ -285,13 +255,29 @@ export function CheckoutForm({ subtotal }: { subtotal: number }) {
           </p>
         )}
 
+        <div className="bg-soft-cloud flex flex-col gap-1 rounded-none p-4">
+          <p className="text-body-sm-strong text-ink-900">{t("confirmationCallTitle")}</p>
+          <p className="text-caption-md text-charcoal">{t("confirmationCallBlurb")}</p>
+        </div>
+
         <Button type="submit" variant="primary" size="lg">
           {t("placeOrder")}
         </Button>
+
+        <p className="text-caption-md text-mute text-center">
+          {t.rich("supportLine", {
+            phone: (chunks) => (
+              <a href={SUPPORT_PHONE.tel} className="text-ink-900 whitespace-nowrap underline">
+                {chunks}
+              </a>
+            ),
+            number: SUPPORT_PHONE.display,
+          })}
+        </p>
       </form>
 
       <Dialog open={confirmOpen} onOpenChange={(o) => !submitting && setConfirmOpen(o)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Confirm your order</DialogTitle>
           </DialogHeader>
@@ -307,13 +293,6 @@ export function CheckoutForm({ subtotal }: { subtotal: number }) {
               <span className="text-ink-900">{address}</span>
               <span className="text-mute">{city}</span>
             </div>
-            <div className="border-hairline-soft flex flex-col gap-0.5 border-t pt-3">
-              <span className="text-eyebrow text-caption-sm text-mute">{t("paymentMethod")}</span>
-              <span className="text-ink-900">{method === "COD" ? t("cod") : method}</span>
-              {method !== "COD" && transactionRef && (
-                <span className="text-mute">Txn: {transactionRef}</span>
-              )}
-            </div>
             <div className="border-hairline-soft flex flex-col gap-1 border-t pt-3">
               <div className="flex justify-between">
                 <span className="text-mute">{t("subtotal")}</span>
@@ -327,6 +306,9 @@ export function CheckoutForm({ subtotal }: { subtotal: number }) {
               )}
               <p className="text-caption-sm text-mute mt-1">{t("deliveryFeeNote")}</p>
             </div>
+            <p className="bg-soft-cloud text-caption-md text-charcoal rounded-none p-3">
+              {t("confirmationCallBlurb")}
+            </p>
           </div>
 
           {error && (

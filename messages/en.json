@@ -128,11 +128,14 @@
     "placingOrder": "Placing order…",
     "placeOrderFailed": "Failed to place order",
     "editDetails": "Edit details",
-    "confirmPlaceOrder": "Confirm & place order"
+    "confirmPlaceOrder": "Confirm & place order",
+    "confirmationCallTitle": "We'll call you to confirm",
+    "confirmationCallBlurb": "No payment needed now. After you place your order, our team will call you on the number above to confirm it before shipping.",
+    "supportLine": "Questions? Call or WhatsApp <phone>{number}</phone>"
   },
   "orderSuccess": {
-    "title": "Order confirmed!",
-    "blurb": "Thank you for your purchase. We'll call <phone></phone> to confirm your order before dispatch.",
+    "title": "Order placed!",
+    "blurb": "Thank you! We've received your order. Our team will call you on <phone></phone> shortly to confirm it before shipping.",
     "orderNumber": "Order number",
     "orderDate": "Order date",
     "estimatedDelivery": "Estimated delivery",
@@ -147,7 +150,10 @@
     "continueShopping": "Continue shopping",
     "trackOrder": "Track order",
     "specialOffers": "Special offers",
-    "youMightAlsoLike": "You might also like"
+    "youMightAlsoLike": "You might also like",
+    "supportPrompt": "Any questions about your order? Reach us at",
+    "callUs": "Call",
+    "whatsappUs": "WhatsApp"
   },
   "trackOrder": {
     "title": "Track order",
@@ -262,7 +268,11 @@
     "phone": "Phone & WhatsApp",
     "email": "Email",
     "address": "Address",
-    "socialBlurb": "The fastest replies are on Facebook and Instagram - send us a message anytime."
+    "socialBlurb": "The fastest replies are on Facebook and Instagram - send us a message anytime.",
+    "hotline": "Call or WhatsApp",
+    "hotlineBlurb": "For orders, product questions or anything else.",
+    "callNow": "Call now",
+    "whatsappNow": "WhatsApp"
   },
   "returns": {
     "title": "Returns & Refunds",

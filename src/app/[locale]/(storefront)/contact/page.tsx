@@ -1,7 +1,9 @@
+import { buttonVariants } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
 import { connectDB } from "@/lib/db";
 import { getPublicSettings } from "@/lib/services/settings.service";
 import { SOCIAL_DEFAULTS } from "@/lib/social-links";
+import { SUPPORT_PHONE } from "@/lib/support-contact";
 import {
   EnvelopeSimpleIcon,
   FacebookLogoIcon,
@@ -9,6 +11,7 @@ import {
   MapPinIcon,
   PhoneIcon,
   TiktokLogoIcon,
+  WhatsappLogoIcon,
   YoutubeLogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
 
@@ -18,15 +21,11 @@ export default async function ContactPage() {
   const t = await getTranslations("contact");
   await connectDB();
   const settings = await getPublicSettings();
-  const { phone, email, address } = settings.storeContact ?? {};
+  // The phone number lives in the hotline section above (SUPPORT_PHONE), so
+  // only email and address come from Settings here.
+  const { email, address } = settings.storeContact ?? {};
 
   const channels = [
-    phone && {
-      label: t("phone"),
-      value: phone,
-      href: `tel:${phone.replace(/[^+\d]/g, "")}`,
-      Icon: PhoneIcon,
-    },
     email && {
       label: t("email"),
       value: email,
@@ -54,9 +53,39 @@ export default async function ContactPage() {
         <h1 className="text-heading-xl text-ink-900 mb-2">{t("title")}</h1>
         <p className="text-body-md text-mute mb-10">{t("getInTouchBlurb")}</p>
 
+        {/* Support hotline - call or WhatsApp, the primary way to reach us. */}
+        <section className="bg-ink-900 mb-10 flex flex-col gap-5 rounded-none p-6 text-white md:flex-row md:items-center md:justify-between md:p-8">
+          <div>
+            <p className="text-eyebrow text-caption-sm mb-2 text-white/70">{t("hotline")}</p>
+            <a
+              href={SUPPORT_PHONE.tel}
+              className="text-heading-lg whitespace-nowrap text-white underline-offset-4 hover:underline"
+            >
+              {SUPPORT_PHONE.display}
+            </a>
+            <p className="text-body-sm mt-1 text-white/70">{t("hotlineBlurb")}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={SUPPORT_PHONE.tel}
+              className={buttonVariants({ variant: "on-image", size: "md" })}
+            >
+              <PhoneIcon size={18} aria-hidden /> {t("callNow")}
+            </a>
+            <a
+              href={SUPPORT_PHONE.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ variant: "on-image-ghost", size: "md" })}
+            >
+              <WhatsappLogoIcon size={18} weight="fill" aria-hidden /> {t("whatsappNow")}
+            </a>
+          </div>
+        </section>
+
         {/* Direct channels */}
         {channels.length > 0 && (
-          <div className="mb-10 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+          <div className="mb-10 grid gap-3 sm:grid-cols-2">
             {channels.map(({ label, value, href, Icon }) => (
               <div key={label} className="bg-soft-cloud flex flex-col gap-4 rounded-none p-6">
                 <span className="bg-ink-900 flex size-12 shrink-0 items-center justify-center rounded-full text-white">

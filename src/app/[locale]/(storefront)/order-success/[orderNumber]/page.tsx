@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { connectDB } from "@/lib/db";
 import { localize } from "@/lib/localize";
@@ -7,7 +7,8 @@ import { getActivePromotions } from "@/lib/services/promotion.service";
 import { getSettings } from "@/lib/services/settings.service";
 import Order from "@/models/Order";
 import type { IProduct } from "@/models/Product";
-import { CheckCircleIcon } from "@phosphor-icons/react/dist/ssr";
+import { SUPPORT_PHONE } from "@/lib/support-contact";
+import { CheckCircleIcon, PhoneIcon, WhatsappLogoIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
@@ -20,8 +21,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { orderNumber } = await params;
   return {
-    title: `Order ${orderNumber} Confirmed | thriftedBD`,
-    description: "Your order has been placed successfully.",
+    title: `Order ${orderNumber} Placed | thriftedBD`,
+    description: "We've received your order and will call you to confirm it.",
   };
 }
 
@@ -68,6 +69,32 @@ export default async function OrderSuccessPage({
             phone: () => <span className="text-body-strong">{order.customer.phone}</span>,
           })}
         </p>
+
+        {/* Support hotline - the one number to reach if they have questions. */}
+        <div className="bg-soft-cloud mt-2 flex w-full max-w-md flex-col items-center gap-3 rounded-none p-4">
+          <p className="text-body-sm text-charcoal">
+            {t("supportPrompt")}{" "}
+            <span className="text-body-sm-strong text-ink-900 whitespace-nowrap">
+              {SUPPORT_PHONE.display}
+            </span>
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <a
+              href={SUPPORT_PHONE.tel}
+              className={buttonVariants({ variant: "primary", size: "sm" })}
+            >
+              <PhoneIcon size={16} aria-hidden /> {t("callUs")}
+            </a>
+            <a
+              href={SUPPORT_PHONE.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ variant: "secondary", size: "sm" })}
+            >
+              <WhatsappLogoIcon size={16} aria-hidden /> {t("whatsappUs")}
+            </a>
+          </div>
+        </div>
 
         <div className="border-hairline-soft mt-6 w-full border-t pt-6">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
