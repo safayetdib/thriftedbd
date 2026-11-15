@@ -57,14 +57,24 @@ export function formatNewOrderMessage(order: NewOrderSummary) {
   return lines.join("\n");
 }
 
+export type TelegramSendResult =
+  | { ok: true }
+  | { ok: false; reason: "not_configured" | "telegram_error" | "network_error"; detail?: string };
+
 /**
- * Sends a message to the configured Telegram chat. Returns false (never throws)
- * when unconfigured or when Telegram fails, so callers can fire and forget.
+ * Sends a message to the configured Telegram chat. Never throws - failures come
+ * back as a result (and are logged) so callers can't break checkout by sending.
  */
-export async function sendTelegramMessage(text: string) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return false;
+export async function sendTelegramMessage(text: string): Promise<TelegramSendResult> {
+  // Trimmed because a stray space or newline pasted into the Netlify UI would
+  // otherwise silently break the request URL or chat lookup.
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  if (!token || !chatId) {
+    const missing = [!token && "TELEGRAM_BOT_TOKEN", !chatId && "TELEGRAM_CHAT_ID"].filter(Boolean);
+    console.warn(`Telegram alert skipped: ${missing.join(", ")} not set`);
+    return { ok: false, reason: "not_configured", detail: `${missing.join(", ")} not set` };
+  }
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -80,19 +90,28 @@ export async function sendTelegramMessage(text: string) {
     });
     if (!res.ok) {
       // Never log the token-bearing URL; the status + Telegram's description is enough.
-      console.error(`Telegram sendMessage failed: ${res.status} ${await res.text()}`);
-      return false;
+      const body = await res.text();
+      let description = body;
+      try {
+        description = (JSON.parse(body) as { description?: string }).description ?? body;
+      } catch {
+        // Non-JSON body - keep the raw text.
+      }
+      const detail = `${res.status} ${description}`;
+      console.error(`Telegram sendMessage failed: ${detail}`);
+      return { ok: false, reason: "telegram_error", detail };
     }
-    return true;
+    return { ok: true };
   } catch (err) {
-    console.error("Telegram sendMessage error:", err instanceof Error ? err.message : err);
-    return false;
+    const detail = err instanceof Error ? err.message : String(err);
+    console.error("Telegram sendMessage error:", detail);
+    return { ok: false, reason: "network_error", detail };
   }
 }
 
 export async function notifyNewOrder(order: NewOrderSummary) {
   try {
-    return await sendTelegramMessage(formatNewOrderMessage(order));
+    return (await sendTelegramMessage(formatNewOrderMessage(order))).ok;
   } catch (err) {
     console.error("New-order notification failed:", err instanceof Error ? err.message : err);
     return false;

@@ -6,7 +6,7 @@ import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { createOrderFromCart } from "@/lib/services/order.service";
 import { createOrderSchema } from "@/lib/validations/order.schema";
 import Order from "@/models/Order";
-import { after, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 function rateLimited(retryAfterSeconds: number) {
   return NextResponse.json(
@@ -74,8 +74,10 @@ export async function POST(request: Request) {
 
   try {
     const order = await createOrderFromCart(identity, parsed.data, customerId);
-    // Alert the team on Telegram after the response is sent, so checkout never waits on it.
-    after(() => notifyNewOrder(order));
+    // Awaited rather than deferred with after(): background work after the
+    // response isn't guaranteed to finish on serverless hosts, and a lost alert
+    // means a missed order. It never throws and times out after 5s.
+    await notifyNewOrder(order);
     return NextResponse.json({ data: order }, { status: 201 });
   } catch (err) {
     if (err instanceof Error && err.message === "CART_EMPTY") {

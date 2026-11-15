@@ -71,7 +71,7 @@ describe("sendTelegramMessage", () => {
 
   it("posts the message to the Bot API with HTML parse mode", async () => {
     const sent = await sendTelegramMessage("hello");
-    expect(sent).toBe(true);
+    expect(sent).toEqual({ ok: true });
     expect(fetchMock).toHaveBeenCalledOnce();
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe("https://api.telegram.org/bot123:abc/sendMessage");
@@ -82,20 +82,43 @@ describe("sendTelegramMessage", () => {
     });
   });
 
-  it("skips silently when not configured", async () => {
+  it("reports not_configured (and warns) when a variable is missing", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.stubEnv("TELEGRAM_BOT_TOKEN", "");
     const sent = await sendTelegramMessage("hello");
-    expect(sent).toBe(false);
+    expect(sent).toMatchObject({ ok: false, reason: "not_configured" });
     expect(fetchMock).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalled();
   });
 
-  it("returns false instead of throwing when Telegram errors", async () => {
+  it("trims stray whitespace from the env values", async () => {
+    vi.stubEnv("TELEGRAM_BOT_TOKEN", " 123:abc\n");
+    vi.stubEnv("TELEGRAM_CHAT_ID", " -1001234 ");
+    await sendTelegramMessage("hello");
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe("https://api.telegram.org/bot123:abc/sendMessage");
+    expect(JSON.parse(init.body).chat_id).toBe("-1001234");
+  });
+
+  it("returns Telegram's error description instead of throwing", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
-    fetchMock.mockResolvedValue(new Response("Bad Request", { status: 400 }));
-    await expect(sendTelegramMessage("hello")).resolves.toBe(false);
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ ok: false, description: "Bad Request: chat not found" }), {
+        status: 400,
+      }),
+    );
+    await expect(sendTelegramMessage("hello")).resolves.toEqual({
+      ok: false,
+      reason: "telegram_error",
+      detail: "400 Bad Request: chat not found",
+    });
 
     fetchMock.mockRejectedValue(new Error("network down"));
-    await expect(sendTelegramMessage("hello")).resolves.toBe(false);
+    await expect(sendTelegramMessage("hello")).resolves.toEqual({
+      ok: false,
+      reason: "network_error",
+      detail: "network down",
+    });
   });
 });
 

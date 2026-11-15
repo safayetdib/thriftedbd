@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { getSettings } from "@/lib/services/settings.service";
+import { TelegramTestButton } from "@/components/admin/telegram-test-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -148,6 +149,15 @@ export default async function AdminSettingsPage({
           Save settings
         </Button>
       </form>
+
+      {/* Outside the settings form - this button sends a message, it doesn't save anything. */}
+      <Section title="Order alerts (Telegram)">
+        <p className="text-body-sm text-charcoal">
+          New orders are posted to the team&apos;s Telegram group. Use this to check the alert setup
+          without placing an order.
+        </p>
+        <TelegramTestButton />
+      </Section>
     </div>
   );
 }

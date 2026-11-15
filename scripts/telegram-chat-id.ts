@@ -22,8 +22,8 @@ async function run() {
 
   if (process.argv.includes("--test")) {
     if (!TELEGRAM_CHAT_ID) throw new Error("Missing TELEGRAM_CHAT_ID in .env.local");
-    const sent = await sendTelegramMessage("✅ thriftedBD order alerts are connected.");
-    console.log(sent ? "Test message sent." : "Test message failed - see the error above.");
+    const result = await sendTelegramMessage("✅ thriftedBD order alerts are connected.");
+    console.log(result.ok ? "Test message sent." : `Test message failed: ${result.detail}`);
     return;
   }
 
